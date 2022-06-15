@@ -1,0 +1,51 @@
+dataset:
+  annotations: /path/to/annotations/
+  dataset: /path/to/dataset
+  targets:
+    - call
+    - dislike
+    - fist
+    - four
+    - like
+    - mute
+    - ok
+    - one
+    - palm
+    - peace
+    - rock
+    - stop
+    - stop_inverted
+    - three
+    - two_up
+    - two_up_inverted
+    - three2
+    - peace_inverted
+    - no_gesture
+  image_size: [224, 224]
+  subset: 2000
+random_state: 42
+device: 'cpu'
+experiment_name: MobileNetV3_small
+model:
+  name: 'MobileNetV3_small'  # 'MobileNetV3_large' or 'MobileNetV3_small' or 'ResNet18'
+  pretrained: False
+  freezed: False
+  start_epoch: 0
+  checkpoint: /path/to/chackpoint
+optimizer:
+  type: 'SGD'
+  lr: 0.005
+  momentum: 0.9
+  weight_decay: 0.0005
+scheduler:
+  type: 'LinearLR'
+  start_factor: 0.001
+train_params:
+  epochs: 100
+  num_workers: 16
+  train_batch_size: 64
+  test_batch_size: 64
+  prefetch_factor: 16
+metric_params:
+  metrics: ['accuracy', 'f1_score', 'precision', 'recall']
+  average: 'weighted'
