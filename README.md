@@ -10,7 +10,7 @@ HaGRID size is **716GB** and dataset contains **552,992** FullHD (1920 × 1080) 
 
 The dataset contains **34,730** unique persons and at least this number of unique scenes. The subjects are people from 18 to 65 years old. The dataset was collected mainly indoors with considerable variation in lighting, including artificial and natural light. Besides, the dataset includes images taken in extreme conditions such as facing and backing to a window. Also, the subjects had to show gestures at a distance of 0.5 to 4 meters from the camera.
 
-For more information see our arxiv paper [HaGRID - HAnd Gesture Recognition Image Dataset](https://arxiv.pdf).
+For more information see our arxiv paper [HaGRID - HAnd Gesture Recognition Image Dataset](https://arxiv.org/abs/2206.08219).
 
 ## Installation
 Clone and install required python packages:
@@ -33,30 +33,36 @@ docker run gestures
 ## Downloads
 We split the train dataset into 18 archives by gestures because of the large size of data. Download and unzip them from the following links:
 
-| Gesture         | Archives                                  | Size     | Gesture     | Archives                                          | Size    |
-|-----------------|-------------------------------------------|----------|-------------|---------------------------------------------------|---------|
-| call            | [train_val_call](https://sc.link/ykEn)    | 39.1 GB  | peace       | [train_val_peace](https://sc.link/l6nM)           | 38.6 GB |
-| dislike         | [train_val_dislike](https://sc.link/xjDB) | 38.7 GB  | peace inv.  | [train_val_peace_inverted](https://sc.link/mXoG)  | 38.6 GB |
-| fist            | [train_val_fist](https://sc.link/wgB8)    | 38.0 GB  | rock        | [train_val_rock](https://sc.link/kMm6)            | 38.9 GB |
-| four            | [train_val_four](https://sc.link/vJA5)    | 40.5 GB  | stop        | [train_val_stop](https://sc.link/gXgk)            | 38.3 GB |
-| like            | [train_val_like](https://sc.link/r7wp)    | 38.3 GB  | stop inv.   | [train_val_stop_inverted](https://sc.link/jJlv)   | 40.2 GB |
-| mute            | [train_val_mute](https://sc.link/q8vp)    | 39.5 GB  | three       | [train_val_three](https://sc.link/wgBr)           | 39.4 GB |
-| ok              | [train_val_ok](https://sc.link/pV0V)      | 39.0 GB  | three2      | [train_val_three2](https://sc.link/vJA8)          | 38.5 GB |
-| one             | [train_val_one](https://sc.link/oJqX)     | 39.9 GB  | two up      | [train_val_two_up](https://sc.link/q8v7)          | 41.2 GB |
-| palm            | [train_val_palm](https://sc.link/nJp7)    | 39.3 GB  | two up inv. | [train_val_two_up_inverted](https://sc.link/r7w2) | 39.2 GB |
+### Tranval
 
-**Train_val annotations** are here: [ann_train_val](https://sc.link/BE5Y)
+| Gesture                           | Size     | Gesture                                   | Size    |
+|-----------------------------------|----------|-------------------------------------------|---------|
+| [`call`](https://sc.link/ykEn)    | 39.1 GB  | [`peace`](https://sc.link/l6nM)           | 38.6 GB |
+| [`dislike`](https://sc.link/xjDB) | 38.7 GB  | [`peace_inverted`](https://sc.link/mXoG)  | 38.6 GB |
+| [`fist`](https://sc.link/wgB8)    | 38.0 GB  | [`rock`](https://sc.link/kMm6)            | 38.9 GB |
+| [`four`](https://sc.link/vJA5)    | 40.5 GB  | [`stop`](https://sc.link/gXgk)            | 38.3 GB |
+| [`like`](https://sc.link/r7wp)    | 38.3 GB  | [`stop_inverted`](https://sc.link/jJlv)   | 40.2 GB |
+| [`mute`](https://sc.link/q8vp)    | 39.5 GB  | [`three`](https://sc.link/wgBr)           | 39.4 GB |
+| [`ok`](https://sc.link/pV0V)      | 39.0 GB  | [`three2`](https://sc.link/vJA8)          | 38.5 GB |
+| [`one`](https://sc.link/oJqX)     | 39.9 GB  | [`two_up`](https://sc.link/q8v7)          | 41.2 GB |
+| [`palm`](https://sc.link/nJp7)    | 39.3 GB  | [`two_up_inverted`](https://sc.link/r7w2) | 39.2 GB |
 
-| Test        | Archives                          | Size      |
-|-------------|-----------------------------------|-----------|
-| images      | [test](https://sc.link/zlGy)      | 60.4 GB   |
-| annotations | [ann_test](https://sc.link/DE5K)  | 3.4 MB    |
+`train_val` **annotations**: [`ann_train_val`](https://sc.link/BE5Y)
 
+### Test
 
-| Subsample   | Archives                              | Size      |
-|-------------|---------------------------------------|-----------|
-| images      | [subsample](https://sc.link/AO5l)     | 2.5 GB    |
-| annotations | [ann_subsample](https://sc.link/EQ5g) | 153.8 KB  |
+| Test        | Archives                            | Size      |
+|-------------|-------------------------------------|-----------|
+| images      | [`test`](https://sc.link/zlGy)      | 60.4 GB   |
+| annotations | [`ann_test`](https://sc.link/DE5K)  | 3.4 MB    |
+
+### Subsample
+Subsample has 100 items per gesture.
+
+| Subsample   | Archives                                | Size      |
+|-------------|-----------------------------------------|-----------|
+| images      | [`subsample`](https://sc.link/AO5l)     | 2.5 GB    |
+| annotations | [`ann_subsample`](https://sc.link/EQ5g) | 153.8 KB  |
 
 or by using python script
 ```bash
@@ -178,12 +184,17 @@ Please see the specific [license](https://github.com/hukenovs/hagrid/blob/master
 - [Andrey Makhlyarchuk](https://www.linkedin.com/in/makhliarchuk)
 - [Karina Kvanchiani](https://www.linkedin.com/in/kvanchiani)
 
+### Links
+- [Github](https://github.com/hukenovs/hagrid)
+- [Mirror](https://gitlab.aicloud.sbercloud.ru/rndcv/hagrid)
+- [arXiv](https://arxiv.org/abs/2206.08219)
+
 ### Citation
 You can cite the paper using the following BibTeX entry:
 
     @article{hagrid,
         title={HaGRID - HAnd Gesture Recognition Image Dataset},
         author={Kapitanov, Alexander and Makhlyarchuk, Andrey and Kvanchiani, Karina},
-        journal={arXiv preprint arXiv:?},
+        journal={arXiv preprint arXiv:2206.08219},
         year={2022}
     }
