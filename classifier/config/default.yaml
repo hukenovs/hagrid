@@ -33,12 +33,10 @@ model:
   start_epoch: 0
   checkpoint: /path/to/chackpoint
 optimizer:
-  type: 'SGD'
   lr: 0.005
   momentum: 0.9
   weight_decay: 0.0005
 scheduler:
-  type: 'LinearLR'
   start_factor: 0.001
 train_params:
   epochs: 100
