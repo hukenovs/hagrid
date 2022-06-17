@@ -188,6 +188,7 @@ Please see the specific [license](https://github.com/hukenovs/hagrid/blob/master
 - [Github](https://github.com/hukenovs/hagrid)
 - [Mirror](https://gitlab.aicloud.sbercloud.ru/rndcv/hagrid)
 - [arXiv](https://arxiv.org/abs/2206.08219)
+- [Paperswithcode](https://paperswithcode.com/paper/hagrid-hand-gesture-recognition-image-dataset)
 
 ### Citation
 You can cite the paper using the following BibTeX entry:
