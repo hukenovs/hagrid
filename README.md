@@ -116,7 +116,7 @@ Also we provide SSDLite model with MobileNetV3 large backbone to solve hand dete
 
 ## Annotations
 
-The annotations consist of bounding boxes of hands with gesture labels in COCO format `[top left X position, top left Y position, width, height]`. Also annotations have markups of `leading hands` (`left` of `right` for gesture hand) and `leading_conf` as confidence for `leading_hand` annotation. We provide `user_id` field that will allow you to split the train / val dataset yourself.
+The annotations consist of bounding boxes of hands in COCO format `[top left X position, top left Y position, width, height]` with gesture labels. Also annotations have markups of `leading hands` (`left` or `right` for gesture hand) and `leading_conf` as confidence for `leading_hand` annotation. We provide `user_id` field that will allow you to split the train / val dataset yourself.
 ```json
 "03487280-224f-490d-8e36-6c5f48e3d7a0": {
   "bboxes": [
