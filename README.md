@@ -16,11 +16,11 @@ For more information see our arxiv paper [HaGRID - HAnd Gesture Recognition Imag
 Clone and install required python packages:
 ```bash
 git clone https://github.com/hukenovs/hagrid.git
-# or mirror link: 
+# or mirror link:
 cd hagrid
 # Create virtual env by conda or venv
 conda create -n gestures python=3.9 -y
-conda activate gestures 
+conda activate gestures
 # Install requirements
 pip install -r requirements.txt
 ```
@@ -28,7 +28,7 @@ pip install -r requirements.txt
 ### Docker Installation
 ```bash
 docker build -t gestures .
-docker run gestures
+docker run -it -d -v $PWD:/gesture-classifier gestures
 ```
 ## Downloads
 We split the train dataset into 18 archives by gestures because of the large size of data. Download and unzip them from the following links:
@@ -71,7 +71,7 @@ python download.py --save_path <PATH_TO_SAVE> \
                    --test \
                    --subset \
                    --annotations \
-                   --dataset 
+                   --dataset
 ```
 
 Run the following command with key `--subset` to download the small subset (100 images per class). You can download the
