@@ -10,17 +10,21 @@ HaGRID size is **716GB** and dataset contains **552,992** FullHD (1920 × 1080) 
 
 The dataset contains **34,730** unique persons and at least this number of unique scenes. The subjects are people from 18 to 65 years old. The dataset was collected mainly indoors with considerable variation in lighting, including artificial and natural light. Besides, the dataset includes images taken in extreme conditions such as facing and backing to a window. Also, the subjects had to show gestures at a distance of 0.5 to 4 meters from the camera.
 
+Example of sample and its annotation:
+
+![example](images/example.jpeg)
+
 For more information see our arxiv paper [HaGRID - HAnd Gesture Recognition Image Dataset](https://arxiv.org/abs/2206.08219).
 
 ## Installation
 Clone and install required python packages:
 ```bash
 git clone https://github.com/hukenovs/hagrid.git
-# or mirror link: 
+# or mirror link:
 cd hagrid
 # Create virtual env by conda or venv
 conda create -n gestures python=3.9 -y
-conda activate gestures 
+conda activate gestures
 # Install requirements
 pip install -r requirements.txt
 ```
@@ -28,8 +32,9 @@ pip install -r requirements.txt
 ### Docker Installation
 ```bash
 docker build -t gestures .
-docker run gestures
+docker run -it -d -v $PWD:/gesture-classifier gestures
 ```
+
 ## Downloads
 We split the train dataset into 18 archives by gestures because of the large size of data. Download and unzip them from the following links:
 
@@ -71,7 +76,7 @@ python download.py --save_path <PATH_TO_SAVE> \
                    --test \
                    --subset \
                    --annotations \
-                   --dataset 
+                   --dataset
 ```
 
 Run the following command with key `--subset` to download the small subset (100 images per class). You can download the
@@ -114,6 +119,33 @@ Also we provide SSDLite model with MobileNetV3 large backbone to solve hand dete
 |---------------------------------|-------|
 | [SSDLite](https://sc.link/YXg2) | 71.49 |
 
+## Train
+
+You can use downloaded trained models, otherwise select a classifier and parameters for training in `default.yaml`.
+To train the model, execute the following command:
+
+```bash
+python -m classifier.run --command 'train' --path_to_config <PATH>
+```
+
+Every step, the current loss, learning rate and others values get logged to **Tensorboard**.
+See all saved metrics and parameters by opening a command line (this will open a webpage at `localhost:6006`):
+```bash
+tensorboard --logdir=experiments
+```
+
+## Test
+Test your model by running the following command:
+```bash
+python -m classifier.run --command 'test' --path_to_config <PATH>
+```
+
+## Demo
+ ```bash
+python demo.py -p <PATH_TO_DETECTOR>
+```
+![demo](images/demo.gif)
+
 ## Annotations
 
 The annotations consist of bounding boxes of hands in COCO format `[top left X position, top left Y position, width, height]` with gesture labels. Also annotations have markups of `leading hands` (`left` or `right` for gesture hand) and `leading_conf` as confidence for `leading_hand` annotation. We provide `user_id` field that will allow you to split the train / val dataset yourself.
@@ -146,33 +178,6 @@ The annotations consist of bounding boxes of hands in COCO format `[top left X p
 | gesture      | ~ 28 300    | ~ 2 400 | 30 629  |
 | no gesture   | 112 740     | 10 849  | 123 589 |
 | total boxes  | 622 063     | 54 518  | 676 581 |
-
-## Train
-
-You can use downloaded trained models, otherwise select a classifier and parameters for training in `default.yaml`.
-To train the model, execute the following command:
-
-```bash
-python -m classifier/run.py --command 'train' --path_to_config <PATH>
-```
-
-Every step, the current loss, learning rate and others values get logged to **Tensorboard**.
-See all saved metrics and parameters by opening a command line (this will open a webpage at `localhost:6006`):
-```bash
-tensorboard --logdir=experiments
-```
-
-## Test
-Test your model by running the following command:
-```bash
-python -m classifier/run.py --command 'test' --path_to_config <PATH>
-```
-
-## Demo
- ```bash
-python demo.py -p <PATH_TO_DETECTOR>
-```
-![demo](images/demo.gif)
 
 ### License
 <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-sa/4.0/88x31.png" /></a><br />This work is licensed under a variant of <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">Creative Commons Attribution-ShareAlike 4.0 International License</a>.
