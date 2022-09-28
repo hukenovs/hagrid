@@ -56,18 +56,18 @@ We split the train dataset into 18 archives by gestures because of the large siz
 
 ### Test
 
-| Test        | Archives                            | Size      |
-|-------------|-------------------------------------|-----------|
-| images      | [`test`](https://sc.link/zlGy)      | 60.4 GB   |
-| annotations | [`ann_test`](https://sc.link/DE5K)  | 3.4 MB    |
+| Test        | Archives                            | Size    |
+|-------------|-------------------------------------|---------|
+| images      | [`test`](https://sc.link/zlGy)      | 60.4 GB |
+| annotations | [`ann_test`](https://sc.link/DE5K)  | 27.3 MB |
 
 ### Subsample
 Subsample has 100 items per gesture.
 
-| Subsample   | Archives                                | Size      |
-|-------------|-----------------------------------------|-----------|
-| images      | [`subsample`](https://sc.link/AO5l)     | 2.5 GB    |
-| annotations | [`ann_subsample`](https://sc.link/EQ5g) | 153.8 KB  |
+| Subsample   | Archives                                | Size   |
+|-------------|-----------------------------------------|--------|
+| images      | [`subsample`](https://sc.link/AO5l)     | 2.5 GB |
+| annotations | [`ann_subsample`](https://sc.link/EQ5g) | 1.2 MB |
 
 or by using python script
 ```bash
@@ -142,19 +142,31 @@ python -m classifier.run --command 'test' --path_to_config <PATH>
 
 ## Demo
  ```bash
-python demo.py -p <PATH_TO_DETECTOR>
+python demo.py -p <PATH_TO_DETECTOR> --landmarks
 ```
 ![demo](images/demo.gif)
 
 ## Annotations
 
-The annotations consist of bounding boxes of hands in COCO format `[top left X position, top left Y position, width, height]` with gesture labels. Also annotations have markups of `leading hands` (`left` or `right` for gesture hand) and `leading_conf` as confidence for `leading_hand` annotation. We provide `user_id` field that will allow you to split the train / val dataset yourself.
+The annotations consist of bounding boxes of hands in COCO format `[top left X position, top left Y position, width, height]` with gesture labels. Also, annotations have 21 `landmarks` in format `[x,y]` relative image coordinates, markups of `leading hands` (`left` or `right` for gesture hand) and `leading_conf` as confidence for `leading_hand` annotation. We provide `user_id` field that will allow you to split the train / val dataset yourself.
 ```json
-"03487280-224f-490d-8e36-6c5f48e3d7a0": {
+"0534147c-4548-4ab4-9a8c-f297b43e8ffb": {
   "bboxes": [
-    [0.0283366, 0.8686061, 0.0757000, 0.1149820],
-    [0.6824319, 0.2661254, 0.1086447, 0.1481245]
+    [0.38038597, 0.74085361, 0.08349486, 0.09142549],
+    [0.67322755, 0.37933984, 0.06350809, 0.09187757]
   ],
+  "landmarks"[
+    [
+      [
+        [0.39917091, 0.74502739],
+        [0.42500172, 0.74984396],
+        ...
+      ],
+        [0.70590734, 0.46012364],
+        [0.69208878, 0.45407018],
+        ...
+    ],
+  ], 
   "labels": [
     "no_gesture",
     "one"
@@ -167,6 +179,7 @@ The annotations consist of bounding boxes of hands in COCO format `[top left X p
 - Key - image name without extension
 - Bboxes - list of normalized bboxes `[top left X pos, top left Y pos, width, height]`
 - Labels - list of class labels e.g. `like`, `stop`, `no_gesture`
+- Landmarks - list of normalized hand landmarks `[x, y]`
 - Leading hand - `right` or `left` for hand which showing gesture
 - Leading conf - leading confidence for `leading_hand`
 - User ID - subject id (useful for split data to train / val subsets).
@@ -179,6 +192,17 @@ The annotations consist of bounding boxes of hands in COCO format `[top left X p
 | no gesture   | 112 740     | 10 849  | 123 589 |
 | total boxes  | 622 063     | 54 518  | 676 581 |
 
+### Landmarks
+
+We annotate 21 hand keypoints by using [MediaPipe](http://www.mediapipe.dev) open source framework.
+Due to auto markup empty lists may be present in landmarks.
+
+| Object           | Train + Val | Test   | Total   |
+|------------------|-------------|--------|---------|
+| leading hand     | 503 872     | 43 167 | 547 039 |
+| not leading hand | 98 766      | 9 243  | 108 009 |
+| total landmarks  | 602 638     | 52 410 | 655 048 |
+
 ### License
 <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-sa/4.0/88x31.png" /></a><br />This work is licensed under a variant of <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">Creative Commons Attribution-ShareAlike 4.0 International License</a>.
 
@@ -188,6 +212,7 @@ Please see the specific [license](https://github.com/hukenovs/hagrid/blob/master
 - [Alexander Kapitanov](https://www.linkedin.com/in/hukenovs)
 - [Andrey Makhlyarchuk](https://www.linkedin.com/in/makhliarchuk)
 - [Karina Kvanchiani](https://www.linkedin.com/in/kvanchiani)
+- [Aleksandr Nagaev](https://www.linkedin.com/in/nagadit)
 
 ### Links
 - [Github](https://github.com/hukenovs/hagrid)

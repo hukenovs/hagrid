@@ -1,19 +1,21 @@
-import os
-import cv2
-import time
-import torch
-import logging
 import argparse
-import numpy as np
-
-from torch import Tensor
-from PIL import Image, ImageOps
+import logging
+import os
+import time
 from typing import Optional, Tuple
+
+import cv2
+import numpy as np
+import torch
+from PIL import Image, ImageOps
+from torch import Tensor
 from torchvision.transforms import functional as f
+import mediapipe as mp
+mp_drawing = mp.solutions.drawing_utils
+mp_drawing_styles = mp.solutions.drawing_styles
 
-from detector.ssd_mobilenetv3 import SSDMobilenet
 from detector.model import TorchVisionModel
-
+from detector.ssd_mobilenetv3 import SSDMobilenet
 
 logging.basicConfig(format="[LINE:%(lineno)d] %(levelname)-8s [%(asctime)s]  %(message)s", level=logging.INFO)
 
@@ -68,7 +70,7 @@ class Demo:
         return img_tensor, (width, height), (padded_width, padded_height)
 
     @staticmethod
-    def run(detector: TorchVisionModel, num_hands: int = 2, threshold: float = 0.5) -> None:
+    def run(detector: TorchVisionModel, num_hands: int = 2, threshold: float = 0.5, landmarks: bool = False) -> None:
         """
         Run detection model and draw bounding boxes on frame
         Parameters
@@ -79,7 +81,16 @@ class Demo:
             Min hands to detect
         threshold : float
             Confidence threshold
+        landmarks : bool
+            Detect landmarks
         """
+
+        if landmarks:
+            hands = mp.solutions.hands.Hands(
+                model_complexity=0,
+                static_image_mode=False,
+                max_num_hands=2,
+                min_detection_confidence=0.8)
 
         cap = cv2.VideoCapture(0)
 
@@ -96,9 +107,18 @@ class Demo:
                 boxes = output["boxes"][:num_hands]
                 scores = output["scores"][:num_hands]
                 labels = output["labels"][:num_hands]
+                if landmarks:
+                    results = hands.process(frame[:,:,::-1])
+                    if results.multi_hand_landmarks:
+                        for hand_landmarks in results.multi_hand_landmarks:
+                            mp_drawing.draw_landmarks(
+                                frame,
+                                hand_landmarks,
+                                mp.solutions.hands.HAND_CONNECTIONS,
+                                mp_drawing_styles.DrawingSpec(color=[0, 255, 0], thickness=2, circle_radius=1),
+                                mp_drawing_styles.DrawingSpec(color=[255, 255, 255], thickness=1, circle_radius=1))
                 for i in range(min(num_hands, len(boxes))):
                     if scores[i] > threshold:
-
                         width, height = size
                         padded_width, padded_height = padded_size
                         scale = max(width, height) / 320
@@ -110,11 +130,9 @@ class Demo:
                         y1 = int((boxes[i][1] - padding_h) * scale)
                         x2 = int((boxes[i][2] - padding_w) * scale)
                         y2 = int((boxes[i][3] - padding_h) * scale)
-
                         cv2.rectangle(frame, (x1, y1), (x2, y2), COLOR, thickness=3)
                         cv2.putText(frame, targets[int(labels[i])], (x1, y1 - 10),
                                     cv2.FONT_HERSHEY_SIMPLEX, 2, (0, 0, 255), thickness=3)
-
                 fps = 1 / delta
                 cv2.putText(frame, f"FPS: {fps :02.1f}, Frame: {cnt}", (30, 30), FONT, 1, COLOR, 2)
                 cnt += 1
@@ -161,6 +179,14 @@ def parse_arguments(params: Optional[Tuple] = None) -> argparse.Namespace:
     )
 
     parser.add_argument(
+        "-lm",
+        "--landmarks",
+        required=False,
+        action='store_true',
+        help="Use landmarks"
+    )
+
+    parser.add_argument(
         "-d",
         "--device",
         required=False,
@@ -177,4 +203,4 @@ if __name__ == '__main__':
     args = parse_arguments()
     model = _load_model(os.path.expanduser(args.path_to_model), args.device)
     if model is not None:
-        Demo.run(model, num_hands=100, threshold=0.5)
+        Demo.run(model, num_hands=100, threshold=0.8, landmarks=args.landmarks)
