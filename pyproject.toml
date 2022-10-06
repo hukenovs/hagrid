@@ -1,0 +1,42 @@
+# [project]
+# dynamic = ["dependencies"]
+#
+# [tool.setuptools.dynamic]
+# dependencies = requirements.txt
+
+# TODO 2020/06/02: Check Flake8
+# [tool.flake8]
+# ignore = ['E203', 'E266', 'E501', 'W503', 'F403', 'F401']
+# max-line-length = 120
+# max-complexity = 18
+# select = ['B','C','E','F','W','T4','B9']
+
+[tool.isort]
+# known_third_party = ["cv2", "numpy", "pandas", "qimage2ndarray", "scipy", "sklearn", "tensorflow", "torch"]
+multi_line_output = 3
+include_trailing_comma = true
+force_grid_wrap = 0
+use_parentheses = true
+line_length = 120
+
+[tool.black]
+line-length = 120
+target-version = ['py39']
+exclude = '''
+/(
+    \.eggs
+  | \.git
+  | \.hg
+  | \.mypy_cache
+  | \.tox
+  | \.venv
+  | _build
+  | buck-out
+  | build
+  | dist
+  # The following are specific to Black, you probably don't want those.
+  | blib2to3
+  | tests/data
+  | profiling
+)/
+'''

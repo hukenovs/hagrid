@@ -1,17 +1,17 @@
-import os
 import json
+import logging
+import os
 import random
+from typing import Dict, List, Tuple
+
 import numpy as np
 import pandas as pd
-import logging
 import torch.utils.data
-
-from PIL import Image, ImageOps
-from typing import Dict, Tuple, List
 from omegaconf import DictConfig
-from classifier.preprocess import get_crop_from_bbox, Compose
+from PIL import Image, ImageOps
 
-FORMATS = (".jpeg", ".jpg", ".jp2", ".png", ".tiff", ".jfif", ".bmp", ".webp", ".heic")
+from classifier.preprocess import Compose, get_crop_from_bbox
+from constants import IMAGES
 
 
 class GestureDataset(torch.utils.data.Dataset):
@@ -19,13 +19,7 @@ class GestureDataset(torch.utils.data.Dataset):
     Custom Dataset for gesture classification pipeline
     """
 
-    def __init__(
-            self,
-            is_train: bool,
-            conf: DictConfig,
-            transform: Compose = None,
-            is_test: bool = False
-    ) -> None:
+    def __init__(self, is_train: bool, conf: DictConfig, transform: Compose = None, is_test: bool = False) -> None:
 
         """
         Custom Dataset for gesture classification pipeline
@@ -45,8 +39,9 @@ class GestureDataset(torch.utils.data.Dataset):
         self.transform = transform
         self.is_train = is_train
 
-        self.labels = {label: num for (label, num) in
-                       zip(self.conf.dataset.targets, range(len(self.conf.dataset.targets)))}
+        self.labels = {
+            label: num for (label, num) in zip(self.conf.dataset.targets, range(len(self.conf.dataset.targets)))
+        }
 
         self.leading_hand = {"right": 0, "left": 1}
 
@@ -58,8 +53,8 @@ class GestureDataset(torch.utils.data.Dataset):
         users = sorted(users)
         random.Random(self.conf.random_state).shuffle(users)
 
-        train_users = users[:int(len(users) * 0.8)]
-        val_users = users[int(len(users) * 0.8):]
+        train_users = users[: int(len(users) * 0.8)]
+        val_users = users[int(len(users) * 0.8) :]
 
         self.annotations = self.annotations.copy()
 
@@ -106,21 +101,20 @@ class GestureDataset(torch.utils.data.Dataset):
         for target in self.conf.dataset.targets:
             target_tsv = os.path.join(path_to_json, f"{target}.json")
             if os.path.exists(target_tsv):
-                json_annotation = json.load(open(
-                    os.path.join(path_to_json, f"{target}.json")
-                ))
+                json_annotation = json.load(open(os.path.join(path_to_json, f"{target}.json")))
 
-                json_annotation = [dict(annotation, **{"name": f"{name}.jpg"}) for name, annotation in zip(
-                    json_annotation, json_annotation.values()
-                )]
+                json_annotation = [
+                    dict(annotation, **{"name": f"{name}.jpg"})
+                    for name, annotation in zip(json_annotation, json_annotation.values())
+                ]
 
                 annotation = pd.DataFrame(json_annotation)
 
                 annotation["target"] = target
                 annotations_all = pd.concat([annotations_all, annotation], ignore_index=True)
                 exists_images.extend(
-                    self.__get_files_from_dir(os.path.join(self.conf.dataset.dataset, target),
-                                              FORMATS, subset))
+                    self.__get_files_from_dir(os.path.join(self.conf.dataset.dataset, target), IMAGES, subset)
+                )
             else:
                 logging.info(f"Databse for {target} not found")
 
@@ -129,12 +123,7 @@ class GestureDataset(torch.utils.data.Dataset):
         return annotations_all[annotations_all["exists"]]
 
     def __prepare_image_target(
-            self,
-            target: str,
-            name: str,
-            bboxes: List,
-            labels: List,
-            leading_hand: str
+        self, target: str, name: str, bboxes: List, labels: List, leading_hand: str
     ) -> Tuple[Image.Image, str, str]:
         """
         Crop and padding image, prepare target
@@ -202,18 +191,13 @@ class GestureDataset(torch.utils.data.Dataset):
         index : int
             Index of annotation item
         """
-        row = self.annotations.iloc[[index]].to_dict('records')[0]
+        row = self.annotations.iloc[[index]].to_dict("records")[0]
 
         image_resized, gesture, leading_hand = self.__prepare_image_target(
-            row["target"],
-            row["name"],
-            row["bboxes"],
-            row["labels"],
-            row["leading_hand"]
+            row["target"], row["name"], row["bboxes"], row["labels"], row["leading_hand"]
         )
 
-        label = {"gesture": self.labels[gesture],
-                 "leading_hand": self.leading_hand[leading_hand]}
+        label = {"gesture": self.labels[gesture], "leading_hand": self.leading_hand[leading_hand]}
 
         if self.transform is not None:
             image_resized, label = self.transform(image_resized, label)

@@ -1,20 +1,18 @@
-import os
+import argparse
 import json
 import logging
+import os
 from typing import Tuple, Union
 
 import numpy as np
-from PIL import Image
 import pandas as pd
-from omegaconf import OmegaConf
-from omegaconf import DictConfig, ListConfig
-import argparse
+from omegaconf import DictConfig, ListConfig, OmegaConf
+from PIL import Image
 from tqdm import tqdm
 
+from constants import IMAGES
+
 tqdm.pandas()
-FORMATS = {
-    "image": (".jpeg", ".jpg", ".jp2", ".png", ".tiff", ".jfif", ".bmp", ".webp", ".heic")
-}
 
 
 def get_area(bboxes: list) -> list:
@@ -140,19 +138,18 @@ def get_dataframe(conf: Union[DictConfig, ListConfig], phase: str) -> pd.DataFra
     for target in tqdm(targets):
         target_json = os.path.join(dataset_annotations, f"ann_{phase}", f"{target}.json")
         if os.path.exists(target_json):
-            json_annotation = json.load(open(
-                os.path.join(target_json)
-            ))
+            json_annotation = json.load(open(os.path.join(target_json)))
 
-            json_annotation = [dict(annotation, **{"name": f"{name}.jpg"}) for name, annotation in
-                               zip(json_annotation, json_annotation.values())]
+            json_annotation = [
+                dict(annotation, **{"name": f"{name}.jpg"})
+                for name, annotation in zip(json_annotation, json_annotation.values())
+            ]
 
             annotation = pd.DataFrame(json_annotation)
 
             annotation["target"] = target
             annotations_all = pd.concat([annotations_all, annotation], ignore_index=True)
-            exists_images.extend(
-                get_files_from_dir(os.path.join(dataset_folder, phase, target), FORMATS["image"]))
+            exists_images.extend(get_files_from_dir(os.path.join(dataset_folder, phase, target), IMAGES))
         else:
             logging.warning(f"Database for {phase}/{target} not found")
 
@@ -187,8 +184,9 @@ def run_convert(args: argparse.Namespace) -> None:
         annotations = get_dataframe(conf, phase)
 
         logging.info("Create image_path")
-        annotations['image_path'] = annotations.progress_apply(
-            lambda row: os.path.join(dataset_folder, phase, row["target"], row["name"]), axis=1)
+        annotations["image_path"] = annotations.progress_apply(
+            lambda row: os.path.join(dataset_folder, phase, row["target"], row["name"]), axis=1
+        )
 
         logging.info("Create width, height")
         w_h = annotations["image_path"].progress_apply(lambda x: get_w_h(x))
@@ -200,7 +198,8 @@ def run_convert(args: argparse.Namespace) -> None:
 
         logging.info("Create abs_bboxes")
         annotations["abs_bboxes"] = annotations.progress_apply(
-            lambda row: get_abs_bboxes(row["bboxes"], (row["width"], row["height"])), axis=1)
+            lambda row: get_abs_bboxes(row["bboxes"], (row["width"], row["height"])), axis=1
+        )
         logging.info("Create area")
         annotations["area"] = annotations["abs_bboxes"].progress_apply(lambda bboxes: get_area(bboxes))
         logging.info("Create segmentation")
@@ -210,17 +209,10 @@ def run_convert(args: argparse.Namespace) -> None:
 
         categories = [{"supercategory": "none", "name": k, "id": v} for k, v in labels.items()]
         logging.info(f"Save to {phase}.json")
-        res_file = {
-            "categories": categories,
-            "images": [],
-            "annotations": []
-        }
+        res_file = {"categories": categories, "images": [], "annotations": []}
         annot_count = 0
         for index, row in tqdm(annotations.iterrows()):
-            img_elem = {"file_name": row["image_path"],
-                        "height": row["height"],
-                        "width": row["width"],
-                        "id": row["id"]}
+            img_elem = {"file_name": row["image_path"], "height": row["height"], "width": row["width"], "id": row["id"]}
 
             res_file["images"].append(img_elem)
 
@@ -233,7 +225,7 @@ def run_convert(args: argparse.Namespace) -> None:
                     "image_id": row["id"],
                     "category_id": row["category_id"][i],
                     "iscrowd": 0,
-                    "area": row["area"][i]
+                    "area": row["area"][i],
                 }
                 res_file["annotations"].append(annot_elem)
                 annot_count += 1
@@ -244,8 +236,8 @@ def run_convert(args: argparse.Namespace) -> None:
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser('Convert Hagrid annotations to Coco annotations format', add_help=False)
-    parser.add_argument('--cfg', default="converter_config.yaml", type=str, help='path to data config')
-    parser.add_argument('--out', default="./hagrid_coco_format", type=str, help='path to output jsons')
+    parser = argparse.ArgumentParser("Convert Hagrid annotations to Coco annotations format", add_help=False)
+    parser.add_argument("--cfg", default="converter_config.yaml", type=str, help="path to data config")
+    parser.add_argument("--out", default="./hagrid_coco_format", type=str, help="path to output jsons")
     args = parser.parse_args()
     run_convert(args)
