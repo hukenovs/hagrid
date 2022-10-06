@@ -1,0 +1,24 @@
+dataset:
+  dataset_annotations: hagrid/annotations # Path to annotations
+  dataset_folder: hagrid/dataset # Path to images
+  phases: [train, test, subsample] #names of annotation directories
+  targets:
+    - call
+    - dislike
+    - fist
+    - four
+    - like
+    - mute
+    - ok
+    - one
+    - palm
+    - peace_inverted
+    - peace
+    - rock
+    - stop_inverted
+    - stop
+    - three
+    - three2
+    - two_up
+    - two_up_inverted
+    - no_gesture
