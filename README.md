@@ -166,7 +166,7 @@ The annotations consist of bounding boxes of hands in COCO format `[top left X p
         [0.69208878, 0.45407018],
         ...
     ],
-  ], 
+  ],
   "labels": [
     "no_gesture",
     "one"
@@ -202,6 +202,43 @@ Due to auto markup empty lists may be present in landmarks.
 | leading hand     | 503 872     | 43 167 | 547 039 |
 | not leading hand | 98 766      | 9 243  | 108 009 |
 | total landmarks  | 602 638     | 52 410 | 655 048 |
+
+### Converters
+
+<details><summary> <b>Yolo</b> </summary>
+
+We provide a script to convert annotations to [YOLO](https://pjreddie.com/darknet/yolo/) format. To convert annotations, run the following command:
+
+```bash
+python -m converters.hagrid_to_yolo --path_to_config <PATH>
+```
+
+after conversion, you need change original definition [img2labels](https://github.com/WongKinYiu/yolov7/blob/2fdc7f14395f6532ad05fb3e6970150a6a83d290/utils/datasets.py#L347-L350) to:
+
+```python
+def img2label_paths(img_paths):
+    img_paths = list(img_paths)
+    # Define label paths as a function of image paths
+    if "subsample" in img_paths[0]:
+        return [x.replace("subsample", "subsample_labels").replace(".jpg", ".txt") for x in img_paths]
+    elif "train_val" in img_paths[0]:
+        return [x.replace("train_val", "train_val_labels").replace(".jpg", ".txt") for x in img_paths]
+    elif "test" in img_paths[0]:
+        return [x.replace("test", "test_labels").replace(".jpg", ".txt") for x in img_paths]
+```
+
+</details>
+
+
+<details><summary> <b>Coco</b> </summary>
+
+Also, we provide a script to convert annotations to [Coco](https://cocodataset.org/#home) format. To convert annotations, run the following command:
+
+```bash
+python -m converters.hagrid_to_coco --path_to_config <PATH>
+```
+
+</details>
 
 ### License
 <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-sa/4.0/88x31.png" /></a><br />This work is licensed under a variant of <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">Creative Commons Attribution-ShareAlike 4.0 International License</a>.

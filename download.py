@@ -1,7 +1,6 @@
 """Download models and datasets"""
-import os
 import argparse
-
+import os
 
 urls = {
     "call": "https://sc.link/ykEn",
@@ -26,7 +25,7 @@ urls = {
     "subsample": "https://sc.link/AO5l",
     "ann_train_val": "https://sc.link/BE5Y",
     "ann_test": "https://sc.link/DE5K",
-    "ann_subsample": "https://sc.link/EQ5g"
+    "ann_subsample": "https://sc.link/EQ5g",
 }
 
 GESTURES = (
@@ -47,7 +46,7 @@ GESTURES = (
     "three",
     "three2",
     "two_up_inverted",
-    "two_up"
+    "two_up",
 )
 
 DATASET = os.path.expanduser("~/hagrid/dataset/")
@@ -82,12 +81,12 @@ def download(args):
 
 def parse_arguments() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Download dataset...")
-    parser.add_argument("--train", action='store_true', help="Download trainval set")
-    parser.add_argument("--test", action='store_true', help="Download test set")
-    parser.add_argument("--subset", action='store_true', help="Download subset with 100 items of each gesture")
+    parser.add_argument("--train", action="store_true", help="Download trainval set")
+    parser.add_argument("--test", action="store_true", help="Download test set")
+    parser.add_argument("--subset", action="store_true", help="Download subset with 100 items of each gesture")
 
-    parser.add_argument("-a", "--annotations", action='store_true', help="Download annotations")
-    parser.add_argument("-d", "--dataset", action='store_true', help="Download dataset")
+    parser.add_argument("-a", "--annotations", action="store_true", help="Download annotations")
+    parser.add_argument("-d", "--dataset", action="store_true", help="Download dataset")
 
     parser.add_argument("-t", "--targets", nargs="+", default=GESTURES, help="Target(s) for downloading train set")
     parser.add_argument("-p", "--save_path", type=str, default=DATASET, help="Save path")
@@ -96,7 +95,7 @@ def parse_arguments() -> argparse.Namespace:
     return known_args
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     params = parse_arguments()
     print("\n".join([f"{k :<30} : {v}" for k, v in vars(params).items()]))
     params.save_path = os.path.expanduser(params.save_path)

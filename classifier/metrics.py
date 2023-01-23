@@ -1,17 +1,24 @@
-import torch
-import seaborn as sns
-import pandas as pd
-import matplotlib.pyplot as plt
-
 from typing import Dict
-from torch import Tensor
+
+import matplotlib.pyplot as plt
+import pandas as pd
+import seaborn as sns
+import torch
 from omegaconf import DictConfig
+from torch import Tensor
 from torch.utils.tensorboard import SummaryWriter
-from torchmetrics.functional import accuracy, f1_score, precision, recall, auroc, confusion_matrix
+from torchmetrics.functional import accuracy, auroc, confusion_matrix, f1_score, precision, recall
 
 
-def get_metrics(targets: Tensor, predicts: Tensor, conf: DictConfig, epoch: int, mode: str, writer: SummaryWriter,
-                target: str = "gesture") -> Dict:
+def get_metrics(
+    targets: Tensor,
+    predicts: Tensor,
+    conf: DictConfig,
+    epoch: int,
+    mode: str,
+    writer: SummaryWriter,
+    target: str = "gesture",
+) -> Dict:
     """
     Calc metrics for predicted labels
 
@@ -40,7 +47,7 @@ def get_metrics(targets: Tensor, predicts: Tensor, conf: DictConfig, epoch: int,
         "accuracy": accuracy(predicts_labels, targets, average=average, num_classes=num_classes),
         "f1_score": f1_score(predicts_labels, targets, average=average, num_classes=num_classes),
         "precision": precision(predicts_labels, targets, average=average, num_classes=num_classes),
-        "recall": recall(predicts_labels, targets, average=average, num_classes=num_classes)
+        "recall": recall(predicts_labels, targets, average=average, num_classes=num_classes),
     }
 
     if mode == "test":
@@ -60,6 +67,6 @@ def get_metrics(targets: Tensor, predicts: Tensor, conf: DictConfig, epoch: int,
         df_cm = pd.DataFrame(cm, index=[i for i in class_names], columns=[i for i in class_names])
 
         plt.figure(figsize=(16, 12))
-        hm = sns.heatmap(df_cm, annot=True, fmt='.5g', cmap="YlGnBu").get_figure()
+        hm = sns.heatmap(df_cm, annot=True, fmt=".5g", cmap="YlGnBu").get_figure()
         writer.add_figure(f"Confusion matrix for {target}", hm, epoch)
     return needed_scores

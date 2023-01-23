@@ -1,7 +1,7 @@
-import torchvision
-
 from typing import Dict
-from torch import nn, Tensor
+
+import torchvision
+from torch import Tensor, nn
 
 
 class MobileNetV3(nn.Module):
@@ -9,13 +9,7 @@ class MobileNetV3(nn.Module):
     Torchvision two headed MobileNet V3 configuration
     """
 
-    def __init__(
-            self,
-            num_classes: int,
-            size: str = "large",
-            pretrained: bool = False,
-            freezed: bool = False
-    ) -> None:
+    def __init__(self, num_classes: int, size: str = "large", pretrained: bool = False, freezed: bool = False) -> None:
         """
         Torchvision two headed MobileNet V3 configuration
 
@@ -45,10 +39,7 @@ class MobileNetV3(nn.Module):
             for param in torchvision_model.parameters():
                 param.requires_grad = False
 
-        self.backbone = nn.Sequential(
-            torchvision_model.features,
-            torchvision_model.avgpool
-        )
+        self.backbone = nn.Sequential(torchvision_model.features, torchvision_model.avgpool)
 
         self.gesture_classifier = nn.Sequential(
             nn.Linear(in_features=in_features, out_features=out_features),

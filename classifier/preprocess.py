@@ -1,12 +1,12 @@
-import numpy as np
+from typing import Dict, List, Optional, Tuple
 
+import numpy as np
 from PIL import Image
-from torch import nn, Tensor
-from typing import Tuple, Dict, Optional, List
+from torch import Tensor, nn
 from torchvision.transforms import functional as F
 
 
-def get_crop_from_bbox(image: Image.Image, bbox: List, box_scale: float = 1.) -> Tuple[Image.Image, np.array]:
+def get_crop_from_bbox(image: Image.Image, bbox: List, box_scale: float = 1.0) -> Tuple[Image.Image, np.array]:
     """
     Crop bounding box from image
 
@@ -53,8 +53,7 @@ class Compose:
 class ToTensor(nn.Module):
     @staticmethod
     def forward(
-            image: Tensor,
-            target: Optional[Dict[str, Tensor]] = None
+        image: Tensor, target: Optional[Dict[str, Tensor]] = None
     ) -> Tuple[Tensor, Optional[Dict[str, Tensor]]]:
         image = F.pil_to_tensor(image)
         image = F.convert_image_dtype(image)

@@ -1,12 +1,14 @@
-from torch import nn, Tensor
 from collections.abc import Callable
-from typing import Tuple, Dict, List, Iterator
+from typing import Dict, Iterator, List, Tuple
+
+from torch import Tensor, nn
 
 
 class TorchVisionModel:
     """
     Torchvision class wrapper
     """
+
     @staticmethod
     def criterion(model_output: Dict):
         raise NotImplementedError

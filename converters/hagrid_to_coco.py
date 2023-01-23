@@ -14,6 +14,8 @@ from constants import IMAGES
 
 tqdm.pandas()
 
+logging.getLogger().setLevel(logging.INFO)
+
 
 def get_area(bboxes: list) -> list:
     """

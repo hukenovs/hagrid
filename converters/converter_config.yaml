@@ -12,13 +12,13 @@ dataset:
     - ok
     - one
     - palm
-    - peace_inverted
     - peace
     - rock
-    - stop_inverted
     - stop
+    - stop_inverted
     - three
-    - three2
     - two_up
     - two_up_inverted
+    - three2
+    - peace_inverted
     - no_gesture
