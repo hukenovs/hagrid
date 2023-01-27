@@ -1,8 +1,8 @@
-import torchvision
-import torch
-
 from typing import Dict
-from torch import nn, Tensor
+
+import torch
+import torchvision
+from torch import Tensor, nn
 
 
 class Vit(nn.Module):
@@ -11,12 +11,7 @@ class Vit(nn.Module):
     for gesture and leading hand classification tasks
     """
 
-    def __init__(
-            self,
-            num_classes: int,
-            pretrained: bool = False,
-            freezed: bool = False
-    ) -> None:
+    def __init__(self, num_classes: int, pretrained: bool = False, freezed: bool = False) -> None:
         """
         Torchvision two headed Vision Transformer configuration
         for gesture and leading hand classification tasks
@@ -38,9 +33,7 @@ class Vit(nn.Module):
             for param in self.torchvision_model.parameters():
                 param.requires_grad = False
 
-        self.backbone = nn.Sequential(
-            self.torchvision_model.encoder
-        )
+        self.backbone = nn.Sequential(self.torchvision_model.encoder)
 
         self.gesture_classifier = nn.Sequential(
             nn.Linear(in_features=self.torchvision_model.hidden_dim, out_features=num_classes)
@@ -65,4 +58,4 @@ class Vit(nn.Module):
 
         leading_hand = self.leading_hand_classifier(x)
 
-        return {'gesture': gesture, 'leading_hand': leading_hand}
+        return {"gesture": gesture, "leading_hand": leading_hand}

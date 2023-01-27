@@ -1,16 +1,16 @@
+import logging
 import math
 from collections import defaultdict
-import torch.utils
-import torch.optim
+
 import torch
-
-import logging
 import torch.nn as nn
-
+import torch.optim
+import torch.utils
 from omegaconf import DictConfig, OmegaConf
 from torch.utils.tensorboard import SummaryWriter
+
 from classifier.metrics import get_metrics
-from classifier.utils import collate_fn, add_metrics_to_tensorboard, add_params_to_tensorboard, save_checkpoint
+from classifier.utils import add_metrics_to_tensorboard, add_params_to_tensorboard, collate_fn, save_checkpoint
 
 
 class TrainClassifier:
@@ -26,12 +26,12 @@ class TrainClassifier:
 
     @staticmethod
     def eval(
-            model: nn.Module,
-            conf: DictConfig,
-            epoch: int,
-            test_loader: torch.utils.data.DataLoader,
-            writer: SummaryWriter,
-            mode: str = "valid"
+        model: nn.Module,
+        conf: DictConfig,
+        epoch: int,
+        test_loader: torch.utils.data.DataLoader,
+        writer: SummaryWriter,
+        mode: str = "valid",
     ) -> float:
         """
         Evaluation model on validation set and metrics calc
@@ -67,8 +67,13 @@ class TrainClassifier:
 
                 for target in targets.keys():
                     metrics = get_metrics(
-                        torch.tensor(targets[target]), torch.tensor(predicts[target]), conf, epoch, mode,
-                        writer=writer, target=target
+                        torch.tensor(targets[target]),
+                        torch.tensor(predicts[target]),
+                        conf,
+                        epoch,
+                        mode,
+                        writer=writer,
+                        target=target,
                     )
                     if target == "gesture":
                         f1_score = metrics["f1_score"]
@@ -77,13 +82,13 @@ class TrainClassifier:
 
     @staticmethod
     def run_epoch(
-            model: nn.Module,
-            epoch: int,
-            device: str,
-            optimizer: torch.optim.Optimizer,
-            lr_scheduler_warmup: torch.optim.lr_scheduler.LinearLR,
-            train_loader: torch.utils.data.DataLoader,
-            writer: SummaryWriter
+        model: nn.Module,
+        epoch: int,
+        device: str,
+        optimizer: torch.optim.Optimizer,
+        lr_scheduler_warmup: torch.optim.lr_scheduler.LinearLR,
+        train_loader: torch.utils.data.DataLoader,
+        writer: SummaryWriter,
     ) -> None:
         """
         Run one training epoch with backprop
@@ -144,15 +149,15 @@ class TrainClassifier:
                 lr_scheduler_warmup.step()
 
             if writer is not None:
-                writer.add_scalar(f"loss/train", loss_value, step)
+                writer.add_scalar("loss/train", loss_value, step)
                 logging.info(f"Step {step}: Loss = {loss_value}")
 
     @staticmethod
     def train(
-            model: nn.Module,
-            conf: DictConfig,
-            train_dataset: torch.utils.data.Dataset,
-            test_dataset: torch.utils.data.Dataset
+        model: nn.Module,
+        conf: DictConfig,
+        train_dataset: torch.utils.data.Dataset,
+        test_dataset: torch.utils.data.Dataset,
     ) -> None:
         """
         Initialization and running training pipeline
@@ -171,7 +176,7 @@ class TrainClassifier:
 
         experimnt_pth = f"experiments/{conf.experiment_name}"
         writer = SummaryWriter(log_dir=f"{experimnt_pth}/logs")
-        writer.add_text(f"model/name", conf.model.name)
+        writer.add_text("model/name", conf.model.name)
 
         epochs = conf.train_params.epochs
 
@@ -184,9 +189,9 @@ class TrainClassifier:
             batch_size=conf.train_params.train_batch_size,
             num_workers=conf.train_params.num_workers,
             collate_fn=collate_fn,
-            persistent_workers = True,
+            persistent_workers=True,
             prefetch_factor=conf.train_params.prefetch_factor,
-            shuffle=True
+            shuffle=True,
         )
 
         test_dataloader = torch.utils.data.DataLoader(
@@ -194,15 +199,12 @@ class TrainClassifier:
             batch_size=conf.train_params.test_batch_size,
             num_workers=conf.train_params.num_workers,
             collate_fn=collate_fn,
-            persistent_workers = True,
+            persistent_workers=True,
             prefetch_factor=conf.train_params.prefetch_factor,
         )
 
         optimizer = torch.optim.SGD(
-            params,
-            lr=conf.optimizer.lr,
-            momentum=conf.optimizer.momentum,
-            weight_decay=conf.optimizer.weight_decay
+            params, lr=conf.optimizer.lr, momentum=conf.optimizer.momentum, weight_decay=conf.optimizer.weight_decay
         )
 
         warmup_iters = min(1000, len(train_dataloader) - 1)
@@ -215,13 +217,7 @@ class TrainClassifier:
         for epoch in range(conf.model.start_epoch, epochs):
             logging.info(f"Epoch: {epoch}")
             TrainClassifier.run_epoch(
-                model,
-                epoch,
-                conf.device,
-                optimizer,
-                lr_scheduler_warmup,
-                train_dataloader,
-                writer
+                model, epoch, conf.device, optimizer, lr_scheduler_warmup, train_dataloader, writer
             )
             current_metric_value = TrainClassifier.eval(model, conf, epoch, test_dataloader, writer)
             save_checkpoint(experimnt_pth, conf_dictionary, model, optimizer, epoch, f"model_{epoch}.pth")

@@ -1,17 +1,16 @@
-import logging
 import argparse
-import torch.utils
+import logging
+from typing import Optional, Tuple
+
 import torch.optim
+import torch.utils
+from omegaconf import DictConfig, OmegaConf
+from torch.utils.tensorboard import SummaryWriter
 
 from classifier.dataset import GestureDataset
 from classifier.preprocess import get_transform
-from omegaconf import OmegaConf, DictConfig
-from typing import Optional, Tuple
-from torch.utils.tensorboard import SummaryWriter
-
 from classifier.train import TrainClassifier
-from classifier.utils import set_random_state, build_model, collate_fn
-
+from classifier.utils import build_model, collate_fn, set_random_state
 
 logging.basicConfig(format="[LINE:%(lineno)d] %(levelname)-8s [%(asctime)s]  %(message)s", level=logging.INFO)
 
@@ -28,7 +27,7 @@ def _initialize_model(conf: DictConfig):
         checkpoint=conf.model.get("checkpoint", None),
         device=conf.device,
         pretrained=conf.model.pretrained,
-        freezed=conf.model.freezed
+        freezed=conf.model.freezed,
     )
 
     return model
@@ -48,7 +47,7 @@ def _run_test(path_to_config: str):
 
     experimnt_pth = f"experiments/{conf.experiment_name}"
     writer = SummaryWriter(log_dir=f"{experimnt_pth}/logs")
-    writer.add_text(f'model/name', conf.model.name)
+    writer.add_text("model/name", conf.model.name)
 
     test_dataset = GestureDataset(is_train=False, conf=conf, transform=get_transform(), is_test=True)
 
@@ -91,26 +90,16 @@ def parse_arguments(params: Optional[Tuple] = None) -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Gesture classifier...")
 
     parser.add_argument(
-        "-c", "--command",
-        required=True,
-        type=str,
-        help="Training or test pipeline",
-        choices=('train', 'test')
+        "-c", "--command", required=True, type=str, help="Training or test pipeline", choices=("train", "test")
     )
 
-    parser.add_argument(
-        "-p",
-        "--path_to_config",
-        required=True,
-        type=str,
-        help="Path to config"
-    )
+    parser.add_argument("-p", "--path_to_config", required=True, type=str, help="Path to config")
 
     known_args, _ = parser.parse_known_args(params)
     return known_args
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     args = parse_arguments()
     if args.command == "train":
         _run_train(args.path_to_config)

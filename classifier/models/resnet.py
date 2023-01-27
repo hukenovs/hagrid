@@ -1,7 +1,7 @@
-import torch
-
 from typing import Dict
-from torch import nn, Tensor
+
+import torch
+from torch import Tensor, nn
 from torchvision import models
 
 
@@ -11,11 +11,7 @@ class ResNet(nn.Module):
     """
 
     def __init__(
-            self,
-            num_classes: int,
-            restype: str = "ResNet18",
-            pretrained: bool = False,
-            freezed: bool = False
+        self, num_classes: int, restype: str = "ResNet18", pretrained: bool = False, freezed: bool = False
     ) -> None:
         """
         Torchvision two headed ResNet and ResNext configuration
@@ -60,7 +56,7 @@ class ResNet(nn.Module):
             torchvision_model.layer2,
             torchvision_model.layer3,
             torchvision_model.layer4,
-            torchvision_model.avgpool
+            torchvision_model.avgpool,
         )
 
         num_features = torchvision_model.fc.in_features
@@ -80,4 +76,4 @@ class ResNet(nn.Module):
 
         leading_hand = self.leading_hand(x)
 
-        return {'gesture': gesture, 'leading_hand': leading_hand}
+        return {"gesture": gesture, "leading_hand": leading_hand}

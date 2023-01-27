@@ -1,18 +1,21 @@
-import torch
-import torchvision
-from torch import nn, Tensor
 from collections import OrderedDict
 from functools import partial
-from typing import Tuple, Dict, List, Iterator
-from detector.model import TorchVisionModel
+from typing import Dict, Iterator, List, Tuple
+
+import torch
+import torchvision
+from torch import Tensor, nn
 from torchvision.models.detection import _utils as det_utils  # NOQA
 from torchvision.models.detection.ssdlite import SSDLiteClassificationHead  # NOQA
+
+from detector.model import TorchVisionModel
 
 
 class SSDMobilenet(TorchVisionModel):
     """
     Torchvision SSDLite model for gesture detection
     """
+
     def __init__(self, num_classes: int):
         """
         Torchvision SSDLite model for gesture detection
@@ -32,10 +35,7 @@ class SSDMobilenet(TorchVisionModel):
         norm_layer = partial(torch.nn.BatchNorm2d, eps=0.001, momentum=0.03)
 
         torchvision_model.head.classification_head = SSDLiteClassificationHead(
-            in_channels,
-            num_anchors,
-            num_classes,
-            norm_layer
+            in_channels, num_anchors, num_classes, norm_layer
         )
 
         self.torchvision_model = torchvision_model
@@ -63,7 +63,7 @@ class SSDMobilenet(TorchVisionModel):
     def eval(self) -> nn.Module:
         return self.torchvision_model.eval()
 
-    def load_state_dict(self, checkpoint_path: str, map_location : str = None):
+    def load_state_dict(self, checkpoint_path: str, map_location: str = None):
         self.torchvision_model.load_state_dict(torch.load(checkpoint_path, map_location=map_location))
 
     def state_dict(self) -> OrderedDict:
