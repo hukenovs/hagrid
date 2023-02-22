@@ -1,6 +1,6 @@
 dataset:
   annotations: /path/to/annotations/
-  dataset: /path/to/dataset
+  dataset: /path/to/annotations/
   targets:
     - call
     - dislike
@@ -21,18 +21,16 @@ dataset:
     - three2
     - peace_inverted
     - no_gesture
-  image_size: [224, 224]
+  image_size: [320, 320]
   subset: -1
 random_state: 42
 device: 'cpu'
-experiment_name: MobileNetV3_small
+experiment_name: SSDLiteMobilenet_large
 model:
-  name: 'MobileNetV3_small'  # 'MobileNetV3_large' or 'MobileNetV3_small' or 'ResNet18'
+  name: 'SSDLiteMobilenet_large'
   pretrained: False
-  freezed: False
   start_epoch: 0
   checkpoint: /path/to/chackpoint
-  full_frame: False
 optimizer:
   lr: 0.005
   momentum: 0.9
@@ -45,6 +43,3 @@ train_params:
   train_batch_size: 64
   test_batch_size: 64
   prefetch_factor: 16
-metric_params:
-  metrics: ['accuracy', 'f1_score', 'precision', 'recall']
-  average: 'weighted'

@@ -2,21 +2,20 @@ import json
 import logging
 import os
 import random
-from typing import Dict, List, Tuple
+from typing import List, Tuple
 
-import numpy as np
 import pandas as pd
 import torch.utils.data
 from omegaconf import DictConfig
 from PIL import Image, ImageOps
 
-from classifier.preprocess import Compose, get_crop_from_bbox
 from constants import IMAGES
+from detector.preprocess import Compose
 
 
 class GestureDataset(torch.utils.data.Dataset):
     """
-    Custom Dataset for gesture classification pipeline
+    Custom Dataset for gesture detection pipeline
     """
 
     def __init__(self, is_train: bool, conf: DictConfig, transform: Compose = None, is_test: bool = False) -> None:
@@ -40,7 +39,7 @@ class GestureDataset(torch.utils.data.Dataset):
         self.is_train = is_train
 
         self.labels = {
-            label: num for (label, num) in zip(self.conf.dataset.targets, range(len(self.conf.dataset.targets)))
+            label: num + 1 for (label, num) in zip(self.conf.dataset.targets, range(len(self.conf.dataset.targets)))
         }
 
         self.leading_hand = {"right": 0, "left": 1}
@@ -122,84 +121,62 @@ class GestureDataset(torch.utils.data.Dataset):
 
         return annotations_all[annotations_all["exists"]]
 
-    def __prepare_image_target(
-        self, target: str, name: str, bboxes: List, labels: List, leading_hand: str
-    ) -> Tuple[Image.Image, str, str]:
-        """
-        Crop and padding image, prepare target
+    def __len__(self):
+        return self.annotations.shape[0]
 
-        Parameters
-        ----------
-        target : str
-            Class name
-        name : str
-            Name of image
-        bboxes : List
-            List of bounding boxes [xywh]
-        labels: List
-            List of labels
-        leading_hand : str
-            Leading hand class name
-        """
-        image_pth = os.path.join(self.conf.dataset.dataset, target, name)
+    def __getitem__(self, index: int):
+        row = self.annotations.iloc[[index]].to_dict("records")[0]
+
+        image_pth = os.path.join(self.conf.dataset.dataset, row["target"], row["name"])
 
         image = Image.open(image_pth).convert("RGB")
 
+        labels = torch.LongTensor([self.labels[label] for label in row["labels"]])
+
+        target = {}
         width, height = image.size
 
-        choice = np.random.choice(["gesture", "no_gesture"], p=[0.7, 0.3])
+        bboxes = []
 
-        bboxes_by_class = {}
-
-        for i, bbox in enumerate(bboxes):
+        for bbox in row["bboxes"]:
             x1, y1, w, h = bbox
             bbox_abs = [x1 * width, y1 * height, (x1 + w) * width, (y1 + h) * height]
-            if labels[i] == "no_gesture":
-                bboxes_by_class["no_gesture"] = (bbox_abs, labels[i])
-            else:
-                bboxes_by_class["gesture"] = (bbox_abs, labels[i])
+            bboxes.append(bbox_abs)
 
-        if choice not in bboxes_by_class:
-            choice = list(bboxes_by_class.keys())[0]
+        bboxes_tensor = torch.as_tensor(bboxes, dtype=torch.float32)
 
-        if self.is_train:
-            box_scale = np.random.uniform(low=1.0, high=2.0)
-        else:
-            box_scale = 1.0
+        area = (bboxes_tensor[:, 3] - bboxes_tensor[:, 1]) * (bboxes_tensor[:, 2] - bboxes_tensor[:, 0])
 
-        image_cropped, bbox_orig = get_crop_from_bbox(image, bboxes_by_class[choice][0], box_scale=box_scale)
+        iscrowd = torch.zeros((len(row["bboxes"]),), dtype=torch.int64)
+        image_id = torch.tensor([index])
 
-        image_resized = ImageOps.pad(image_cropped, tuple(self.conf.dataset.image_size), color=(0, 0, 0))
+        target["labels"] = labels
+        target["boxes"] = bboxes_tensor
+        target["image_id"] = image_id
+        target["iscrowd"] = iscrowd
+        target["area"] = area
 
-        gesture = bboxes_by_class[choice][1]
+        orig_width, orig_height = image.size
+        image = ImageOps.pad(image, (max(image.size), max(image.size)))
+        padded_width, padded_height = image.size
+        padding_w = abs(padded_width - orig_width) // 2
+        padding_h = abs(padded_height - orig_height) // 2
 
-        leading_hand_class = leading_hand
-        if gesture == "no_gesture":
-            leading_hand_class = "right" if leading_hand == "left" else "left"
+        image = image.resize(self.conf.dataset.image_size)
 
-        return image_resized, gesture, leading_hand_class
+        resized_boxes = []
+        for bbox in target["boxes"]:
+            resized_box = []
+            resized_box.append((bbox[0] + padding_w) / (padded_width / self.conf.dataset.image_size[0]))
+            resized_box.append((bbox[1] + padding_h) / (padded_height / self.conf.dataset.image_size[1]))
+            resized_box.append((bbox[2] + padding_w) / (padded_width / self.conf.dataset.image_size[0]))
+            resized_box.append((bbox[3] + padding_h) / (padded_height / self.conf.dataset.image_size[1]))
 
-    def __len__(self) -> int:
-        return self.annotations.shape[0]
+            resized_boxes.append(resized_box)
 
-    def __getitem__(self, index: int) -> Tuple[Image.Image, Dict]:
-        """
-        Get item from annotations
-
-        Parameters
-        ----------
-        index : int
-            Index of annotation item
-        """
-        row = self.annotations.iloc[[index]].to_dict("records")[0]
-
-        image_resized, gesture, leading_hand = self.__prepare_image_target(
-            row["target"], row["name"], row["bboxes"], row["labels"], row["leading_hand"]
-        )
-
-        label = {"gesture": self.labels[gesture], "leading_hand": self.leading_hand[leading_hand]}
+        target["boxes"] = torch.tensor(resized_boxes)
 
         if self.transform is not None:
-            image_resized, label = self.transform(image_resized, label)
+            image, target = self.transform(image, target)
 
-        return image_resized, label
+        return image, target

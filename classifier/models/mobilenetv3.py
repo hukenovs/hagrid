@@ -9,7 +9,9 @@ class MobileNetV3(nn.Module):
     Torchvision two headed MobileNet V3 configuration
     """
 
-    def __init__(self, num_classes: int, size: str = "large", pretrained: bool = False, freezed: bool = False) -> None:
+    def __init__(
+        self, num_classes: int, size: str = "large", pretrained: bool = False, freezed: bool = False, ff: bool = False
+    ) -> None:
         """
         Torchvision two headed MobileNet V3 configuration
 
@@ -23,9 +25,13 @@ class MobileNetV3(nn.Module):
             Using pretrained weights or not
         freezed : bool
             Freezing model parameters or not
+        ff : bool
+            Enable full frame mode
         """
 
         super(MobileNetV3, self).__init__()
+        self.ff = ff
+
         if size == "small":
             torchvision_model = torchvision.models.mobilenet_v3_small(pretrained)
             in_features = 576
@@ -47,12 +53,13 @@ class MobileNetV3(nn.Module):
             nn.Dropout(p=0.2, inplace=True),
             nn.Linear(in_features=out_features, out_features=num_classes),
         )
-        self.leading_hand_classifier = nn.Sequential(
-            nn.Linear(in_features=in_features, out_features=out_features),
-            nn.Hardswish(),
-            nn.Dropout(p=0.2, inplace=True),
-            nn.Linear(in_features=out_features, out_features=2),
-        )
+        if not self.ff:
+            self.leading_hand_classifier = nn.Sequential(
+                nn.Linear(in_features=in_features, out_features=out_features),
+                nn.Hardswish(),
+                nn.Dropout(p=0.2, inplace=True),
+                nn.Linear(in_features=out_features, out_features=2),
+            )
 
         self.num_classes = num_classes
 
@@ -61,6 +68,8 @@ class MobileNetV3(nn.Module):
         x = x.view(x.size(0), -1)
         gesture = self.gesture_classifier(x)
 
-        leading_hand = self.leading_hand_classifier(x)
-
-        return {"gesture": gesture, "leading_hand": leading_hand}
+        if self.ff:
+            return {"gesture": gesture}
+        else:
+            leading_hand = self.leading_hand_classifier(x)
+            return {"gesture": gesture, "leading_hand": leading_hand}

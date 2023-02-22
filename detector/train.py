@@ -1,30 +1,24 @@
 import logging
-import math
-from collections import defaultdict
 
 import torch
 import torch.nn as nn
-import torch.optim
-import torch.utils
 from omegaconf import DictConfig, OmegaConf
 from torch.utils.tensorboard import SummaryWriter
 from tqdm import tqdm
 
-from classifier.metrics import get_metrics
-from classifier.utils import add_metrics_to_tensorboard, add_params_to_tensorboard, collate_fn, save_checkpoint
+from detector.utils import add_metrics_to_tensorboard, add_params_to_tensorboard, collate_fn, save_checkpoint
+
+try:
+    from torchmetrics.detection import MeanAveragePrecision
+except ImportError:
+    from torchmetrics.detection import MAP
+
+    MeanAveragePrecision = MAP
+
+logger = logging.getLogger(__name__)
 
 
-class TrainClassifier:
-    """
-    Gesture classification training pipeline:
-        -initialize dataloaders
-        for n epochs from training config:
-            -run one epoch
-            -eval on validation set
-            - metrics calculation
-            -save checkpoint
-    """
-
+class TrainDetector:
     @staticmethod
     def eval(
         model: nn.Module,
@@ -34,54 +28,26 @@ class TrainClassifier:
         writer: SummaryWriter,
         mode: str = "valid",
     ) -> float:
-        """
-        Evaluation model on validation set and metrics calc
-
-        Parameters
-        ----------
-        model : nn.Module
-            Model for eval
-        conf : DictConfig
-            Config with training params
-        epoch : int
-            Number of epoch
-        test_loader : torch.utils.data.DataLoader
-            Dataloader for sampling test data
-        writer : SummaryWriter
-            Tensorboard log writer
-        mode : str
-            Eval mode valid or test
-        """
-        f1_score = None
+        model.eval()
+        mapmetric = MeanAveragePrecision()
         if test_loader is not None:
             with torch.no_grad():
-                model.eval()
-                predicts, targets = defaultdict(list), defaultdict(list)
                 with tqdm(test_loader, unit="batch") as tepoch:
-                    tepoch.set_description(f"{mode} Epoch {epoch}")
-                    for i, (images, labels) in enumerate(tepoch):
-                        images = torch.stack(list(image.to(conf.device) for image in images))
+                    tepoch.set_description(f"Eval Epoch {epoch}")
+                    for i, (images, targets) in enumerate(tepoch):
+                        images = list(image.to(conf.device) for image in images)
                         output = model(images)
+                        for pred_box, true_box in zip(output, targets):
+                            for key in true_box:
+                                true_box[key] = true_box[key].to(conf.device)
+                            mapmetric.update([pred_box], [true_box])
 
-                        for target in list(labels)[0].keys():
-                            target_labels = [label[target] for label in labels]
-                            predicts[target] += list(output[target].detach().cpu().numpy())
-                            targets[target] += target_labels
+                logging.info("Start compute metric")
+                mAP = mapmetric.compute()
 
-                for target in targets.keys():
-                    metrics = get_metrics(
-                        torch.tensor(targets[target]),
-                        torch.tensor(predicts[target]),
-                        conf,
-                        epoch,
-                        mode,
-                        writer=writer,
-                        target=target,
-                    )
-                    if target == "gesture":
-                        f1_score = metrics["f1_score"]
-                    add_metrics_to_tensorboard(writer, metrics, epoch, "valid", target=target)
-        return f1_score
+        add_metrics_to_tensorboard(writer, mAP, epoch, mode, target="gesture")
+
+        return mAP["map"].item()
 
     @staticmethod
     def run_epoch(
@@ -93,59 +59,27 @@ class TrainClassifier:
         train_loader: torch.utils.data.DataLoader,
         writer: SummaryWriter,
     ) -> None:
-        """
-        Run one training epoch with backprop
-
-        Parameters
-        ----------
-        model : nn.Module
-            Model for eval
-        epoch : int
-            Number of epoch
-        device : str
-            CUDA or CPU device
-        optimizer : torch.optim.optimizer.Optimizer
-            Optimizer
-        lr_scheduler_warmup :
-            Linear learning rate scheduler
-        train_loader : torch.utils.data.DataLoader
-            Dataloader for sampling train data
-        writer : SummaryWriter
-            Tensorboard log writer
-        """
-        criterion = nn.CrossEntropyLoss()
         model.train()
 
-        lr_scheduler_params = lr_scheduler_warmup.state_dict()
-
         if writer is not None:
+            lr_scheduler_params = lr_scheduler_warmup.state_dict()
             optimizer_params = optimizer.param_groups[0]
             add_params_to_tensorboard(writer, optimizer_params, epoch, "optimizer", {"params"})
             not_logging = lr_scheduler_params.keys() - {"start_factor", "end_factor"}
             add_params_to_tensorboard(writer, lr_scheduler_params, epoch, "lr_scheduler", not_logging)
-
         with tqdm(train_loader, unit="batch") as tepoch:
             tepoch.set_description(f"Train Epoch {epoch}")
-            for i, (images, labels) in enumerate(tepoch):
+            for i, (images, targets) in enumerate(tepoch):
 
                 step = i + len(train_loader) * epoch
 
-                images = torch.stack(list(image.to(device) for image in images))
-                output = model(images)
-                loss = []
+                images = list(image.to(device) for image in images)
+                targets = [{k: v.to(device) for k, v in t.items()} for t in targets]
 
-                for target in list(labels)[0].keys():
+                loss_dict = model(images, targets)
 
-                    target_labels = [label[target] for label in labels]
-                    target_labels = torch.as_tensor(target_labels).to(device)
-                    loss.append(criterion(output[target], target_labels))
-
-                loss = sum(loss)
+                loss = sum(loss for loss in loss_dict.values())
                 loss_value = loss.item()
-
-                if not math.isfinite(loss_value):
-                    logging.info("Loss is {}, stopping training".format(loss_value))
-                    exit(1)
                 optimizer.zero_grad()
                 loss.backward()
                 optimizer.step()
@@ -155,6 +89,8 @@ class TrainClassifier:
 
                 if writer is not None:
                     writer.add_scalar("loss/train", loss_value, step)
+
+                tepoch.set_postfix(loss=loss_value, batch=i)
 
     @staticmethod
     def train(
@@ -173,7 +109,7 @@ class TrainClassifier:
         conf : DictConfig
             Config with training params
         train_dataset : torch.utils.data.Dataset
-            Custom train gesture classification dataset
+            Custom train gesture classifxication dataset
         test_dataset : torch.utils.data.Dataset
             Custom test gesture classification dataset
         """
@@ -220,10 +156,8 @@ class TrainClassifier:
         conf_dictionary = OmegaConf.to_container(conf)
         for epoch in range(conf.model.start_epoch, epochs):
             logging.info(f"Epoch: {epoch}")
-            TrainClassifier.run_epoch(
-                model, epoch, conf.device, optimizer, lr_scheduler_warmup, train_dataloader, writer
-            )
-            current_metric_value = TrainClassifier.eval(model, conf, epoch, test_dataloader, writer)
+            TrainDetector.run_epoch(model, epoch, conf.device, optimizer, lr_scheduler_warmup, train_dataloader, writer)
+            current_metric_value = TrainDetector.eval(model, conf, epoch, test_dataloader, writer)
             save_checkpoint(experimnt_pth, conf_dictionary, model, optimizer, epoch, f"model_{epoch}.pth")
 
             if current_metric_value > best_metric:

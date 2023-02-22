@@ -11,7 +11,12 @@ class ResNet(nn.Module):
     """
 
     def __init__(
-        self, num_classes: int, restype: str = "ResNet18", pretrained: bool = False, freezed: bool = False
+        self,
+        num_classes: int,
+        restype: str = "ResNet18",
+        pretrained: bool = False,
+        freezed: bool = False,
+        ff: bool = False,
     ) -> None:
         """
         Torchvision two headed ResNet and ResNext configuration
@@ -26,11 +31,14 @@ class ResNet(nn.Module):
             Using pretrained weights or not
         freezed : bool
             Freezing model parameters or not
+        ff : bool
+            Enable full frame mode
         """
 
         super().__init__()
 
         torchvision_model = None
+        self.ff = ff
 
         if restype == "ResNet18":
             torchvision_model = models.resnet18(pretrained=pretrained)
@@ -64,16 +72,18 @@ class ResNet(nn.Module):
         self.classifier = nn.Sequential(
             nn.Linear(num_features, num_classes),
         )
-
-        self.leading_hand = nn.Sequential(
-            nn.Linear(num_features, 2),
-        )
+        if not self.ff:
+            self.leading_hand = nn.Sequential(
+                nn.Linear(num_features, 2),
+            )
 
     def forward(self, img: Tensor) -> Dict:
         x = self.backbone(img)
         x = torch.flatten(x, 1)
         gesture = self.classifier(x)
 
-        leading_hand = self.leading_hand(x)
-
-        return {"gesture": gesture, "leading_hand": leading_hand}
+        if self.ff:
+            return {"gesture": gesture}
+        else:
+            leading_hand = self.leading_hand(x)
+            return {"gesture": gesture, "leading_hand": leading_hand}

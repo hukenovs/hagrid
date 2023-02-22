@@ -113,11 +113,27 @@ We provide some pre-trained models as the baseline with the classic backbone arc
 | [MobileNetV3_large](https://sc.link/YXG2) | 97.88       | 98.58           |
 | [Vitb32](https://sc.link/XV4g)            | 98.49       | 99.13           |
 
-Also we provide SSDLite model with MobileNetV3 large backbone to solve hand detection problem.
+Also we provide some models to solve hand detection problem.
 
-| Detector                        | mAP   |
-|---------------------------------|-------|
-| [SSDLite](https://sc.link/YXg2) | 71.49 |
+| Detector                                         | mAP        |
+|--------------------------------------------------|------------|
+| [SSDLiteMobileNetV3Large](https://sc.link/W2Mo)  | 71.49      |
+| [SSDLiteMobileNetV3Small](https://sc.link/OQAE)  | 53.38      |
+| [FRCNNMobilenetV3LargeFPN](https://sc.link/PRB6) | 78.05      |
+| [YoloV7Tiny](https://sc.link/QVD5)               | **81.1**   |
+
+However, if you need a single gesture, you can use pre-trained full frame classifiers instead of detectors.
+To use full frame models, set the configuration parameter ```full_frame: True``` and **remove the no_gesture class**
+
+| Full Frame Classifiers                    | F1 Gestures |
+|-------------------------------------------|-------------|
+| [ResNet18](https://sc.link/JLvy)          | 93.51       |
+| [ResNet152](https://sc.link/KMw8)         | 94.49       |
+| [ResNeXt50](https://sc.link/EDnl)         | 95.20       |
+| [ResNeXt101](https://sc.link/GGp5)        | **95.67**   |
+| [MobileNetV3_small](https://sc.link/LNxv) | 87.09       |
+| [MobileNetV3_large](https://sc.link/M0y1) | 90.96       |
+| [Lenet](https://sc.link/NPz8)             | 48.10       |
 
 ## Train
 
@@ -126,6 +142,9 @@ To train the model, execute the following command:
 
 ```bash
 python -m classifier.run --command 'train' --path_to_config <PATH>
+```
+```bash
+python -m detector.run --command 'train' --path_to_config <PATH>
 ```
 
 Every step, the current loss, learning rate and others values get logged to **Tensorboard**.
@@ -139,12 +158,21 @@ Test your model by running the following command:
 ```bash
 python -m classifier.run --command 'test' --path_to_config <PATH>
 ```
+```bash
+python -m detecotr.run --command 'test' --path_to_config <PATH>
+```
+
 
 ## Demo
  ```bash
-python demo.py -p <PATH_TO_DETECTOR> --landmarks
+python demo.py -p <PATH_TO_CONFIG> --landmarks
 ```
 ![demo](images/demo.gif)
+
+## Demo Full Frame Classifiers
+ ```bash
+python demoFF.py -p <PATH_TO_CONFIG> --landmarks
+```
 
 ## Annotations
 

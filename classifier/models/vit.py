@@ -11,7 +11,7 @@ class Vit(nn.Module):
     for gesture and leading hand classification tasks
     """
 
-    def __init__(self, num_classes: int, pretrained: bool = False, freezed: bool = False) -> None:
+    def __init__(self, num_classes: int, pretrained: bool = False, freezed: bool = False, ff=False) -> None:
         """
         Torchvision two headed Vision Transformer configuration
         for gesture and leading hand classification tasks
@@ -24,9 +24,11 @@ class Vit(nn.Module):
             Using pretrained weights or not
         freezed : bool
             Freezing model parameters or not
+        ff : bool
+            Enable full frame mode
         """
         super(Vit, self).__init__()
-
+        self.ff = ff
         self.torchvision_model = torchvision.models.vit_b_32(pretrained)
 
         if freezed:
@@ -38,10 +40,10 @@ class Vit(nn.Module):
         self.gesture_classifier = nn.Sequential(
             nn.Linear(in_features=self.torchvision_model.hidden_dim, out_features=num_classes)
         )
-
-        self.leading_hand_classifier = nn.Sequential(
-            nn.Linear(in_features=self.torchvision_model.hidden_dim, out_features=2)
-        )
+        if not self.ff:
+            self.leading_hand_classifier = nn.Sequential(
+                nn.Linear(in_features=self.torchvision_model.hidden_dim, out_features=2)
+            )
 
     def forward(self, x: Tensor) -> Dict:
         x = self.torchvision_model._process_input(x)  # NOQA
@@ -56,6 +58,9 @@ class Vit(nn.Module):
 
         gesture = self.gesture_classifier(x)
 
-        leading_hand = self.leading_hand_classifier(x)
+        if self.ff:
+            return {"gesture": gesture}
+        else:
+            leading_hand = self.leading_hand_classifier(x)
 
-        return {"gesture": gesture, "leading_hand": leading_hand}
+            return {"gesture": gesture, "leading_hand": leading_hand}
