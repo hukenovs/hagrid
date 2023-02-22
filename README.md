@@ -122,6 +122,19 @@ Also we provide some models to solve hand detection problem.
 | [FRCNNMobilenetV3LargeFPN](https://sc.link/PRB6) | 78.05      |
 | [YoloV7Tiny](https://sc.link/QVD5)               | **81.1**   |
 
+However, if you need a single gesture, you can use pre-trained full frame classifiers instead of detectors.
+To use full frame models, set the configuration parameter ```full_frame: True``` and **remove the no_gesture class**
+
+| Full Frame Classifiers                    | F1 Gestures |
+|-------------------------------------------|-------------|
+| [ResNet18](https://sc.link/JLvy)          | 93.51       |
+| [ResNet152](https://sc.link/KMw8)         | 94.49       |
+| [ResNeXt50](https://sc.link/EDnl)         | 95.20       |
+| [ResNeXt101](https://sc.link/GGp5)        | **95.67**   |
+| [MobileNetV3_small](https://sc.link/LNxv) | 87.09       |
+| [MobileNetV3_large](https://sc.link/M0y1) | 90.96       |
+| [Lenet](https://sc.link/NPz8)             | 48.10       |
+
 ## Train
 
 You can use downloaded trained models, otherwise select a classifier and parameters for training in `default.yaml`.
@@ -155,6 +168,11 @@ python -m detecotr.run --command 'test' --path_to_config <PATH>
 python demo.py -p <PATH_TO_CONFIG> --landmarks
 ```
 ![demo](images/demo.gif)
+
+## Demo Full Frame Classifiers
+ ```bash
+python demoFF.py -p <PATH_TO_CONFIG> --landmarks
+```
 
 ## Annotations
 

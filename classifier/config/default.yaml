@@ -22,7 +22,7 @@ dataset:
     - peace_inverted
     - no_gesture
   image_size: [224, 224]
-  subset: 2000
+  subset: -1
 random_state: 42
 device: 'cpu'
 experiment_name: MobileNetV3_small
@@ -32,6 +32,7 @@ model:
   freezed: False
   start_epoch: 0
   checkpoint: /path/to/chackpoint
+  full_frame: False
 optimizer:
   lr: 0.005
   momentum: 0.9

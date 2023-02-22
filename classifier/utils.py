@@ -11,6 +11,7 @@ from torch.utils.tensorboard import SummaryWriter
 from classifier.models.mobilenetv3 import MobileNetV3
 from classifier.models.resnet import ResNet
 from classifier.models.vit import Vit
+from classifier.models.lenet import LeNet
 
 
 def add_metrics_to_tensorboard(writer: SummaryWriter, metrics: Dict, epoch: int, mode: str, target: str) -> None:
@@ -96,7 +97,7 @@ def save_checkpoint(
     if not os.path.exists(output_dir):
         os.makedirs(os.path.join(output_dir), exist_ok=True)
 
-    checkpoint_path = os.path.join(output_dir, f"{name}.pth")
+    checkpoint_path = os.path.join(output_dir, f"{name}")
 
     checkpoint_dict = {
         "state_dict": model.state_dict(),
@@ -114,6 +115,7 @@ def build_model(
     checkpoint: str = None,
     pretrained: bool = False,
     freezed: bool = False,
+    ff: bool = False,
 ) -> nn.Module:
     """
     Build modela and load checkpoint
@@ -134,13 +136,14 @@ def build_model(
         Freeze model layers
     """
     models = {
-        "ResNet18": ResNet(num_classes=num_classes, restype="ResNet18", pretrained=pretrained, freezed=freezed),
-        "ResNext50": ResNet(num_classes=num_classes, restype="ResNext50", pretrained=pretrained, freezed=freezed),
-        "ResNext101": ResNet(num_classes=num_classes, restype="ResNext101", pretrained=pretrained, freezed=freezed),
-        "ResNet152": ResNet(num_classes=num_classes, restype="ResNet152", pretrained=pretrained, freezed=freezed),
-        "MobileNetV3_large": MobileNetV3(num_classes=num_classes, size="large", pretrained=pretrained, freezed=freezed),
-        "MobileNetV3_small": MobileNetV3(num_classes=num_classes, size="small", pretrained=pretrained, freezed=freezed),
-        "Vitb32": Vit(num_classes=num_classes, pretrained=pretrained, freezed=freezed),
+        "LeNet": LeNet(num_classes=num_classes, ff=ff),
+        "ResNet18": ResNet(num_classes=num_classes, restype="ResNet18", pretrained=pretrained, freezed=freezed, ff=ff),
+        "ResNext50": ResNet(num_classes=num_classes, restype="ResNext50", pretrained=pretrained, freezed=freezed, ff=ff),
+        "ResNext101": ResNet(num_classes=num_classes, restype="ResNext101", pretrained=pretrained, freezed=freezed, ff=ff),
+        "ResNet152": ResNet(num_classes=num_classes, restype="ResNet152", pretrained=pretrained, freezed=freezed, ff=ff),
+        "MobileNetV3_large": MobileNetV3(num_classes=num_classes, size="large", pretrained=pretrained, freezed=freezed, ff=ff),
+        "MobileNetV3_small": MobileNetV3(num_classes=num_classes, size="small", pretrained=pretrained, freezed=freezed, ff=ff),
+        "Vitb32": Vit(num_classes=num_classes, pretrained=pretrained, freezed=freezed, ff=ff),
     }
 
     model = models[model_name]
@@ -149,7 +152,7 @@ def build_model(
         checkpoint = os.path.expanduser(checkpoint)
         if os.path.exists(checkpoint):
             checkpoint = torch.load(checkpoint, map_location=torch.device(device))["state_dict"]
-            model.load_state_dict(checkpoint, strict=False)
+            model.load_state_dict(checkpoint)
 
     model.to(device)
     return model

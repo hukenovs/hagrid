@@ -116,7 +116,7 @@ class GestureDataset(torch.utils.data.Dataset):
                     self.__get_files_from_dir(os.path.join(self.conf.dataset.dataset, target), IMAGES, subset)
                 )
             else:
-                logging.info(f"Databse for {target} not found")
+                logging.info(f"Database for {target} not found")
 
         annotations_all["exists"] = annotations_all["name"].isin(exists_images)
 

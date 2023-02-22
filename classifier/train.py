@@ -8,6 +8,7 @@ import torch.optim
 import torch.utils
 from omegaconf import DictConfig, OmegaConf
 from torch.utils.tensorboard import SummaryWriter
+from tqdm import tqdm
 
 from classifier.metrics import get_metrics
 from classifier.utils import add_metrics_to_tensorboard, add_params_to_tensorboard, collate_fn, save_checkpoint
@@ -56,14 +57,16 @@ class TrainClassifier:
             with torch.no_grad():
                 model.eval()
                 predicts, targets = defaultdict(list), defaultdict(list)
-                for i, (images, labels) in enumerate(test_loader):
-                    images = torch.stack(list(image.to(conf.device) for image in images))
-                    output = model(images)
+                with tqdm(test_loader, unit="batch") as tepoch:
+                    tepoch.set_description(f"{mode} Epoch {epoch}")
+                    for i, (images, labels) in enumerate(tepoch):
+                        images = torch.stack(list(image.to(conf.device) for image in images))
+                        output = model(images)
 
-                    for target in list(labels)[0].keys():
-                        target_labels = [label[target] for label in labels]
-                        predicts[target] += list(output[target].detach().cpu().numpy())
-                        targets[target] += target_labels
+                        for target in list(labels)[0].keys():
+                            target_labels = [label[target] for label in labels]
+                            predicts[target] += list(output[target].detach().cpu().numpy())
+                            targets[target] += target_labels
 
                 for target in targets.keys():
                     metrics = get_metrics(
@@ -121,36 +124,37 @@ class TrainClassifier:
             not_logging = lr_scheduler_params.keys() - {"start_factor", "end_factor"}
             add_params_to_tensorboard(writer, lr_scheduler_params, epoch, "lr_scheduler", not_logging)
 
-        for i, (images, labels) in enumerate(train_loader):
+        with tqdm(train_loader, unit="batch") as tepoch:
+            tepoch.set_description(f"Train Epoch {epoch}")
+            for i, (images, labels) in enumerate(tepoch):
 
-            step = i + len(train_loader) * epoch
+                step = i + len(train_loader) * epoch
 
-            images = torch.stack(list(image.to(device) for image in images))
-            output = model(images)
-            loss = []
+                images = torch.stack(list(image.to(device) for image in images))
+                output = model(images)
+                loss = []
 
-            for target in list(labels)[0].keys():
+                for target in list(labels)[0].keys():
 
-                target_labels = [label[target] for label in labels]
-                target_labels = torch.as_tensor(target_labels).to(device)
-                loss.append(criterion(output[target], target_labels))
+                    target_labels = [label[target] for label in labels]
+                    target_labels = torch.as_tensor(target_labels).to(device)
+                    loss.append(criterion(output[target], target_labels))
 
-            loss = sum(loss)
-            loss_value = loss.item()
+                loss = sum(loss)
+                loss_value = loss.item()
 
-            if not math.isfinite(loss_value):
-                logging.info("Loss is {}, stopping training".format(loss_value))
-                exit(1)
-            optimizer.zero_grad()
-            loss.backward()
-            optimizer.step()
+                if not math.isfinite(loss_value):
+                    logging.info("Loss is {}, stopping training".format(loss_value))
+                    exit(1)
+                optimizer.zero_grad()
+                loss.backward()
+                optimizer.step()
 
-            if lr_scheduler_warmup is not None:
-                lr_scheduler_warmup.step()
+                if lr_scheduler_warmup is not None:
+                    lr_scheduler_warmup.step()
 
-            if writer is not None:
-                writer.add_scalar("loss/train", loss_value, step)
-                logging.info(f"Step {step}: Loss = {loss_value}")
+                if writer is not None:
+                    writer.add_scalar("loss/train", loss_value, step)
 
     @staticmethod
     def train(
@@ -224,7 +228,7 @@ class TrainClassifier:
 
             if current_metric_value > best_metric:
                 logging.info(f"Save best model with metric: {current_metric_value}")
-                save_checkpoint(experimnt_pth, conf_dictionary, model, optimizer, epoch, "best_model")
+                save_checkpoint(experimnt_pth, conf_dictionary, model, optimizer, epoch, "best_model.pth")
                 best_metric = current_metric_value
 
         writer.flush()
