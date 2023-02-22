@@ -15,6 +15,7 @@ from torchvision.transforms import functional as f
 mp_drawing = mp.solutions.drawing_utils
 mp_drawing_styles = mp.solutions.drawing_styles
 
+from constants import targets
 from detector.models.model import TorchVisionModel
 from detector.utils import build_model
 
@@ -22,28 +23,6 @@ logging.basicConfig(format="[LINE:%(lineno)d] %(levelname)-8s [%(asctime)s]  %(m
 
 COLOR = (0, 255, 0)
 FONT = cv2.FONT_HERSHEY_SIMPLEX
-
-targets = {
-    1: "call",
-    2: "dislike",
-    3: "fist",
-    4: "four",
-    5: "like",
-    6: "mute",
-    7: "ok",
-    8: "one",
-    9: "palm",
-    10: "peace",
-    11: "rock",
-    12: "stop",
-    13: "stop inverted",
-    14: "three",
-    15: "two up",
-    16: "two up inverted",
-    17: "three2",
-    18: "peace inverted",
-    19: "no gesture",
-}
 
 
 class Demo:

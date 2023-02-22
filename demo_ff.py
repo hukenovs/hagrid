@@ -12,32 +12,12 @@ from torch import Tensor
 from torchvision.transforms import functional as f
 
 from classifier.utils import build_model
+from constants import targets
 
 logging.basicConfig(format="[LINE:%(lineno)d] %(levelname)-8s [%(asctime)s]  %(message)s", level=logging.INFO)
 
 COLOR = (0, 255, 0)
 FONT = cv2.FONT_HERSHEY_SIMPLEX
-
-targets = {
-    1: "call",
-    2: "dislike",
-    3: "fist",
-    4: "four",
-    5: "like",
-    6: "mute",
-    7: "ok",
-    8: "one",
-    9: "palm",
-    10: "peace",
-    11: "rock",
-    12: "stop",
-    13: "stop inverted",
-    14: "three",
-    15: "two up",
-    16: "two up inverted",
-    17: "three2",
-    18: "peace inverted",
-}
 
 
 class Demo:
@@ -117,7 +97,7 @@ if __name__ == "__main__":
         raise Exception("For Full Frame model use full-frame: True in config")
     model = build_model(
         model_name=conf.model.name,
-        num_classes=len(targets),
+        num_classes=len(targets) - 1,
         checkpoint=conf.model.get("checkpoint", None),
         device=conf.device,
         pretrained=conf.model.pretrained,

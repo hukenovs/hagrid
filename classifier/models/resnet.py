@@ -31,7 +31,7 @@ class ResNet(nn.Module):
             Using pretrained weights or not
         freezed : bool
             Freezing model parameters or not
-        ff : boll
+        ff : bool
             Enable full frame mode
         """
 

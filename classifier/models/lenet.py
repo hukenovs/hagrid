@@ -11,7 +11,7 @@ class LeNet(torch.nn.Module):
         ----------
         num_classes : int
             Number of classes for each task
-        ff : boll
+        ff : bool
             Enable full frame mode
         """
 
