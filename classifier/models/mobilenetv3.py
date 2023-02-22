@@ -9,8 +9,9 @@ class MobileNetV3(nn.Module):
     Torchvision two headed MobileNet V3 configuration
     """
 
-    def __init__(self, num_classes: int, size: str = "large", pretrained: bool = False, freezed: bool = False,
-                 ff: bool = False) -> None:
+    def __init__(
+        self, num_classes: int, size: str = "large", pretrained: bool = False, freezed: bool = False, ff: bool = False
+    ) -> None:
         """
         Torchvision two headed MobileNet V3 configuration
 

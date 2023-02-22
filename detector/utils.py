@@ -1,16 +1,16 @@
-import torch
-import numpy as np
-import random
 import logging
 import os
-import torch.nn as nn
+import random
+from typing import Dict, List, Set, Tuple
 
-from typing import Dict, List, Tuple, Set
-from detector.models.ssd_mobilenetv3 import SSDLiteMobilenet_small, SSDLiteMobilenet_large
+import numpy as np
+import torch
+import torch.nn as nn
+from torch.utils.tensorboard import SummaryWriter
+
 from detector.models.fasterrcnn import FasterRCNN_Mobilenet_large
 from detector.models.model import TorchVisionModel
-from torch.utils.tensorboard import SummaryWriter
-import torchvision
+from detector.models.ssd_mobilenetv3 import SSDLiteMobilenet_large, SSDLiteMobilenet_small
 
 
 def add_metrics_to_tensorboard(writer: SummaryWriter, metrics: Dict, epoch: int, mode: str, target: str) -> None:
@@ -30,10 +30,10 @@ def add_metrics_to_tensorboard(writer: SummaryWriter, metrics: Dict, epoch: int,
     target : str
         Target name: gesture or leading_hand
     """
-    logging.info(f'{mode}: metrics for {target}')
+    logging.info(f"{mode}: metrics for {target}")
     logging.info(metrics)
     for key, value in metrics.items():
-        writer.add_scalar(f'{key}_{target}/{mode}', value, epoch)
+        writer.add_scalar(f"{key}_{target}/{mode}", value, epoch)
 
 
 def add_params_to_tensorboard(writer: SummaryWriter, params: Dict, epoch: int, obj: str, not_logging: Set) -> None:
@@ -55,7 +55,7 @@ def add_params_to_tensorboard(writer: SummaryWriter, params: Dict, epoch: int, o
     """
     for param, value in params.items():
         if param not in not_logging:
-            writer.add_scalar(f'{obj}/{param}', value, epoch)
+            writer.add_scalar(f"{obj}/{param}", value, epoch)
 
 
 def set_random_state(random_seed: int) -> None:
@@ -73,12 +73,7 @@ def set_random_state(random_seed: int) -> None:
 
 
 def save_checkpoint(
-        output_dir: str,
-        config_dict: Dict,
-        model: nn.Module,
-        optimizer: torch.optim.Optimizer,
-        epoch: int,
-        name: str
+    output_dir: str, config_dict: Dict, model: nn.Module, optimizer: torch.optim.Optimizer, epoch: int, name: str
 ) -> None:
     """
     Save checkpoint dictionary
@@ -101,23 +96,23 @@ def save_checkpoint(
     if not os.path.exists(output_dir):
         os.makedirs(os.path.join(output_dir), exist_ok=True)
 
-    checkpoint_path = os.path.join(output_dir, f'{name}')
+    checkpoint_path = os.path.join(output_dir, f"{name}")
 
     checkpoint_dict = {
-        'state_dict': model.state_dict(),
-        'optimizer_state_dict': optimizer.state_dict(),
-        'epoch': epoch,
-        'config': config_dict
+        "state_dict": model.state_dict(),
+        "optimizer_state_dict": optimizer.state_dict(),
+        "epoch": epoch,
+        "config": config_dict,
     }
     torch.save(checkpoint_dict, checkpoint_path)
 
 
 def build_model(
-        model_name: str,
-        num_classes: int,
-        device: str,
-        checkpoint: str = None,
-        pretrained: bool = False,
+    model_name: str,
+    num_classes: int,
+    device: str,
+    checkpoint: str = None,
+    pretrained: bool = False,
 ) -> TorchVisionModel:
     """
     Build modela and load checkpoint
@@ -140,7 +135,7 @@ def build_model(
     models = {
         "SSDLiteMobilenet_large": SSDLiteMobilenet_large(pretrained=pretrained, num_classes=num_classes),
         "SSDLiteMobilenet_small": SSDLiteMobilenet_small(pretrained=pretrained, num_classes=num_classes),
-        "FasterRCNN_mobilenet_large": FasterRCNN_Mobilenet_large(pretrained=pretrained, num_classes=num_classes)
+        "FasterRCNN_mobilenet_large": FasterRCNN_Mobilenet_large(pretrained=pretrained, num_classes=num_classes),
     }
 
     model = models[model_name]

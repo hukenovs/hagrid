@@ -1,30 +1,32 @@
-import torch
 import logging
+
+import torch
 import torch.nn as nn
+from omegaconf import DictConfig, OmegaConf
 from torch.utils.tensorboard import SummaryWriter
 from tqdm import tqdm
-from omegaconf import DictConfig, OmegaConf
+
 from detector.utils import add_metrics_to_tensorboard, add_params_to_tensorboard, collate_fn, save_checkpoint
 
 try:
     from torchmetrics.detection import MeanAveragePrecision
 except ImportError:
     from torchmetrics.detection import MAP
+
     MeanAveragePrecision = MAP
 
 logger = logging.getLogger(__name__)
 
 
 class TrainDetector:
-
     @staticmethod
     def eval(
-            model: nn.Module,
-            conf: DictConfig,
-            epoch: int,
-            test_loader: torch.utils.data.DataLoader,
-            writer: SummaryWriter,
-            mode: str = "valid",
+        model: nn.Module,
+        conf: DictConfig,
+        epoch: int,
+        test_loader: torch.utils.data.DataLoader,
+        writer: SummaryWriter,
+        mode: str = "valid",
     ) -> float:
         model.eval()
         mapmetric = MeanAveragePrecision()
@@ -38,9 +40,9 @@ class TrainDetector:
                         for pred_box, true_box in zip(output, targets):
                             for key in true_box:
                                 true_box[key] = true_box[key].to(conf.device)
-                            mapmetric.update([pred_box],  [true_box])
-                
-                logging.info(f"Start compute metric")
+                            mapmetric.update([pred_box], [true_box])
+
+                logging.info("Start compute metric")
                 mAP = mapmetric.compute()
 
         add_metrics_to_tensorboard(writer, mAP, epoch, mode, target="gesture")
@@ -49,13 +51,13 @@ class TrainDetector:
 
     @staticmethod
     def run_epoch(
-            model: nn.Module,
-            epoch: int,
-            device: str,
-            optimizer: torch.optim.Optimizer,
-            lr_scheduler_warmup: torch.optim.lr_scheduler.LinearLR,
-            train_loader: torch.utils.data.DataLoader,
-            writer: SummaryWriter,
+        model: nn.Module,
+        epoch: int,
+        device: str,
+        optimizer: torch.optim.Optimizer,
+        lr_scheduler_warmup: torch.optim.lr_scheduler.LinearLR,
+        train_loader: torch.utils.data.DataLoader,
+        writer: SummaryWriter,
     ) -> None:
         model.train()
 
@@ -86,16 +88,16 @@ class TrainDetector:
                     lr_scheduler_warmup.step()
 
                 if writer is not None:
-                    writer.add_scalar(f'loss/train', loss_value, step)
+                    writer.add_scalar("loss/train", loss_value, step)
 
                 tepoch.set_postfix(loss=loss_value, batch=i)
 
     @staticmethod
     def train(
-            model: nn.Module,
-            conf: DictConfig,
-            train_dataset: torch.utils.data.Dataset,
-            test_dataset: torch.utils.data.Dataset,
+        model: nn.Module,
+        conf: DictConfig,
+        train_dataset: torch.utils.data.Dataset,
+        test_dataset: torch.utils.data.Dataset,
     ) -> None:
         """
         Initialization and running training pipeline
@@ -147,15 +149,14 @@ class TrainDetector:
 
         warmup_iters = min(1000, len(train_dataloader) - 1)
         lr_scheduler_warmup = torch.optim.lr_scheduler.LinearLR(
-            optimizer, start_factor=conf.scheduler.start_factor, total_iters=warmup_iters)
+            optimizer, start_factor=conf.scheduler.start_factor, total_iters=warmup_iters
+        )
 
         best_metric = -1.0
         conf_dictionary = OmegaConf.to_container(conf)
         for epoch in range(conf.model.start_epoch, epochs):
             logging.info(f"Epoch: {epoch}")
-            TrainDetector.run_epoch(
-                model, epoch, conf.device, optimizer, lr_scheduler_warmup, train_dataloader, writer
-            )
+            TrainDetector.run_epoch(model, epoch, conf.device, optimizer, lr_scheduler_warmup, train_dataloader, writer)
             current_metric_value = TrainDetector.eval(model, conf, epoch, test_dataloader, writer)
             save_checkpoint(experimnt_pth, conf_dictionary, model, optimizer, epoch, f"model_{epoch}.pth")
 

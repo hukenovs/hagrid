@@ -8,10 +8,10 @@ import torch
 import torch.nn as nn
 from torch.utils.tensorboard import SummaryWriter
 
+from classifier.models.lenet import LeNet
 from classifier.models.mobilenetv3 import MobileNetV3
 from classifier.models.resnet import ResNet
 from classifier.models.vit import Vit
-from classifier.models.lenet import LeNet
 
 
 def add_metrics_to_tensorboard(writer: SummaryWriter, metrics: Dict, epoch: int, mode: str, target: str) -> None:
@@ -138,11 +138,21 @@ def build_model(
     models = {
         "LeNet": LeNet(num_classes=num_classes, ff=ff),
         "ResNet18": ResNet(num_classes=num_classes, restype="ResNet18", pretrained=pretrained, freezed=freezed, ff=ff),
-        "ResNext50": ResNet(num_classes=num_classes, restype="ResNext50", pretrained=pretrained, freezed=freezed, ff=ff),
-        "ResNext101": ResNet(num_classes=num_classes, restype="ResNext101", pretrained=pretrained, freezed=freezed, ff=ff),
-        "ResNet152": ResNet(num_classes=num_classes, restype="ResNet152", pretrained=pretrained, freezed=freezed, ff=ff),
-        "MobileNetV3_large": MobileNetV3(num_classes=num_classes, size="large", pretrained=pretrained, freezed=freezed, ff=ff),
-        "MobileNetV3_small": MobileNetV3(num_classes=num_classes, size="small", pretrained=pretrained, freezed=freezed, ff=ff),
+        "ResNext50": ResNet(
+            num_classes=num_classes, restype="ResNext50", pretrained=pretrained, freezed=freezed, ff=ff
+        ),
+        "ResNext101": ResNet(
+            num_classes=num_classes, restype="ResNext101", pretrained=pretrained, freezed=freezed, ff=ff
+        ),
+        "ResNet152": ResNet(
+            num_classes=num_classes, restype="ResNet152", pretrained=pretrained, freezed=freezed, ff=ff
+        ),
+        "MobileNetV3_large": MobileNetV3(
+            num_classes=num_classes, size="large", pretrained=pretrained, freezed=freezed, ff=ff
+        ),
+        "MobileNetV3_small": MobileNetV3(
+            num_classes=num_classes, size="small", pretrained=pretrained, freezed=freezed, ff=ff
+        ),
         "Vitb32": Vit(num_classes=num_classes, pretrained=pretrained, freezed=freezed, ff=ff),
     }
 

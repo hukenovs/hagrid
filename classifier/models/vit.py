@@ -64,4 +64,3 @@ class Vit(nn.Module):
             leading_hand = self.leading_hand_classifier(x)
 
             return {"gesture": gesture, "leading_hand": leading_hand}
-

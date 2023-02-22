@@ -1,6 +1,5 @@
 import argparse
 import logging
-import os
 import time
 from typing import Optional, Tuple
 
@@ -8,10 +7,10 @@ import cv2
 import mediapipe as mp
 import numpy as np
 import torch
+from omegaconf import OmegaConf
 from PIL import Image, ImageOps
 from torch import Tensor
 from torchvision.transforms import functional as f
-from omegaconf import OmegaConf
 
 mp_drawing = mp.solutions.drawing_utils
 mp_drawing_styles = mp.solutions.drawing_styles
@@ -168,11 +167,13 @@ def parse_arguments(params: Optional[Tuple] = None) -> argparse.Namespace:
 if __name__ == "__main__":
     args = parse_arguments()
     conf = OmegaConf.load(args.path_to_config)
-    model = build_model(model_name=conf.model.name,
-                        num_classes=len(conf.dataset.targets) + 1,
-                        checkpoint=conf.model.get("checkpoint", None),
-                        device=conf.device,
-                        pretrained=conf.model.pretrained)
+    model = build_model(
+        model_name=conf.model.name,
+        num_classes=len(conf.dataset.targets) + 1,
+        checkpoint=conf.model.get("checkpoint", None),
+        device=conf.device,
+        pretrained=conf.model.pretrained,
+    )
 
     model.eval()
     if model is not None:

@@ -8,9 +8,9 @@ import pandas as pd
 import torch.utils.data
 from omegaconf import DictConfig
 from PIL import Image, ImageOps
-from detector.preprocess import Compose
 
 from constants import IMAGES
+from detector.preprocess import Compose
 
 
 class GestureDataset(torch.utils.data.Dataset):
@@ -38,7 +38,9 @@ class GestureDataset(torch.utils.data.Dataset):
         self.transform = transform
         self.is_train = is_train
 
-        self.labels = {label: num + 1 for (label, num) in zip(self.conf.dataset.targets, range(len(self.conf.dataset.targets)))}
+        self.labels = {
+            label: num + 1 for (label, num) in zip(self.conf.dataset.targets, range(len(self.conf.dataset.targets)))
+        }
 
         self.leading_hand = {"right": 0, "left": 1}
 
@@ -51,7 +53,7 @@ class GestureDataset(torch.utils.data.Dataset):
         random.Random(self.conf.random_state).shuffle(users)
 
         train_users = users[: int(len(users) * 0.8)]
-        val_users = users[int(len(users) * 0.8):]
+        val_users = users[int(len(users) * 0.8) :]
 
         self.annotations = self.annotations.copy()
 
@@ -123,7 +125,7 @@ class GestureDataset(torch.utils.data.Dataset):
         return self.annotations.shape[0]
 
     def __getitem__(self, index: int):
-        row = self.annotations.iloc[[index]].to_dict('records')[0]
+        row = self.annotations.iloc[[index]].to_dict("records")[0]
 
         image_pth = os.path.join(self.conf.dataset.dataset, row["target"], row["name"])
 

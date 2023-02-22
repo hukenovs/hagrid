@@ -11,8 +11,13 @@ class ResNet(nn.Module):
     """
 
     def __init__(
-        self, num_classes: int, restype: str = "ResNet18", pretrained: bool = False, freezed: bool = False,
-            ff: bool = False) -> None:
+        self,
+        num_classes: int,
+        restype: str = "ResNet18",
+        pretrained: bool = False,
+        freezed: bool = False,
+        ff: bool = False,
+    ) -> None:
         """
         Torchvision two headed ResNet and ResNext configuration
 

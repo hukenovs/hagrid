@@ -1,13 +1,14 @@
 import warnings
 from collections import OrderedDict
 from functools import partial
-from typing import Any, Callable, Optional, Union, Tuple, Dict, List, Iterator
+from typing import Any, Dict, Iterator, List, Optional, Tuple
 
 import torch
 import torchvision
-from torch import nn, Tensor
+from torch import Tensor, nn
 from torchvision.models.detection import _utils as det_utils
 from torchvision.models.detection.ssdlite import SSDLiteClassificationHead
+
 from detector.models.model import TorchVisionModel
 
 
@@ -35,10 +36,7 @@ class SSDLiteMobilenet_large(TorchVisionModel):
         norm_layer = partial(torch.nn.BatchNorm2d, eps=0.001, momentum=0.03)
 
         torchvision_model.head.classification_head = SSDLiteClassificationHead(
-            in_channels,
-            num_anchors,
-            num_classes,
-            norm_layer
+            in_channels, num_anchors, num_classes, norm_layer
         )
 
         self.torchvision_model = torchvision_model
@@ -73,11 +71,13 @@ class SSDLiteMobilenet_large(TorchVisionModel):
         return self.torchvision_model.state_dict()
 
 
-def SSDLiteMobilenet_small(pretrained: bool = False,
-                              num_classes: int = 19,
-                              pretrained_backbone: bool = False,
-                              trainable_backbone_layers: Optional[int] = None,
-                              **kwargs: Any, ):
+def SSDLiteMobilenet_small(
+    pretrained: bool = False,
+    num_classes: int = 19,
+    pretrained_backbone: bool = False,
+    trainable_backbone_layers: Optional[int] = None,
+    **kwargs: Any,
+):
     if "size" in kwargs:
         warnings.warn("The size of the model is already fixed; ignoring the argument.")
 
@@ -106,8 +106,9 @@ def SSDLiteMobilenet_small(pretrained: bool = False,
     )
 
     size = (320, 320)
-    anchor_generator = torchvision.models.detection.ssdlite.DefaultBoxGenerator([[2, 3] for _ in range(6)],
-                                                                                min_ratio=0.2, max_ratio=0.95)
+    anchor_generator = torchvision.models.detection.ssdlite.DefaultBoxGenerator(
+        [[2, 3] for _ in range(6)], min_ratio=0.2, max_ratio=0.95
+    )
     out_channels = det_utils.retrieve_out_channels(backbone, size)
     num_anchors = anchor_generator.num_anchors_per_location()
     assert len(out_channels) == len(anchor_generator.aspect_ratios)

@@ -3,7 +3,6 @@ import torch.nn.functional as F
 
 
 class LeNet(torch.nn.Module):
-
     def __init__(self, num_classes: int, ff: bool = False):
         """
         Torchvision two headed MobileNet V3 configuration
