@@ -113,11 +113,14 @@ We provide some pre-trained models as the baseline with the classic backbone arc
 | [MobileNetV3_large](https://sc.link/YXG2) | 97.88       | 98.58           |
 | [Vitb32](https://sc.link/XV4g)            | 98.49       | 99.13           |
 
-Also we provide SSDLite model with MobileNetV3 large backbone to solve hand detection problem.
+Also we provide some models to solve hand detection problem.
 
-| Detector                        | mAP   |
-|---------------------------------|-------|
-| [SSDLite](https://sc.link/YXg2) | 71.49 |
+| Detector                                         | mAP        |
+|--------------------------------------------------|------------|
+| [SSDLiteMobileNetV3Large](https://sc.link/W2Mo)  | 71.49      |
+| [SSDLiteMobileNetV3Small](https://sc.link/OQAE)  | 53.38      |
+| [FRCNNMobilenetV3LargeFPN](https://sc.link/PRB6) | 78.05      |
+| [YoloV7Tiny](https://sc.link/QVD5)               | **81.1**   |
 
 ## Train
 
@@ -126,6 +129,9 @@ To train the model, execute the following command:
 
 ```bash
 python -m classifier.run --command 'train' --path_to_config <PATH>
+```
+```bash
+python -m detector.run --command 'train' --path_to_config <PATH>
 ```
 
 Every step, the current loss, learning rate and others values get logged to **Tensorboard**.
@@ -139,10 +145,14 @@ Test your model by running the following command:
 ```bash
 python -m classifier.run --command 'test' --path_to_config <PATH>
 ```
+```bash
+python -m detecotr.run --command 'test' --path_to_config <PATH>
+```
+
 
 ## Demo
  ```bash
-python demo.py -p <PATH_TO_DETECTOR> --landmarks
+python demo.py -p <PATH_TO_CONFIG> --landmarks
 ```
 ![demo](images/demo.gif)
 

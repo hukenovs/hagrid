@@ -11,12 +11,13 @@ import torch
 from PIL import Image, ImageOps
 from torch import Tensor
 from torchvision.transforms import functional as f
+from omegaconf import OmegaConf
 
 mp_drawing = mp.solutions.drawing_utils
 mp_drawing_styles = mp.solutions.drawing_styles
 
-from detector.model import TorchVisionModel
-from detector.ssd_mobilenetv3 import SSDMobilenet
+from detector.models.model import TorchVisionModel
+from detector.utils import build_model
 
 logging.basicConfig(format="[LINE:%(lineno)d] %(levelname)-8s [%(asctime)s]  %(message)s", level=logging.INFO)
 
@@ -153,34 +154,12 @@ class Demo:
                 cv2.destroyAllWindows()
 
 
-def _load_model(model_path: str, device: str) -> TorchVisionModel:
-    """
-    Load model
-    Parameters
-    ----------
-    model_path: str
-        Model Path
-    device: str
-        Device cpu or cuda
-    """
-    ssd_mobilenet = SSDMobilenet(num_classes=len(targets) + 1)
-    if not os.path.exists(model_path):
-        logging.info(f"Model not found {model_path}")
-        raise FileNotFoundError
-
-    ssd_mobilenet.load_state_dict(model_path, map_location=device)
-    ssd_mobilenet.eval()
-    return ssd_mobilenet
-
-
 def parse_arguments(params: Optional[Tuple] = None) -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="Train classifier...")
+    parser = argparse.ArgumentParser(description="Demo detection...")
 
-    parser.add_argument("-p", "--path_to_model", required=True, type=str, help="Path to model")
+    parser.add_argument("-p", "--path_to_config", required=True, type=str, help="Path to config")
 
     parser.add_argument("-lm", "--landmarks", required=False, action="store_true", help="Use landmarks")
-
-    parser.add_argument("-d", "--device", required=False, default="cpu", type=str, help="Device")
 
     known_args, _ = parser.parse_known_args(params)
     return known_args
@@ -188,6 +167,13 @@ def parse_arguments(params: Optional[Tuple] = None) -> argparse.Namespace:
 
 if __name__ == "__main__":
     args = parse_arguments()
-    model = _load_model(os.path.expanduser(args.path_to_model), args.device)
+    conf = OmegaConf.load(args.path_to_config)
+    model = build_model(model_name=conf.model.name,
+                        num_classes=len(conf.dataset.targets) + 1,
+                        checkpoint=conf.model.get("checkpoint", None),
+                        device=conf.device,
+                        pretrained=conf.model.pretrained)
+
+    model.eval()
     if model is not None:
         Demo.run(model, num_hands=100, threshold=0.8, landmarks=args.landmarks)
