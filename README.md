@@ -112,6 +112,7 @@ We provide some pre-trained models as the baseline with the classic backbone arc
 | [MobileNetV3_small](https://sc.link/XVEg) | 96.78       | 98.28           |
 | [MobileNetV3_large](https://sc.link/YXG2) | 97.88       | 98.58           |
 | [Vitb32](https://sc.link/XV4g)            | 98.49       | 99.13           |
+| [Lenet](https://sc.link/mBr3)             | 84.69       | 92.24           |
 
 Also we provide some models to solve hand detection problem.
 
@@ -133,7 +134,6 @@ To use full frame models, set the configuration parameter ```full_frame: True```
 | [ResNeXt101](https://sc.link/GGp5)        | **95.67**   |
 | [MobileNetV3_small](https://sc.link/LNxv) | 87.09       |
 | [MobileNetV3_large](https://sc.link/M0y1) | 90.96       |
-| [Lenet](https://sc.link/NPz8)             | 48.10       |
 
 ## Train
 
