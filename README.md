@@ -171,7 +171,7 @@ python demo.py -p <PATH_TO_CONFIG> --landmarks
 
 ## Demo Full Frame Classifiers
  ```bash
-python demoFF.py -p <PATH_TO_CONFIG> --landmarks
+python demo_ff.py -p <PATH_TO_CONFIG> --landmarks
 ```
 
 ## Annotations
