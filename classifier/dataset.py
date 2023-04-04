@@ -82,7 +82,7 @@ class GestureDataset(torch.utils.data.Dataset):
             logging.warning(f"Dataset directory doesn't exist {pth}")
             return []
         files = [f for f in os.listdir(pth) if f.endswith(extns)]
-        if subset is not None:
+        if (subset is not None) and (subset > 0):
             files = files[:subset]
         return files
 
