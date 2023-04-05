@@ -104,15 +104,15 @@ optional arguments:
 We provide some pre-trained models as the baseline with the classic backbone architectures and two output heads - for gesture classification and leading hand classification.
 
 | Classifiers                               | F1 Gestures | F1 Leading hand |
-|-------------------------------------------|-------------|-----------------|
-| [ResNet18](https://sc.link/KEnx)          | 98.72       | 99.27           |
-| [ResNet152](https://sc.link/O9rr)         | 99.11       | **99.45**       |
-| [ResNeXt50](https://sc.link/GKjJ)         | 98.99       | 99.39           |
-| [ResNeXt101](https://sc.link/JXmg)        | **99.28**   | 99.28           |
-| [MobileNetV3_small](https://sc.link/XVEg) | 96.78       | 98.28           |
-| [MobileNetV3_large](https://sc.link/YXG2) | 97.88       | 98.58           |
-| [Vitb32](https://sc.link/XV4g)            | 98.49       | 99.13           |
-| [Lenet](https://sc.link/mBr3)             | 84.69       | 92.24           |
+|-------------------------------------------|-----------|---------------|
+| [ResNet18](https://sc.link/KEnx)          | 98.80     | 98.80         |
+| [ResNet152](https://sc.link/O9rr)         | 99.04     | **98.92**     |
+| [ResNeXt50](https://sc.link/GKjJ)         | 98.95     | 98.87         |
+| [ResNeXt101](https://sc.link/JXmg)        | **99.16** | 98.71         |
+| [MobileNetV3_small](https://sc.link/XVEg) | 96.50     | 97.31         |
+| [MobileNetV3_large](https://sc.link/YXG2) | 98.03     | 97.99         |
+| [Vitb32](https://sc.link/XV4g)            | 98.35     | 98.63         |
+| [Lenet](https://sc.link/mBr3)             | 84.58     | 91.16         |
 
 Also we provide some models to solve hand detection problem.
 
