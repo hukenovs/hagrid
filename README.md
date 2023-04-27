@@ -42,32 +42,32 @@ We split the train dataset into 18 archives by gestures because of the large siz
 
 | Gesture                           | Size     | Gesture                                   | Size    |
 |-----------------------------------|----------|-------------------------------------------|---------|
-| [`call`](https://sc.link/ykEn)    | 39.1 GB  | [`peace`](https://sc.link/l6nM)           | 38.6 GB |
-| [`dislike`](https://sc.link/xjDB) | 38.7 GB  | [`peace_inverted`](https://sc.link/mXoG)  | 38.6 GB |
-| [`fist`](https://sc.link/wgB8)    | 38.0 GB  | [`rock`](https://sc.link/kMm6)            | 38.9 GB |
-| [`four`](https://sc.link/vJA5)    | 40.5 GB  | [`stop`](https://sc.link/gXgk)            | 38.3 GB |
-| [`like`](https://sc.link/r7wp)    | 38.3 GB  | [`stop_inverted`](https://sc.link/jJlv)   | 40.2 GB |
-| [`mute`](https://sc.link/q8vp)    | 39.5 GB  | [`three`](https://sc.link/wgBr)           | 39.4 GB |
-| [`ok`](https://sc.link/pV0V)      | 39.0 GB  | [`three2`](https://sc.link/vJA8)          | 38.5 GB |
-| [`one`](https://sc.link/oJqX)     | 39.9 GB  | [`two_up`](https://sc.link/q8v7)          | 41.2 GB |
-| [`palm`](https://sc.link/nJp7)    | 39.3 GB  | [`two_up_inverted`](https://sc.link/r7w2) | 39.2 GB |
+| [`call`](https://n-usr-2uzac.s3pd02.sbercloud.ru/b-usr-2uzac-mv4/hagrid/train_val_call.zip)    | 39.1 GB  | [`peace`](https://n-usr-2uzac.s3pd02.sbercloud.ru/b-usr-2uzac-mv4/hagrid/train_val_peace.zip)           | 38.6 GB |
+| [`dislike`](https://n-usr-2uzac.s3pd02.sbercloud.ru/b-usr-2uzac-mv4/hagrid/train_val_dislike.zip) | 38.7 GB  | [`peace_inverted`](https://n-usr-2uzac.s3pd02.sbercloud.ru/b-usr-2uzac-mv4/hagrid/train_val_peace_inverted.zip)  | 38.6 GB |
+| [`fist`](https://n-usr-2uzac.s3pd02.sbercloud.ru/b-usr-2uzac-mv4/hagrid/train_val_fist.zip)    | 38.0 GB  | [`rock`](https://n-usr-2uzac.s3pd02.sbercloud.ru/b-usr-2uzac-mv4/hagrid/train_val_rock.zip)            | 38.9 GB |
+| [`four`](https://n-usr-2uzac.s3pd02.sbercloud.ru/b-usr-2uzac-mv4/hagrid/train_val_four.zip)    | 40.5 GB  | [`stop`](https://n-usr-2uzac.s3pd02.sbercloud.ru/b-usr-2uzac-mv4/hagrid/train_val_stop.zip)            | 38.3 GB |
+| [`like`](https://n-usr-2uzac.s3pd02.sbercloud.ru/b-usr-2uzac-mv4/hagrid/train_val_like.zip)    | 38.3 GB  | [`stop_inverted`](https://n-usr-2uzac.s3pd02.sbercloud.ru/b-usr-2uzac-mv4/hagrid/train_val_stop_inverted.zip)   | 40.2 GB |
+| [`mute`](https://n-usr-2uzac.s3pd02.sbercloud.ru/b-usr-2uzac-mv4/hagrid/train_val_mute.zip)    | 39.5 GB  | [`three`](https://n-usr-2uzac.s3pd02.sbercloud.ru/b-usr-2uzac-mv4/hagrid/train_val_three.zip)           | 39.4 GB |
+| [`ok`](https://n-usr-2uzac.s3pd02.sbercloud.ru/b-usr-2uzac-mv4/hagrid/train_val_ok.zip)      | 39.0 GB  | [`three2`](https://n-usr-2uzac.s3pd02.sbercloud.ru/b-usr-2uzac-mv4/hagrid/train_val_three2.zip)          | 38.5 GB |
+| [`one`](https://n-usr-2uzac.s3pd02.sbercloud.ru/b-usr-2uzac-mv4/hagrid/train_val_one.zip)     | 39.9 GB  | [`two_up`](https://n-usr-2uzac.s3pd02.sbercloud.ru/b-usr-2uzac-mv4/hagrid/train_val_two_up.zip)          | 41.2 GB |
+| [`palm`](https://n-usr-2uzac.s3pd02.sbercloud.ru/b-usr-2uzac-mv4/hagrid/train_val_palm.zip)    | 39.3 GB  | [`two_up_inverted`](https://n-usr-2uzac.s3pd02.sbercloud.ru/b-usr-2uzac-mv4/hagrid/train_val_two_up_inverted.zip) | 39.2 GB |
 
-`train_val` **annotations**: [`ann_train_val`](https://sc.link/BE5Y)
+`train_val` **annotations**: [`ann_train_val`](https://n-usr-2uzac.s3pd02.sbercloud.ru/b-usr-2uzac-mv4/hagrid/ann_train_val.zip)
 
 ### Test
 
 | Test        | Archives                            | Size    |
 |-------------|-------------------------------------|---------|
-| images      | [`test`](https://sc.link/zlGy)      | 60.4 GB |
-| annotations | [`ann_test`](https://sc.link/DE5K)  | 27.3 MB |
+| images      | [`test`](https://n-usr-2uzac.s3pd02.sbercloud.ru/b-usr-2uzac-mv4/hagrid/test.zip)      | 60.4 GB |
+| annotations | [`ann_test`](https://n-usr-2uzac.s3pd02.sbercloud.ru/b-usr-2uzac-mv4/hagrid/ann_test.zip)  | 27.3 MB |
 
 ### Subsample
 Subsample has 100 items per gesture.
 
 | Subsample   | Archives                                | Size   |
 |-------------|-----------------------------------------|--------|
-| images      | [`subsample`](https://sc.link/AO5l)     | 2.5 GB |
-| annotations | [`ann_subsample`](https://sc.link/EQ5g) | 1.2 MB |
+| images      | [`subsample`](https://n-usr-2uzac.s3pd02.sbercloud.ru/b-usr-2uzac-mv4/hagrid/subsample.zip)     | 2.5 GB |
+| annotations | [`ann_subsample`](https://n-usr-2uzac.s3pd02.sbercloud.ru/b-usr-2uzac-mv4/hagrid/ann_subsample.zip) | 1.2 MB |
 
 or by using python script
 ```bash
@@ -105,35 +105,35 @@ We provide some pre-trained models as the baseline with the classic backbone arc
 
 | Classifiers                               | F1 Gestures | F1 Leading hand |
 |-------------------------------------------|-----------|---------------|
-| [ResNet18](https://sc.link/KEnx)          | 98.80     | 98.80         |
-| [ResNet152](https://sc.link/O9rr)         | 99.04     | **98.92**     |
-| [ResNeXt50](https://sc.link/GKjJ)         | 98.95     | 98.87         |
-| [ResNeXt101](https://sc.link/JXmg)        | **99.16** | 98.71         |
-| [MobileNetV3_small](https://sc.link/XVEg) | 96.50     | 97.31         |
-| [MobileNetV3_large](https://sc.link/YXG2) | 98.03     | 97.99         |
-| [Vitb32](https://sc.link/XV4g)            | 98.35     | 98.63         |
-| [Lenet](https://sc.link/mBr3)             | 84.58     | 91.16         |
+| [ResNet18](https://n-usr-2uzac.s3pd02.sbercloud.ru/b-usr-2uzac-mv4/models/ResNet18.pth)          | 98.80     | 98.80         |
+| [ResNet152](https://n-usr-2uzac.s3pd02.sbercloud.ru/b-usr-2uzac-mv4/models/ResNet152.pth)         | 99.04     | **98.92**     |
+| [ResNeXt50](https://n-usr-2uzac.s3pd02.sbercloud.ru/b-usr-2uzac-mv4/models/ResNext50.pth)         | 98.95     | 98.87         |
+| [ResNeXt101](https://n-usr-2uzac.s3pd02.sbercloud.ru/b-usr-2uzac-mv4/models/ResNext101.pth)        | **99.16** | 98.71         |
+| [MobileNetV3_small](https://n-usr-2uzac.s3pd02.sbercloud.ru/b-usr-2uzac-mv4/models/MobileNetV3_small.pth) | 96.50     | 97.31         |
+| [MobileNetV3_large](https://n-usr-2uzac.s3pd02.sbercloud.ru/b-usr-2uzac-mv4/models/MobileNetV3_large.pth) | 98.03     | 97.99         |
+| [Vitb32](https://n-usr-2uzac.s3pd02.sbercloud.ru/b-usr-2uzac-mv4/models/Vitb32_pretrained.pth)            | 98.35     | 98.63         |
+| [Lenet](https://n-usr-2uzac.s3pd12.sbercloud.ru/b-usr-2uzac-mv4/models/LeNet.pth)             | 84.58     | 91.16         |
 
 Also we provide some models to solve hand detection problem.
 
 | Detector                                         | mAP        |
 |--------------------------------------------------|------------|
-| [SSDLiteMobileNetV3Large](https://sc.link/W2Mo)  | 71.49      |
-| [SSDLiteMobileNetV3Small](https://sc.link/OQAE)  | 53.38      |
-| [FRCNNMobilenetV3LargeFPN](https://sc.link/PRB6) | 78.05      |
-| [YoloV7Tiny](https://sc.link/QVD5)               | **81.1**   |
+| [SSDLiteMobileNetV3Large](https://n-usr-2uzac.s3pd12.sbercloud.ru/b-usr-2uzac-mv4/models/SSDLite_MobilenetV3_large.pth)  | 71.49      |
+| [SSDLiteMobileNetV3Small](https://n-usr-2uzac.s3pd12.sbercloud.ru/b-usr-2uzac-mv4/models/SSDLite_MobilenetV3_small.pth)  | 53.38      |
+| [FRCNNMobilenetV3LargeFPN](https://n-usr-2uzac.s3pd12.sbercloud.ru/b-usr-2uzac-mv4/models/FasterRCNN_mobilenet_large.pth) | 78.05      |
+| [YoloV7Tiny](https://n-usr-2uzac.s3pd12.sbercloud.ru/b-usr-2uzac-mv4/models/YoloV7_Tiny.onnx)               | **81.1**   |
 
 However, if you need a single gesture, you can use pre-trained full frame classifiers instead of detectors.
 To use full frame models, set the configuration parameter ```full_frame: True``` and **remove the no_gesture class**
 
 | Full Frame Classifiers                    | F1 Gestures |
 |-------------------------------------------|-------------|
-| [ResNet18](https://sc.link/JLvy)          | 93.51       |
-| [ResNet152](https://sc.link/KMw8)         | 94.49       |
-| [ResNeXt50](https://sc.link/EDnl)         | 95.20       |
-| [ResNeXt101](https://sc.link/GGp5)        | **95.67**   |
-| [MobileNetV3_small](https://sc.link/LNxv) | 87.09       |
-| [MobileNetV3_large](https://sc.link/M0y1) | 90.96       |
+| [ResNet18](https://n-usr-2uzac.s3pd12.sbercloud.ru/b-usr-2uzac-mv4/models/ResNet18FF.pth)          | 93.51       |
+| [ResNet152](https://n-usr-2uzac.s3pd12.sbercloud.ru/b-usr-2uzac-mv4/models/ResNet152FF.pth)         | 94.49       |
+| [ResNeXt50](https://n-usr-2uzac.s3pd12.sbercloud.ru/b-usr-2uzac-mv4/models/ResNext50FF.pth)         | 95.20       |
+| [ResNeXt101](https://n-usr-2uzac.s3pd12.sbercloud.ru/b-usr-2uzac-mv4/models/ResNext101FF.pth)        | **95.67**   |
+| [MobileNetV3_small](https://n-usr-2uzac.s3pd12.sbercloud.ru/b-usr-2uzac-mv4/models/MobileNetV3FF_small.pth) | 87.09       |
+| [MobileNetV3_large](https://n-usr-2uzac.s3pd12.sbercloud.ru/b-usr-2uzac-mv4/models/MobileNetV3FF_large.pth) | 90.96       |
 
 ## Train
 
