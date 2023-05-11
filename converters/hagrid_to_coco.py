@@ -1,7 +1,7 @@
 import argparse
 import json
 import logging
-import os
+import os, pdb
 from typing import Tuple, Union
 
 import numpy as np
@@ -173,6 +173,7 @@ def run_convert(args: argparse.Namespace) -> None:
     -------
     None
     """
+    other_label_marker = '_EXCLUDE_'
     conf = OmegaConf.load(args.cfg)
     labels = {label: num for (label, num) in zip(conf.dataset.targets, range(len(conf.dataset.targets)))}
     if not os.path.exists(args.out):
@@ -207,7 +208,9 @@ def run_convert(args: argparse.Namespace) -> None:
         logging.info("Create segmentation")
         annotations["segmentation"] = annotations["abs_bboxes"].progress_apply(lambda bboxes: get_poly(bboxes))
         logging.info("Create category_id")
-        annotations["category_id"] = annotations["labels"].progress_apply(lambda x: [labels[label] for label in x])
+        
+        labels2ids = lambda x: [labels[label] if label in labels else other_label_marker for label in x ]
+        annotations["category_id"] = annotations["labels"].progress_apply(labels2ids)
 
         categories = [{"supercategory": "none", "name": k, "id": v} for k, v in labels.items()]
         logging.info(f"Save to {phase}.json")
@@ -215,11 +218,14 @@ def run_convert(args: argparse.Namespace) -> None:
         annot_count = 0
         for index, row in tqdm(annotations.iterrows()):
             img_elem = {"file_name": row["image_path"], "height": row["height"], "width": row["width"], "id": row["id"]}
-
             res_file["images"].append(img_elem)
 
             num_boxes = len(row["bboxes"])
             for i in range(num_boxes):
+                # exclude labels that are not interested 
+                if row["category_id"][i] == other_label_marker:
+                    continue 
+                
                 annot_elem = {
                     "id": annot_count,
                     "bbox": row["abs_bboxes"][i],
