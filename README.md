@@ -42,32 +42,32 @@ We split the train dataset into 18 archives by gestures because of the large siz
 
 | Gesture                           | Size     | Gesture                                   | Size    |
 |-----------------------------------|----------|-------------------------------------------|---------|
-| [`call`](https://n-usr-2uzac.s3pd02.sbercloud.ru/b-usr-2uzac-mv4/hagrid/train_val_call.zip)    | 39.1 GB  | [`peace`](https://n-usr-2uzac.s3pd02.sbercloud.ru/b-usr-2uzac-mv4/hagrid/train_val_peace.zip)           | 38.6 GB |
-| [`dislike`](https://n-usr-2uzac.s3pd02.sbercloud.ru/b-usr-2uzac-mv4/hagrid/train_val_dislike.zip) | 38.7 GB  | [`peace_inverted`](https://n-usr-2uzac.s3pd02.sbercloud.ru/b-usr-2uzac-mv4/hagrid/train_val_peace_inverted.zip)  | 38.6 GB |
-| [`fist`](https://n-usr-2uzac.s3pd02.sbercloud.ru/b-usr-2uzac-mv4/hagrid/train_val_fist.zip)    | 38.0 GB  | [`rock`](https://n-usr-2uzac.s3pd02.sbercloud.ru/b-usr-2uzac-mv4/hagrid/train_val_rock.zip)            | 38.9 GB |
-| [`four`](https://n-usr-2uzac.s3pd02.sbercloud.ru/b-usr-2uzac-mv4/hagrid/train_val_four.zip)    | 40.5 GB  | [`stop`](https://n-usr-2uzac.s3pd02.sbercloud.ru/b-usr-2uzac-mv4/hagrid/train_val_stop.zip)            | 38.3 GB |
-| [`like`](https://n-usr-2uzac.s3pd02.sbercloud.ru/b-usr-2uzac-mv4/hagrid/train_val_like.zip)    | 38.3 GB  | [`stop_inverted`](https://n-usr-2uzac.s3pd02.sbercloud.ru/b-usr-2uzac-mv4/hagrid/train_val_stop_inverted.zip)   | 40.2 GB |
-| [`mute`](https://n-usr-2uzac.s3pd02.sbercloud.ru/b-usr-2uzac-mv4/hagrid/train_val_mute.zip)    | 39.5 GB  | [`three`](https://n-usr-2uzac.s3pd02.sbercloud.ru/b-usr-2uzac-mv4/hagrid/train_val_three.zip)           | 39.4 GB |
-| [`ok`](https://n-usr-2uzac.s3pd02.sbercloud.ru/b-usr-2uzac-mv4/hagrid/train_val_ok.zip)      | 39.0 GB  | [`three2`](https://n-usr-2uzac.s3pd02.sbercloud.ru/b-usr-2uzac-mv4/hagrid/train_val_three2.zip)          | 38.5 GB |
-| [`one`](https://n-usr-2uzac.s3pd02.sbercloud.ru/b-usr-2uzac-mv4/hagrid/train_val_one.zip)     | 39.9 GB  | [`two_up`](https://n-usr-2uzac.s3pd02.sbercloud.ru/b-usr-2uzac-mv4/hagrid/train_val_two_up.zip)          | 41.2 GB |
-| [`palm`](https://n-usr-2uzac.s3pd02.sbercloud.ru/b-usr-2uzac-mv4/hagrid/train_val_palm.zip)    | 39.3 GB  | [`two_up_inverted`](https://n-usr-2uzac.s3pd02.sbercloud.ru/b-usr-2uzac-mv4/hagrid/train_val_two_up_inverted.zip) | 39.2 GB |
+| [`call`](https://n-usr-2uzac.s3pd12.sbercloud.ru/b-usr-2uzac-mv4/hagrid/train_val_call.zip)    | 39.1 GB  | [`peace`](https://n-usr-2uzac.s3pd12.sbercloud.ru/b-usr-2uzac-mv4/hagrid/train_val_peace.zip)           | 38.6 GB |
+| [`dislike`](https://n-usr-2uzac.s3pd12.sbercloud.ru/b-usr-2uzac-mv4/hagrid/train_val_dislike.zip) | 38.7 GB  | [`peace_inverted`](https://n-usr-2uzac.s3pd12.sbercloud.ru/b-usr-2uzac-mv4/hagrid/train_val_peace_inverted.zip)  | 38.6 GB |
+| [`fist`](https://n-usr-2uzac.s3pd12.sbercloud.ru/b-usr-2uzac-mv4/hagrid/train_val_fist.zip)    | 38.0 GB  | [`rock`](https://n-usr-2uzac.s3pd12.sbercloud.ru/b-usr-2uzac-mv4/hagrid/train_val_rock.zip)            | 38.9 GB |
+| [`four`](https://n-usr-2uzac.s3pd12.sbercloud.ru/b-usr-2uzac-mv4/hagrid/train_val_four.zip)    | 40.5 GB  | [`stop`](https://n-usr-2uzac.s3pd12.sbercloud.ru/b-usr-2uzac-mv4/hagrid/train_val_stop.zip)            | 38.3 GB |
+| [`like`](https://n-usr-2uzac.s3pd12.sbercloud.ru/b-usr-2uzac-mv4/hagrid/train_val_like.zip)    | 38.3 GB  | [`stop_inverted`](https://n-usr-2uzac.s3pd12.sbercloud.ru/b-usr-2uzac-mv4/hagrid/train_val_stop_inverted.zip)   | 40.2 GB |
+| [`mute`](https://n-usr-2uzac.s3pd12.sbercloud.ru/b-usr-2uzac-mv4/hagrid/train_val_mute.zip)    | 39.5 GB  | [`three`](https://n-usr-2uzac.s3pd12.sbercloud.ru/b-usr-2uzac-mv4/hagrid/train_val_three.zip)           | 39.4 GB |
+| [`ok`](https://n-usr-2uzac.s3pd12.sbercloud.ru/b-usr-2uzac-mv4/hagrid/train_val_ok.zip)      | 39.0 GB  | [`three2`](https://n-usr-2uzac.s3pd12.sbercloud.ru/b-usr-2uzac-mv4/hagrid/train_val_three2.zip)          | 38.5 GB |
+| [`one`](https://n-usr-2uzac.s3pd12.sbercloud.ru/b-usr-2uzac-mv4/hagrid/train_val_one.zip)     | 39.9 GB  | [`two_up`](https://n-usr-2uzac.s3pd12.sbercloud.ru/b-usr-2uzac-mv4/hagrid/train_val_two_up.zip)          | 41.2 GB |
+| [`palm`](https://n-usr-2uzac.s3pd12.sbercloud.ru/b-usr-2uzac-mv4/hagrid/train_val_palm.zip)    | 39.3 GB  | [`two_up_inverted`](https://n-usr-2uzac.s3pd12.sbercloud.ru/b-usr-2uzac-mv4/hagrid/train_val_two_up_inverted.zip) | 39.2 GB |
 
-`train_val` **annotations**: [`ann_train_val`](https://n-usr-2uzac.s3pd02.sbercloud.ru/b-usr-2uzac-mv4/hagrid/ann_train_val.zip)
+`train_val` **annotations**: [`ann_train_val`](https://n-usr-2uzac.s3pd12.sbercloud.ru/b-usr-2uzac-mv4/hagrid/ann_train_val.zip)
 
 ### Test
 
 | Test        | Archives                            | Size    |
 |-------------|-------------------------------------|---------|
-| images      | [`test`](https://n-usr-2uzac.s3pd02.sbercloud.ru/b-usr-2uzac-mv4/hagrid/test.zip)      | 60.4 GB |
-| annotations | [`ann_test`](https://n-usr-2uzac.s3pd02.sbercloud.ru/b-usr-2uzac-mv4/hagrid/ann_test.zip)  | 27.3 MB |
+| images      | [`test`](https://n-usr-2uzac.s3pd12.sbercloud.ru/b-usr-2uzac-mv4/hagrid/test.zip)      | 60.4 GB |
+| annotations | [`ann_test`](https://n-usr-2uzac.s3pd12.sbercloud.ru/b-usr-2uzac-mv4/hagrid/ann_test.zip)  | 27.3 MB |
 
 ### Subsample
 Subsample has 100 items per gesture.
 
 | Subsample   | Archives                                | Size   |
 |-------------|-----------------------------------------|--------|
-| images      | [`subsample`](https://n-usr-2uzac.s3pd02.sbercloud.ru/b-usr-2uzac-mv4/hagrid/subsample.zip)     | 2.5 GB |
-| annotations | [`ann_subsample`](https://n-usr-2uzac.s3pd02.sbercloud.ru/b-usr-2uzac-mv4/hagrid/ann_subsample.zip) | 1.2 MB |
+| images      | [`subsample`](https://n-usr-2uzac.s3pd12.sbercloud.ru/b-usr-2uzac-mv4/hagrid/subsample.zip)     | 2.5 GB |
+| annotations | [`ann_subsample`](https://n-usr-2uzac.s3pd12.sbercloud.ru/b-usr-2uzac-mv4/hagrid/ann_subsample.zip) | 1.2 MB |
 
 or by using python script
 ```bash
@@ -105,13 +105,13 @@ We provide some pre-trained models as the baseline with the classic backbone arc
 
 | Classifiers                               | F1 Gestures | F1 Leading hand |
 |-------------------------------------------|-----------|---------------|
-| [ResNet18](https://n-usr-2uzac.s3pd02.sbercloud.ru/b-usr-2uzac-mv4/models/ResNet18.pth)          | 98.80     | 98.80         |
-| [ResNet152](https://n-usr-2uzac.s3pd02.sbercloud.ru/b-usr-2uzac-mv4/models/ResNet152.pth)         | 99.04     | **98.92**     |
-| [ResNeXt50](https://n-usr-2uzac.s3pd02.sbercloud.ru/b-usr-2uzac-mv4/models/ResNext50.pth)         | 98.95     | 98.87         |
-| [ResNeXt101](https://n-usr-2uzac.s3pd02.sbercloud.ru/b-usr-2uzac-mv4/models/ResNext101.pth)        | **99.16** | 98.71         |
-| [MobileNetV3_small](https://n-usr-2uzac.s3pd02.sbercloud.ru/b-usr-2uzac-mv4/models/MobileNetV3_small.pth) | 96.50     | 97.31         |
-| [MobileNetV3_large](https://n-usr-2uzac.s3pd02.sbercloud.ru/b-usr-2uzac-mv4/models/MobileNetV3_large.pth) | 98.03     | 97.99         |
-| [Vitb32](https://n-usr-2uzac.s3pd02.sbercloud.ru/b-usr-2uzac-mv4/models/Vitb32_pretrained.pth)            | 98.35     | 98.63         |
+| [ResNet18](https://n-usr-2uzac.s3pd12.sbercloud.ru/b-usr-2uzac-mv4/models/ResNet18.pth)          | 98.80     | 98.80         |
+| [ResNet152](https://n-usr-2uzac.s3pd12.sbercloud.ru/b-usr-2uzac-mv4/models/ResNet152.pth)         | 99.04     | **98.92**     |
+| [ResNeXt50](https://n-usr-2uzac.s3pd12.sbercloud.ru/b-usr-2uzac-mv4/models/ResNext50.pth)         | 98.95     | 98.87         |
+| [ResNeXt101](https://n-usr-2uzac.s3pd12.sbercloud.ru/b-usr-2uzac-mv4/models/ResNext101.pth)        | **99.16** | 98.71         |
+| [MobileNetV3_small](https://n-usr-2uzac.s3pd12.sbercloud.ru/b-usr-2uzac-mv4/models/MobileNetV3_small.pth) | 96.50     | 97.31         |
+| [MobileNetV3_large](https://n-usr-2uzac.s3pd12.sbercloud.ru/b-usr-2uzac-mv4/models/MobileNetV3_large.pth) | 98.03     | 97.99         |
+| [Vitb32](https://n-usr-2uzac.s3pd12.sbercloud.ru/b-usr-2uzac-mv4/models/Vitb32_pretrained.pth)            | 98.35     | 98.63         |
 | [Lenet](https://n-usr-2uzac.s3pd12.sbercloud.ru/b-usr-2uzac-mv4/models/LeNet.pth)             | 84.58     | 91.16         |
 
 Also we provide some models to solve hand detection problem.
