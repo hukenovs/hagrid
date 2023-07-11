@@ -2,7 +2,7 @@
 import argparse
 import os
 
-main_url = "https://n-usr-2uzac.s3pd02.sbercloud.ru/b-usr-2uzac-mv4/hagrid/"
+main_url = "https://n-usr-2uzac.s3pd12.sbercloud.ru/b-usr-2uzac-mv4/hagrid/"
 urls = {
     "call": f"{main_url}train_val_call.zip",
     "dislike": f"{main_url}train_val_dislike.zip",
