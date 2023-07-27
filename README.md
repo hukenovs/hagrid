@@ -69,6 +69,8 @@ Subsample has 100 items per gesture.
 | images      | [`subsample`](https://n-usr-2uzac.s3pd12.sbercloud.ru/b-usr-2uzac-mv4/hagrid/subsample.zip)     | 2.5 GB |
 | annotations | [`ann_subsample`](https://n-usr-2uzac.s3pd12.sbercloud.ru/b-usr-2uzac-mv4/hagrid/ann_subsample.zip) | 1.2 MB |
 
+[HaGRID 512px - lightweight version of the full dataset with `max_side = 512p`](https://n-ws-620xz-pd11.s3pd11.sbercloud.ru/b-ws-620xz-pd11-jux/hagrid/hagrid/hagrid_512.zip)
+
 or by using python script
 ```bash
 python download.py --save_path <PATH_TO_SAVE> \
