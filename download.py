@@ -2,31 +2,27 @@
 import argparse
 import os
 
-main_url = "https://n-usr-2uzac.s3pd12.sbercloud.ru/b-usr-2uzac-mv4/hagrid/"
+main_url = "https://n-ws-620xz-pd11.s3pd11.sbercloud.ru/b-ws-620xz-pd11-jux/hagrid/hagrid_dataset_new/"
 urls = {
-    "call": f"{main_url}train_val_call.zip",
-    "dislike": f"{main_url}train_val_dislike.zip",
-    "fist": f"{main_url}train_val_fist.zip",
-    "four": f"{main_url}train_val_four.zip",
-    "like": f"{main_url}train_val_like.zip",
-    "mute": f"{main_url}train_val_mute.zip",
-    "ok": f"{main_url}train_val_ok.zip",
-    "one": f"{main_url}train_val_one.zip",
-    "palm": f"{main_url}train_val_palm.zip",
-    "peace_inverted": f"{main_url}train_val_peace_inverted.zip",
-    "peace": f"{main_url}train_val_peace.zip",
-    "rock": f"{main_url}train_val_rock.zip",
-    "stop_inverted": f"{main_url}train_val_stop_inverted.zip",
-    "stop": f"{main_url}train_val_stop.zip",
-    "three": f"{main_url}train_val_three.zip",
-    "three2": f"{main_url}train_val_three2.zip",
-    "two_up_inverted": f"{main_url}train_val_two_up_inverted.zip",
-    "two_up": f"{main_url}train_val_two_up.zip",
-    "test": f"{main_url}test.zip",
-    "subsample": f"{main_url}subsample.zip",
-    "ann_train_val": f"{main_url}ann_train_val.zip",
-    "ann_test": f"{main_url}ann_test.zip",
-    "ann_subsample": f"{main_url}ann_subsample.zip",
+    "call": f"{main_url}hagrid_dataset/call.zip",
+    "dislike": f"{main_url}hagrid_dataset/dislike.zip",
+    "fist": f"{main_url}hagrid_dataset/fist.zip",
+    "four": f"{main_url}hagrid_dataset/four.zip",
+    "like": f"{main_url}hagrid_dataset/like.zip",
+    "mute": f"{main_url}hagrid_dataset/mute.zip",
+    "ok": f"{main_url}hagrid_dataset/ok.zip",
+    "one": f"{main_url}hagrid_dataset/one.zip",
+    "palm": f"{main_url}hagrid_dataset/palm.zip",
+    "peace_inverted": f"{main_url}hagrid_dataset/peace_inverted.zip",
+    "peace": f"{main_url}hagrid_dataset/peace.zip",
+    "rock": f"{main_url}hagrid_dataset/rock.zip",
+    "stop_inverted": f"{main_url}hagrid_dataset/stop_inverted.zip",
+    "stop": f"{main_url}hagrid_dataset/stop.zip",
+    "three": f"{main_url}hagrid_dataset/three.zip",
+    "three2": f"{main_url}hagrid_dataset/three2.zip",
+    "two_up_inverted": f"{main_url}hagrid_dataset/two_up_inverted.zip",
+    "two_up": f"{main_url}hagrid_dataset/two_up.zip",
+    "annotations": f"{main_url}annotations.zip",
 }
 
 GESTURES = (
@@ -50,41 +46,21 @@ GESTURES = (
     "two_up",
 )
 
-DATASET = os.path.expanduser("~/hagrid/dataset/")
+DATASET = os.path.expanduser("./hagrid/dataset/")
 
 
 def download(args):
-    if args.subset:
-        subsample = os.path.join(args.save_path, "subsample")
-        os.makedirs(subsample, exist_ok=True)
-        if args.dataset:
-            os.system(f"wget {urls['subsample']} -O {subsample}/subsample.zip")
-        if args.annotations:
-            os.system(f"wget {urls['ann_subsample']} -O {subsample}/ann_subsample.zip")
-
-    if args.test:
-        testset = os.path.join(args.save_path, "test")
-        os.makedirs(testset, exist_ok=True)
-        if args.dataset:
-            os.system(f"wget {urls['test']} -O {testset}/test.zip")
-        if args.annotations:
-            os.system(f"wget {urls['ann_test']} -O {testset}/ann_test.zip")
-
-    if args.train:
-        train_val = os.path.join(args.save_path, "train")
-        os.makedirs(train_val, exist_ok=True)
-        if args.dataset:
-            for target in args.targets:
-                os.system(f"wget {urls[target]} -O {train_val}/{target}.zip")
-        if args.annotations:
-            os.system(f"wget {urls['ann_train_val']} -O {train_val}/ann_train_val.zip")
+    dataset = args.save_path
+    os.makedirs(dataset, exist_ok=True)
+    if args.dataset:
+        for target in args.targets:
+            os.system(f"wget {urls[target]} -O {dataset}/{target}.zip")
+    if args.annotations:
+        os.system(f"wget {urls['annotations']} -O {dataset}/ann.zip")
 
 
 def parse_arguments() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Download dataset...")
-    parser.add_argument("--train", action="store_true", help="Download trainval set")
-    parser.add_argument("--test", action="store_true", help="Download test set")
-    parser.add_argument("--subset", action="store_true", help="Download subset with 100 items of each gesture")
 
     parser.add_argument("-a", "--annotations", action="store_true", help="Download annotations")
     parser.add_argument("-d", "--dataset", action="store_true", help="Download dataset")

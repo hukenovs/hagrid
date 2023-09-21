@@ -1,7 +1,7 @@
 dataset:
-  dataset_annotations: hagrid/annotations # Path to annotations
-  dataset_folder: hagrid/dataset # Path to images
-  phases: [train, test, subsample] #names of annotation directories
+  dataset_annotations: <path_to_annotations> # Path to annotations
+  dataset_folder: <path_to_dataset> # Path to images
+  phases: [train, test, val] #names of annotation directories
   targets:
     - call
     - dislike

@@ -1,0 +1,140 @@
+#Exp params
+epochs: 100
+random_state: 42
+log_every: 100 # Log every n iterations
+eval_every: 1 # Eval and save every n epochs
+test_every: 0 # Test every n epochs
+experiment_name: ResNext50
+work_dir: work_dir
+
+# Stop training conditions
+early_stopping:
+    epochs: 10
+    metric: 0.01
+
+
+# Dataset configuration
+dataset:
+    annotations_train: <path_to_json_train>
+    annotations_val: <path_to_json_val>
+    annotations_test: <path_to_json_test>
+
+    dataset_train: <path_to_dataset_folder>
+    dataset_val: <path_to_dataset_folder>
+    dataset_test: <path_to_dataset_folder>
+
+    img_size: &img_size 224 # Image size for training, must be square
+    img_mean: &img_mean [0.54, 0.499, 0.473]
+    img_std: &img_std [0.231, 0.232, 0.229]
+    subset: -1 # Amount of training data
+
+    targets:
+        - call
+        - dislike
+        - fist
+        - four
+        - like
+        - mute
+        - ok
+        - one
+        - palm
+        - peace
+        - rock
+        - stop
+        - stop_inverted
+        - three
+        - two_up
+        - two_up_inverted
+        - three2
+        - peace_inverted
+
+
+# Transform and augmentation pipeline. See https://albumentations.ai/docs/ for using
+train_transforms:
+    LongestMaxSize:
+        max_size: *img_size
+        p: 1
+    PadIfNeeded:
+        min_height: *img_size
+        min_width: *img_size
+        value: [144,144,144]
+        border_mode: 0
+        p: 1
+    Normalize:
+        mean: *img_mean
+        std: *img_std
+        max_pixel_value: 255.0
+        p: 1
+
+val_transforms:
+    LongestMaxSize:
+        max_size: *img_size
+        p: 1
+    PadIfNeeded:
+        min_height: *img_size
+        min_width: *img_size
+        value: [144,144,144]
+        border_mode: 0
+        p: 1
+    Normalize:
+        mean: *img_mean
+        std: *img_std
+        max_pixel_value: 255.0
+        p: 1
+
+test_transforms:
+    LongestMaxSize:
+        max_size: *img_size
+        p: 1
+    PadIfNeeded:
+        min_height: *img_size
+        min_width: *img_size
+        value: [144,144,144]
+        border_mode: 0
+        p: 1
+    Normalize:
+        mean: *img_mean
+        std: *img_std
+        max_pixel_value: 255.0
+        p: 1
+
+# Model parameters. See model_card for using
+model:
+    name: ResNext50
+    pretrained: False
+    pretrained_backbone: False
+    checkpoint: null
+
+# Model optimizer params
+optimizer:
+    name: SGD
+    params:
+        lr: 0.1
+        weight_decay: 0.0001
+        momentum: 0.9
+
+scheduler:
+    name: ReduceLROnPlateau
+    params:
+        mode: min
+        factor: 0.1
+
+criterion: CrossEntropyLoss
+
+train_params:
+    num_workers: 16
+    shuffle: True
+    batch_size: 128
+    prefetch_factor: 3
+
+test_params:
+    num_workers: 16
+    shuffle: True
+    batch_size: 128
+    prefetch_factor: 3
+
+val_params:
+    num_workers: 16
+    shuffle: True
+    batch_size: 128
+    prefetch_factor: 3

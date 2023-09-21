@@ -4,17 +4,24 @@
 
 We introduce a large image dataset **HaGRID** (**HA**nd **G**esture **R**ecognition **I**mage **D**ataset) for hand gesture recognition (HGR) systems. You can use it for image classification or image detection tasks. Proposed dataset allows to build HGR systems, which can be used in video conferencing services (Zoom, Skype, Discord, Jazz etc.), home automation systems, the automotive sector, etc.
 
-HaGRID size is **716GB** and dataset contains **552,992** FullHD (1920 × 1080) RGB images divided into **18** classes of gestures. Also, some images have `no_gesture` class if there is a second free hand in the frame. This extra class contains **123,589** samples. The data were split into training 92%, and testing 8% sets by subject `user_id`, with 509,323 images for train and 43,669 images for test.
+HaGRID size is **723GB** and dataset contains **553,991** FullHD (1920 × 1080) RGB images divided into **18** classes of gestures. Also, some images have `no_gesture` class if there is a second free hand in the frame. This extra class contains **108,056** samples. The data were split into training 74%, 10% validation and testing 16% sets by subject `user_id`, with 410,107 images for train, 53,982 images for validation and 89,902 for test.
 
 ![gestures](images/gestures.jpg)
 
-The dataset contains **34,730** unique persons and at least this number of unique scenes. The subjects are people from 18 to 65 years old. The dataset was collected mainly indoors with considerable variation in lighting, including artificial and natural light. Besides, the dataset includes images taken in extreme conditions such as facing and backing to a window. Also, the subjects had to show gestures at a distance of 0.5 to 4 meters from the camera.
+The dataset contains **37,563** unique persons and at least this number of unique scenes. The subjects are people from 18 to 65 years old. The dataset was collected mainly indoors with considerable variation in lighting, including artificial and natural light. Besides, the dataset includes images taken in extreme conditions such as facing and backing to a window. Also, the subjects had to show gestures at a distance of 0.5 to 4 meters from the camera.
 
 Example of sample and its annotation:
 
 ![example](images/example.jpeg)
 
 For more information see our arxiv paper [HaGRID - HAnd Gesture Recognition Image Dataset](https://arxiv.org/abs/2206.08219).
+
+## 🔥 News
+- **`2023/09/21`**: We release HaGRID 2.0.
+  - All files for training and testing are combined into one directory.
+  - The data was further cleared and new ones were added
+  - Multi-gpu training and testing.
+  - Added new models for detection and full-frame classification.
 
 ## Installation
 Clone and install required python packages:
@@ -23,16 +30,10 @@ git clone https://github.com/hukenovs/hagrid.git
 # or mirror link:
 cd hagrid
 # Create virtual env by conda or venv
-conda create -n gestures python=3.9 -y
+conda create -n gestures python=3.11 -y
 conda activate gestures
 # Install requirements
 pip install -r requirements.txt
-```
-
-### Docker Installation
-```bash
-docker build -t gestures .
-docker run -it -d -v $PWD:/gesture-classifier gestures
 ```
 
 ## Downloads
@@ -40,60 +41,38 @@ We split the train dataset into 18 archives by gestures because of the large siz
 
 ### Tranval
 
-| Gesture                           | Size     | Gesture                                   | Size    |
-|-----------------------------------|----------|-------------------------------------------|---------|
-| [`call`](https://n-usr-2uzac.s3pd12.sbercloud.ru/b-usr-2uzac-mv4/hagrid/train_val_call.zip)    | 39.1 GB  | [`peace`](https://n-usr-2uzac.s3pd12.sbercloud.ru/b-usr-2uzac-mv4/hagrid/train_val_peace.zip)           | 38.6 GB |
-| [`dislike`](https://n-usr-2uzac.s3pd12.sbercloud.ru/b-usr-2uzac-mv4/hagrid/train_val_dislike.zip) | 38.7 GB  | [`peace_inverted`](https://n-usr-2uzac.s3pd12.sbercloud.ru/b-usr-2uzac-mv4/hagrid/train_val_peace_inverted.zip)  | 38.6 GB |
-| [`fist`](https://n-usr-2uzac.s3pd12.sbercloud.ru/b-usr-2uzac-mv4/hagrid/train_val_fist.zip)    | 38.0 GB  | [`rock`](https://n-usr-2uzac.s3pd12.sbercloud.ru/b-usr-2uzac-mv4/hagrid/train_val_rock.zip)            | 38.9 GB |
-| [`four`](https://n-usr-2uzac.s3pd12.sbercloud.ru/b-usr-2uzac-mv4/hagrid/train_val_four.zip)    | 40.5 GB  | [`stop`](https://n-usr-2uzac.s3pd12.sbercloud.ru/b-usr-2uzac-mv4/hagrid/train_val_stop.zip)            | 38.3 GB |
-| [`like`](https://n-usr-2uzac.s3pd12.sbercloud.ru/b-usr-2uzac-mv4/hagrid/train_val_like.zip)    | 38.3 GB  | [`stop_inverted`](https://n-usr-2uzac.s3pd12.sbercloud.ru/b-usr-2uzac-mv4/hagrid/train_val_stop_inverted.zip)   | 40.2 GB |
-| [`mute`](https://n-usr-2uzac.s3pd12.sbercloud.ru/b-usr-2uzac-mv4/hagrid/train_val_mute.zip)    | 39.5 GB  | [`three`](https://n-usr-2uzac.s3pd12.sbercloud.ru/b-usr-2uzac-mv4/hagrid/train_val_three.zip)           | 39.4 GB |
-| [`ok`](https://n-usr-2uzac.s3pd12.sbercloud.ru/b-usr-2uzac-mv4/hagrid/train_val_ok.zip)      | 39.0 GB  | [`three2`](https://n-usr-2uzac.s3pd12.sbercloud.ru/b-usr-2uzac-mv4/hagrid/train_val_three2.zip)          | 38.5 GB |
-| [`one`](https://n-usr-2uzac.s3pd12.sbercloud.ru/b-usr-2uzac-mv4/hagrid/train_val_one.zip)     | 39.9 GB  | [`two_up`](https://n-usr-2uzac.s3pd12.sbercloud.ru/b-usr-2uzac-mv4/hagrid/train_val_two_up.zip)          | 41.2 GB |
-| [`palm`](https://n-usr-2uzac.s3pd12.sbercloud.ru/b-usr-2uzac-mv4/hagrid/train_val_palm.zip)    | 39.3 GB  | [`two_up_inverted`](https://n-usr-2uzac.s3pd12.sbercloud.ru/b-usr-2uzac-mv4/hagrid/train_val_two_up_inverted.zip) | 39.2 GB |
+| Gesture                           | Size    | Gesture                                   | Size    |
+|-----------------------------------|---------|-------------------------------------------|---------|
+| [`call`](https://n-ws-620xz-pd11.s3pd11.sbercloud.ru/b-ws-620xz-pd11-jux/hagrid/hagrid_dataset_new/hagrid_dataset/call.zip)    | 37.2 GB | [`peace`](https://n-ws-620xz-pd11.s3pd11.sbercloud.ru/b-ws-620xz-pd11-jux/hagrid/hagrid_dataset_new/hagrid_dataset/peace.zip)           | 41.4 GB |
+| [`dislike`](https://n-ws-620xz-pd11.s3pd11.sbercloud.ru/b-ws-620xz-pd11-jux/hagrid/hagrid_dataset_new/hagrid_dataset/dislike.zip) | 40.9 GB | [`peace_inverted`](https://n-ws-620xz-pd11.s3pd11.sbercloud.ru/b-ws-620xz-pd11-jux/hagrid/hagrid_dataset_new/hagrid_dataset/peace_inverted.zip)  | 39.6 GB |
+| [`fist`](https://n-ws-620xz-pd11.s3pd11.sbercloud.ru/b-ws-620xz-pd11-jux/hagrid/hagrid_dataset_new/hagrid_dataset/fist.zip)    | 41.2 GB | [`rock`](https://n-ws-620xz-pd11.s3pd11.sbercloud.ru/b-ws-620xz-pd11-jux/hagrid/hagrid_dataset_new/hagrid_dataset/rock.zip)            | 40.7 GB |
+| [`four`](https://n-ws-620xz-pd11.s3pd11.sbercloud.ru/b-ws-620xz-pd11-jux/hagrid/hagrid_dataset_new/hagrid_dataset/four.zip)    | 42.1 GB | [`stop`](https://n-ws-620xz-pd11.s3pd11.sbercloud.ru/b-ws-620xz-pd11-jux/hagrid/hagrid_dataset_new/hagrid_dataset/stop.zip)            | 40.8 GB |
+| [`like`](https://n-ws-620xz-pd11.s3pd11.sbercloud.ru/b-ws-620xz-pd11-jux/hagrid/hagrid_dataset_new/hagrid_dataset/like.zip)    | 41.2 GB | [`stop_inverted`](https://n-ws-620xz-pd11.s3pd11.sbercloud.ru/b-ws-620xz-pd11-jux/hagrid/hagrid_dataset_new/hagrid_dataset/stop_inverted.zip)   | 40.4 GB |
+| [`mute`](https://n-ws-620xz-pd11.s3pd11.sbercloud.ru/b-ws-620xz-pd11-jux/hagrid/hagrid_dataset_new/hagrid_dataset/mute.zip)    | 42.1 GB | [`three`](https://n-ws-620xz-pd11.s3pd11.sbercloud.ru/b-ws-620xz-pd11-jux/hagrid/hagrid_dataset_new/hagrid_dataset/three.zip)           | 41.2 GB |
+| [`ok`](https://n-ws-620xz-pd11.s3pd11.sbercloud.ru/b-ws-620xz-pd11-jux/hagrid/hagrid_dataset_new/hagrid_dataset/ok.zip)      | 41.4 GB | [`three2`](https://n-ws-620xz-pd11.s3pd11.sbercloud.ru/b-ws-620xz-pd11-jux/hagrid/hagrid_dataset_new/hagrid_dataset/three2.zip)          | 39.2 GB |
+| [`one`](https://n-ws-620xz-pd11.s3pd11.sbercloud.ru/b-ws-620xz-pd11-jux/hagrid/hagrid_dataset_new/hagrid_dataset/one.zip)     | 41.7 GB | [`two_up`](https://n-ws-620xz-pd11.s3pd11.sbercloud.ru/b-ws-620xz-pd11-jux/hagrid/hagrid_dataset_new/hagrid_dataset/two_up.zip)          | 40.9 GB |
+| [`palm`](https://n-ws-620xz-pd11.s3pd11.sbercloud.ru/b-ws-620xz-pd11-jux/hagrid/hagrid_dataset_new/hagrid_dataset/palm.zip)    | 42.1 GB | [`two_up_inverted`](https://n-ws-620xz-pd11.s3pd11.sbercloud.ru/b-ws-620xz-pd11-jux/hagrid/hagrid_dataset_new/hagrid_dataset/two_up_inverted.zip) | 39.9 GB |
 
-`train_val` **annotations**: [`ann_train_val`](https://n-usr-2uzac.s3pd12.sbercloud.ru/b-usr-2uzac-mv4/hagrid/ann_train_val.zip)
+`dataset` **annotations**: [`annotations`](https://n-ws-620xz-pd11.s3pd11.sbercloud.ru/b-ws-620xz-pd11-jux/hagrid/hagrid_dataset_new/annotations.zip)
 
-### Test
-
-| Test        | Archives                            | Size    |
-|-------------|-------------------------------------|---------|
-| images      | [`test`](https://n-usr-2uzac.s3pd12.sbercloud.ru/b-usr-2uzac-mv4/hagrid/test.zip)      | 60.4 GB |
-| annotations | [`ann_test`](https://n-usr-2uzac.s3pd12.sbercloud.ru/b-usr-2uzac-mv4/hagrid/ann_test.zip)  | 27.3 MB |
-
-### Subsample
-Subsample has 100 items per gesture.
-
-| Subsample   | Archives                                | Size   |
-|-------------|-----------------------------------------|--------|
-| images      | [`subsample`](https://n-usr-2uzac.s3pd12.sbercloud.ru/b-usr-2uzac-mv4/hagrid/subsample.zip)     | 2.5 GB |
-| annotations | [`ann_subsample`](https://n-usr-2uzac.s3pd12.sbercloud.ru/b-usr-2uzac-mv4/hagrid/ann_subsample.zip) | 1.2 MB |
-
-[HaGRID 512px - lightweight version of the full dataset with `max_side = 512p`](https://n-ws-620xz-pd11.s3pd11.sbercloud.ru/b-ws-620xz-pd11-jux/hagrid/hagrid/hagrid_512.zip)
+[HaGRID 512px - lightweight version of the full dataset with](https://n-ws-620xz-pd11.s3pd11.sbercloud.ru/b-ws-620xz-pd11-jux/hagrid/hagrid_dataset_new/hagrid_dataset_512.zip) `min_side = 512p` `22.4 GB`
 
 or by using python script
 ```bash
 python download.py --save_path <PATH_TO_SAVE> \
-                   --train \
-                   --test \
-                   --subset \
                    --annotations \
                    --dataset
 ```
 
-Run the following command with key `--subset` to download the small subset (100 images per class). You can download the
-train subset with `--trainval` or test subset with `--test`. Download annotations for selected stage by `--annotations` key. Download dataset with images by `--dataset`.
+Run the following command with key `--dataset` to download dataset with images. Download annotations for selected stage by `--annotations` key.
 
 ```bash
-usage: download.py [-h] [--train] [--test] [--subset] [-a] [-d] [-t TARGETS [TARGETS ...]] [-p SAVE_PATH]
+usage: download.py [-h] [-a] [-d] [-t TARGETS [TARGETS ...]] [-p SAVE_PATH]
 
 Download dataset...
 
 optional arguments:
   -h, --help            show this help message and exit
-  --train               Download trainval set
-  --test                Download test set
-  --subset              Download subset with 100 items of each gesture
   -a, --annotations     Download annotations
   -d, --dataset         Download dataset
   -t TARGETS [TARGETS ...], --targets TARGETS [TARGETS ...]
@@ -101,68 +80,87 @@ optional arguments:
   -p SAVE_PATH, --save_path SAVE_PATH
                         Save path
 ```
+After downloading, you can unzip the archive by running the following command:
+```bash
+unzip <PATH_TO_ARCHIVE> -d <PATH_TO_SAVE>
+```
+The structure of the dataset is as follows:
+```
+├── hagrid_dataset <PATH_TO_DATASET_FOLDER>
+│   ├── call
+│   │   ├── 00000000.jpg
+│   │   ├── 00000001.jpg
+│   │   ├── ...
+├── hagrid_annotations
+│   ├── train <PATH_TO_JSON_TRAIN>
+│   │   ├── call.json
+│   │   ├── ...
+│   ├── val <PATH_TO_JSON_VAL>
+│   │   ├── call.json
+│   │   ├── ...
+│   ├── test <PATH_TO_JSON_TEST>
+│   │   ├── call.json
+│   │   ├── ...
+```
 
 ## Models
-We provide some pre-trained models as the baseline with the classic backbone architectures and two output heads - for gesture classification and leading hand classification.
+We provide some pre-trained models as the baseline with the classic backbone architectures for gesture classification and gesture detection.
 
-| Classifiers                               | F1 Gestures | F1 Leading hand |
-|-------------------------------------------|-----------|---------------|
-| [ResNet18](https://n-usr-2uzac.s3pd12.sbercloud.ru/b-usr-2uzac-mv4/models/ResNet18.pth)          | 98.80     | 98.80         |
-| [ResNet152](https://n-usr-2uzac.s3pd12.sbercloud.ru/b-usr-2uzac-mv4/models/ResNet152.pth)         | 99.04     | **98.92**     |
-| [ResNeXt50](https://n-usr-2uzac.s3pd12.sbercloud.ru/b-usr-2uzac-mv4/models/ResNext50.pth)         | 98.95     | 98.87         |
-| [ResNeXt101](https://n-usr-2uzac.s3pd12.sbercloud.ru/b-usr-2uzac-mv4/models/ResNext101.pth)        | **99.16** | 98.71         |
-| [MobileNetV3_small](https://n-usr-2uzac.s3pd12.sbercloud.ru/b-usr-2uzac-mv4/models/MobileNetV3_small.pth) | 96.50     | 97.31         |
-| [MobileNetV3_large](https://n-usr-2uzac.s3pd12.sbercloud.ru/b-usr-2uzac-mv4/models/MobileNetV3_large.pth) | 98.03     | 97.99         |
-| [Vitb32](https://n-usr-2uzac.s3pd12.sbercloud.ru/b-usr-2uzac-mv4/models/Vitb32_pretrained.pth)            | 98.35     | 98.63         |
-| [Lenet](https://n-usr-2uzac.s3pd12.sbercloud.ru/b-usr-2uzac-mv4/models/LeNet.pth)             | 84.58     | 91.16         |
+| Detector                                         | mAP      |
+|--------------------------------------------------|----------|
+| [SSDLiteMobileNetV3Small](https://n-ws-620xz-pd11.s3pd11.sbercloud.ru/b-ws-620xz-pd11-jux/hagrid/hagrid_models_new/SSDLite_MobilenetV3_small.pth)  | 57.7     |
+| [SSDLiteMobileNetV3Large](https://n-ws-620xz-pd11.s3pd11.sbercloud.ru/b-ws-620xz-pd11-jux/hagrid/hagrid_models_new/SSDLite_MobilenetV3_large.pth)  | 71.6     |
+| [RetinaNet_ResNet50](https://n-ws-620xz-pd11.s3pd11.sbercloud.ru/b-ws-620xz-pd11-jux/hagrid/hagrid_models_new/RetinaNet_ResNet50.pth) | **79.1** |
+| [YoloV7Tiny](https://n-ws-620xz-pd11.s3pd11.sbercloud.ru/b-ws-620xz-pd11-jux/hagrid/hagrid_models_new/YoloV7Tiny.onnx)               | 71.6     |
 
-Also we provide some models to solve hand detection problem.
-
-| Detector                                         | mAP        |
-|--------------------------------------------------|------------|
-| [SSDLiteMobileNetV3Large](https://n-usr-2uzac.s3pd12.sbercloud.ru/b-usr-2uzac-mv4/models/SSDLite_MobilenetV3_large.pth)  | 71.49      |
-| [SSDLiteMobileNetV3Small](https://n-usr-2uzac.s3pd12.sbercloud.ru/b-usr-2uzac-mv4/models/SSDLite_MobilenetV3_small.pth)  | 53.38      |
-| [FRCNNMobilenetV3LargeFPN](https://n-usr-2uzac.s3pd12.sbercloud.ru/b-usr-2uzac-mv4/models/FasterRCNN_mobilenet_large.pth) | 78.05      |
-| [YoloV7Tiny](https://n-usr-2uzac.s3pd12.sbercloud.ru/b-usr-2uzac-mv4/models/YoloV7_Tiny.onnx)               | **81.1**   |
 
 However, if you need a single gesture, you can use pre-trained full frame classifiers instead of detectors.
-To use full frame models, set the configuration parameter ```full_frame: True``` and **remove the no_gesture class**
+To use full frame models, **remove the no_gesture class**
 
 | Full Frame Classifiers                    | F1 Gestures |
-|-------------------------------------------|-------------|
-| [ResNet18](https://n-usr-2uzac.s3pd12.sbercloud.ru/b-usr-2uzac-mv4/models/ResNet18FF.pth)          | 93.51       |
-| [ResNet152](https://n-usr-2uzac.s3pd12.sbercloud.ru/b-usr-2uzac-mv4/models/ResNet152FF.pth)         | 94.49       |
-| [ResNeXt50](https://n-usr-2uzac.s3pd12.sbercloud.ru/b-usr-2uzac-mv4/models/ResNext50FF.pth)         | 95.20       |
-| [ResNeXt101](https://n-usr-2uzac.s3pd12.sbercloud.ru/b-usr-2uzac-mv4/models/ResNext101FF.pth)        | **95.67**   |
-| [MobileNetV3_small](https://n-usr-2uzac.s3pd12.sbercloud.ru/b-usr-2uzac-mv4/models/MobileNetV3FF_small.pth) | 87.09       |
-| [MobileNetV3_large](https://n-usr-2uzac.s3pd12.sbercloud.ru/b-usr-2uzac-mv4/models/MobileNetV3FF_large.pth) | 90.96       |
+|-------------------------------------------|---------|
+| [MobileNetV3_small](https://n-ws-620xz-pd11.s3pd11.sbercloud.ru/b-ws-620xz-pd11-jux/hagrid/hagrid_models_new/MobileNetV3_small.pth) | 86.4    |
+| [MobileNetV3_large](https://n-ws-620xz-pd11.s3pd11.sbercloud.ru/b-ws-620xz-pd11-jux/hagrid/hagrid_models_new/MobileNetV3_large.pth) | 91.9    |
+| [VitB16](https://n-ws-620xz-pd11.s3pd11.sbercloud.ru/b-ws-620xz-pd11-jux/hagrid/hagrid_models_new/VitB16.pth) | 91.1    |
+| [ResNet18](https://n-ws-620xz-pd11.s3pd11.sbercloud.ru/b-ws-620xz-pd11-jux/hagrid/hagrid_models_new/ResNet18.pth)      | 97.5    |
+| [ResNet152](https://n-ws-620xz-pd11.s3pd11.sbercloud.ru/b-ws-620xz-pd11-jux/hagrid/hagrid_models_new/ResNet152.pth)    | 95.5    |
+| [ResNeXt50](https://n-ws-620xz-pd11.s3pd11.sbercloud.ru/b-ws-620xz-pd11-jux/hagrid/hagrid_models_new/ResNext50.pth)    | **98.3** |
+| [ResNeXt101](https://n-ws-620xz-pd11.s3pd11.sbercloud.ru/b-ws-620xz-pd11-jux/hagrid/hagrid_models_new/ResNext101.pth)  | 97.5    |
+
 
 ## Train
 
-You can use downloaded trained models, otherwise select a classifier and parameters for training in `default.yaml`.
+You can use downloaded trained models, otherwise select a parameters for training in `configs` folder.
 To train the model, execute the following command:
 
+Single GPU:
 ```bash
-python -m classifier.run --command 'train' --path_to_config <PATH>
+python run.py -c train -p configs/<config>
 ```
+Multi GPU:
 ```bash
-python -m detector.run --command 'train' --path_to_config <PATH>
+bash ddp_run.sh -g 0,1,2,3 -c train -p configs/<config>
 ```
+which -g is a list of GPU ids.
+
 
 Every step, the current loss, learning rate and others values get logged to **Tensorboard**.
 See all saved metrics and parameters by opening a command line (this will open a webpage at `localhost:6006`):
 ```bash
-tensorboard --logdir=experiments
+tensorboard --logdir=<workdir>
 ```
 
 ## Test
 Test your model by running the following command:
+Single GPU:
 ```bash
-python -m classifier.run --command 'test' --path_to_config <PATH>
+python run.py -c test -p configs/<config>
 ```
+Multi GPU:
 ```bash
-python -m detecotr.run --command 'test' --path_to_config <PATH>
+bash ddp_run.sh -g 0,1,2,3 -c test -p configs/<config>
 ```
+which -g is a list of GPU ids.
 
 
 ## Demo
@@ -173,45 +171,28 @@ python demo.py -p <PATH_TO_CONFIG> --landmarks
 
 ## Demo Full Frame Classifiers
  ```bash
-python demo_ff.py -p <PATH_TO_CONFIG> --landmarks
+python demo_ff.py -p <PATH_TO_CONFIG>
 ```
 
 ## Annotations
 
-The annotations consist of bounding boxes of hands in COCO format `[top left X position, top left Y position, width, height]` with gesture labels. Also, annotations have 21 `landmarks` in format `[x,y]` relative image coordinates, markups of `leading hands` (`left` or `right` for gesture hand) and `leading_conf` as confidence for `leading_hand` annotation. We provide `user_id` field that will allow you to split the train / val dataset yourself.
+The annotations consist of bounding boxes of hands in COCO format `[top left X position, top left Y position, width, height]` with gesture labels. We provide `user_id` field that will allow you to split the train / val / test dataset yourself.
 ```json
 "0534147c-4548-4ab4-9a8c-f297b43e8ffb": {
   "bboxes": [
     [0.38038597, 0.74085361, 0.08349486, 0.09142549],
     [0.67322755, 0.37933984, 0.06350809, 0.09187757]
   ],
-  "landmarks"[
-    [
-      [
-        [0.39917091, 0.74502739],
-        [0.42500172, 0.74984396],
-        ...
-      ],
-        [0.70590734, 0.46012364],
-        [0.69208878, 0.45407018],
-        ...
-    ],
-  ],
   "labels": [
     "no_gesture",
     "one"
   ],
-  "leading_hand": "left",
-  "leading_conf": 1.0,
   "user_id": "bb138d5db200f29385f..."
 }
 ```
 - Key - image name without extension
 - Bboxes - list of normalized bboxes `[top left X pos, top left Y pos, width, height]`
 - Labels - list of class labels e.g. `like`, `stop`, `no_gesture`
-- Landmarks - list of normalized hand landmarks `[x, y]`
-- Leading hand - `right` or `left` for hand which showing gesture
-- Leading conf - leading confidence for `leading_hand`
 - User ID - subject id (useful for split data to train / val subsets).
 
 ### Bounding boxes
@@ -221,17 +202,6 @@ The annotations consist of bounding boxes of hands in COCO format `[top left X p
 | gesture      | ~ 28 300    | ~ 2 400 | 30 629  |
 | no gesture   | 112 740     | 10 849  | 123 589 |
 | total boxes  | 622 063     | 54 518  | 676 581 |
-
-### Landmarks
-
-We annotate 21 hand keypoints by using [MediaPipe](http://www.mediapipe.dev) open source framework.
-Due to auto markup empty lists may be present in landmarks.
-
-| Object           | Train + Val | Test   | Total   |
-|------------------|-------------|--------|---------|
-| leading hand     | 503 872     | 43 167 | 547 039 |
-| not leading hand | 98 766      | 9 243  | 108 009 |
-| total landmarks  | 602 638     | 52 410 | 655 048 |
 
 ### Converters
 
@@ -249,12 +219,12 @@ after conversion, you need change original definition [img2labels](https://githu
 def img2label_paths(img_paths):
     img_paths = list(img_paths)
     # Define label paths as a function of image paths
-    if "subsample" in img_paths[0]:
-        return [x.replace("subsample", "subsample_labels").replace(".jpg", ".txt") for x in img_paths]
-    elif "train_val" in img_paths[0]:
-        return [x.replace("train_val", "train_val_labels").replace(".jpg", ".txt") for x in img_paths]
+    if "train" in img_paths[0]:
+        return [x.replace("train", "train_labels").replace(".jpg", ".txt") for x in img_paths]
     elif "test" in img_paths[0]:
         return [x.replace("test", "test_labels").replace(".jpg", ".txt") for x in img_paths]
+    elif "val" in img_paths[0]:
+        return [x.replace("val", "val_labels").replace(".jpg", ".txt") for x in img_paths]
 ```
 
 </details>
@@ -280,6 +250,7 @@ Please see the specific [license](https://github.com/hukenovs/hagrid/blob/master
 - [Andrey Makhlyarchuk](https://www.linkedin.com/in/makhliarchuk)
 - [Karina Kvanchiani](https://www.linkedin.com/in/kvanchiani)
 - [Aleksandr Nagaev](https://www.linkedin.com/in/nagadit)
+- [Roman Kraynov](https://ru.linkedin.com/in/roman-kraynov-25ab44265)
 
 ### Links
 - [Github](https://github.com/hukenovs/hagrid)
