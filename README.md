@@ -4,7 +4,7 @@
 
 We introduce a large image dataset **HaGRID** (**HA**nd **G**esture **R**ecognition **I**mage **D**ataset) for hand gesture recognition (HGR) systems. You can use it for image classification or image detection tasks. Proposed dataset allows to build HGR systems, which can be used in video conferencing services (Zoom, Skype, Discord, Jazz etc.), home automation systems, the automotive sector, etc.
 
-HaGRID size is **723GB** and dataset contains **553,991** FullHD (1920 × 1080) RGB images divided into **18** classes of gestures. Also, some images have `no_gesture` class if there is a second free hand in the frame. This extra class contains **108,056** samples. The data were split into training 74%, 10% validation and testing 16% sets by subject `user_id`, with 410,107 images for train, 53,982 images for validation and 89,902 for test.
+HaGRID size is **723GB** and dataset contains **553,991** FullHD RGB images divided into **18** classes of gestures. Also, some images have `no_gesture` class if there is a second free hand in the frame. This extra class contains **108,056** samples. The data were split into training 74%, 10% validation and testing 16% sets by subject `user_id`, with 410,107 images for train, 53,982 images for validation and 89,902 for test.
 
 ![gestures](images/gestures.jpg)
 
@@ -16,12 +16,26 @@ Example of sample and its annotation:
 
 For more information see our arxiv paper [HaGRID - HAnd Gesture Recognition Image Dataset](https://arxiv.org/abs/2206.08219).
 
-## 🔥 News
-- **`2023/09/21`**: We release HaGRID 2.0.
-  - All files for training and testing are combined into one directory.
+## 🔥 Changelog
+- **`2023/09/21`**: We release HaGRID 2.0. ✌️
+  - All files for training and testing are combined into one directory
   - The data was further cleared and new ones were added
-  - Multi-gpu training and testing.
-  - Added new models for detection and full-frame classification.
+  - Multi-gpu training and testing
+  - Added new models for detection and full-frame classification
+  - Dataset size is **723GB**
+  - **553,991** FullHD RGB images (cleaned and updated classes, added diversity by race)
+  - Extra class `no_gesture` contains **108,056** samples
+  - Train/val/test split: (410,107) **74%** / (53,982) **10%** / (89,902) **16%** by subject `user_id`
+  - **37,563** unique persons
+- **`2022/06/16`**: HaGRID (Initial Dataset) 💪
+  - Dataset size is **716GB**
+  - **552,992** FullHD RGB images divided into **18** classes
+  - Extra class `no_gesture` contains **123,589** samples
+  - Train/test split: (509,323) **92%** / (43,669) **8%** by subject `user_id`
+  - **34,730** unique persons from 18 to 65 years old
+  - The distance is 0.5 to 4 meters from the camera
+
+Old HaGRID dataset is also available into branch `hagrid_v1`! 
 
 ## Installation
 Clone and install required python packages:
@@ -127,8 +141,7 @@ To use full frame models, **remove the no_gesture class**
 | [ResNeXt50](https://n-ws-620xz-pd11.s3pd11.sbercloud.ru/b-ws-620xz-pd11-jux/hagrid/hagrid_models_new/ResNext50.pth)    | **98.3** |
 | [ResNeXt101](https://n-ws-620xz-pd11.s3pd11.sbercloud.ru/b-ws-620xz-pd11-jux/hagrid/hagrid_models_new/ResNext101.pth)  | 97.5    |
 
-
-## Train
+<details><summary><h3>Train</h3></summary>
 
 You can use downloaded trained models, otherwise select a parameters for training in `configs` folder.
 To train the model, execute the following command:
@@ -149,8 +162,8 @@ See all saved metrics and parameters by opening a command line (this will open a
 ```bash
 tensorboard --logdir=<workdir>
 ```
-
-## Test
+</details>
+<details><summary><h3>Test</h3></summary>
 Test your model by running the following command:
 Single GPU:
 ```bash
@@ -161,7 +174,7 @@ Multi GPU:
 bash ddp_run.sh -g 0,1,2,3 -c test -p configs/<config>
 ```
 which -g is a list of GPU ids.
-
+</details>
 
 ## Demo
  ```bash
