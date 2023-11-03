@@ -2,15 +2,14 @@ import argparse
 import json
 import logging
 import os
-from typing import Tuple, Union
+from typing import Tuple
 
 import numpy as np
-import pandas as pd
-from omegaconf import DictConfig, ListConfig, OmegaConf
+from omegaconf import OmegaConf
 from PIL import Image
 from tqdm import tqdm
 
-from constants import IMAGES
+from converters.convert_utils import get_dataframe
 
 tqdm.pandas()
 
@@ -96,71 +95,6 @@ def get_poly(bboxes: list) -> list:
     return poly
 
 
-def get_files_from_dir(pth: str, extns: Tuple) -> list:
-    """
-    Get files from directory
-    Parameters
-    ----------
-    pth: str
-        path to directory
-    extns: Tuple
-        extensions of files
-
-    Returns
-    -------
-    list
-    """
-    if not os.path.exists(pth):
-        logging.error(f"Dataset directory doesn't exist {pth}")
-        return []
-    files = [f for f in os.listdir(pth) if f.endswith(extns)]
-    return files
-
-
-def get_dataframe(conf: Union[DictConfig, ListConfig], phase: str) -> pd.DataFrame:
-    """
-    Get dataframe with annotations
-    Parameters
-    ----------
-    conf: Union[DictConfig, ListConfig]
-        config
-    phase: str
-        phase of dataset
-
-    Returns
-    -------
-    pd.DataFrame
-    """
-    dataset_annotations = conf.dataset.dataset_annotations
-    dataset_folder = conf.dataset.dataset_folder
-    targets = conf.dataset.targets
-    annotations_all = None
-    exists_images = []
-
-    for target in tqdm(targets):
-        target_json = os.path.join(dataset_annotations, f"ann_{phase}", f"{target}.json")
-        if os.path.exists(target_json):
-            json_annotation = json.load(open(os.path.join(target_json)))
-
-            json_annotation = [
-                dict(annotation, **{"name": f"{name}.jpg"})
-                for name, annotation in zip(json_annotation, json_annotation.values())
-            ]
-
-            annotation = pd.DataFrame(json_annotation)
-
-            annotation["target"] = target
-            annotations_all = pd.concat([annotations_all, annotation], ignore_index=True)
-            exists_images.extend(get_files_from_dir(os.path.join(dataset_folder, phase, target), IMAGES))
-        else:
-            logging.warning(f"Database for {phase}/{target} not found")
-
-    annotations_all["exists"] = annotations_all["name"].isin(exists_images)
-    annotations = annotations_all[annotations_all["exists"]]
-
-    return annotations
-
-
 def run_convert(args: argparse.Namespace) -> None:
     """
     Run convert
@@ -180,14 +114,13 @@ def run_convert(args: argparse.Namespace) -> None:
     dataset_folder = conf.dataset.dataset_folder
     phases = conf.dataset.phases
     for phase in phases:
-
         logging.info(f"Run convert {phase}")
         logging.info("Create Dataframe")
         annotations = get_dataframe(conf, phase)
 
         logging.info("Create image_path")
         annotations["image_path"] = annotations.progress_apply(
-            lambda row: os.path.join(dataset_folder, phase, row["target"], row["name"]), axis=1
+            lambda row: os.path.join(dataset_folder, row["target"], row["name"]), axis=1
         )
 
         logging.info("Create width, height")

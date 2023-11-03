@@ -3,21 +3,20 @@ import logging
 import time
 from typing import Optional, Tuple
 
+import albumentations as A
 import cv2
 import mediapipe as mp
 import numpy as np
 import torch
-from omegaconf import OmegaConf
-from PIL import Image, ImageOps
+from albumentations.pytorch import ToTensorV2
+from omegaconf import DictConfig, OmegaConf
 from torch import Tensor
-from torchvision.transforms import functional as f
 
 mp_drawing = mp.solutions.drawing_utils
 mp_drawing_styles = mp.solutions.drawing_styles
 
 from constants import targets
-from detector.models.model import TorchVisionModel
-from detector.utils import build_model
+from custom_utils.utils import build_model
 
 logging.basicConfig(format="[LINE:%(lineno)d] %(levelname)-8s [%(asctime)s]  %(message)s", level=logging.INFO)
 
@@ -27,35 +26,48 @@ FONT = cv2.FONT_HERSHEY_SIMPLEX
 
 class Demo:
     @staticmethod
-    def preprocess(img: np.ndarray) -> Tuple[Tensor, Tuple[int, int], Tuple[int, int]]:
+    def preprocess(img: np.ndarray, transform) -> Tuple[Tensor, Tuple[int, int], Tuple[int, int]]:
         """
         Preproc image for model input
         Parameters
         ----------
         img: np.ndarray
             input image
+        transform :
+            albumentation transforms
         """
-        img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
-        image = Image.fromarray(img)
-        width, height = image.size
-
-        image = ImageOps.pad(image, (max(width, height), max(width, height)))
-        padded_width, padded_height = image.size
-        image = image.resize((320, 320))
-
-        img_tensor = f.pil_to_tensor(image)
-        img_tensor = f.convert_image_dtype(img_tensor)
-        img_tensor = img_tensor[None, :, :, :]
-        return img_tensor, (width, height), (padded_width, padded_height)
+        height, width = img.shape[0], img.shape[1]
+        transformed_image = transform(image=img)
+        processed_image = transformed_image["image"] / 255.0
+        return processed_image, (width, height)
 
     @staticmethod
-    def run(detector: TorchVisionModel, num_hands: int = 2, threshold: float = 0.5, landmarks: bool = False) -> None:
+    def get_transform_for_inf(transform_config: DictConfig):
+        """
+        Create list of transforms from config
+        Parameters
+        ----------
+        transform_config: DictConfig
+            config with test transforms
+        """
+        transforms_list = [getattr(A, key)(**params) for key, params in transform_config.items()]
+        transforms_list.append(ToTensorV2())
+        return A.Compose(transforms_list)
+
+    @staticmethod
+    def run(
+        detector, transform, conf: DictConfig, num_hands: int = 2, threshold: float = 0.5, landmarks: bool = False
+    ) -> None:
         """
         Run detection model and draw bounding boxes on frame
         Parameters
         ----------
         detector : TorchVisionModel
             Detection model
+        transform :
+            albumentation transforms
+        transform_config: DictConfig
+            config with test transforms
         num_hands:
             Min hands to detect
         threshold : float
@@ -78,9 +90,9 @@ class Demo:
 
             ret, frame = cap.read()
             if ret:
-                processed_frame, size, padded_size = Demo.preprocess(frame)
+                processed_image, size = Demo.preprocess(frame, transform)
                 with torch.no_grad():
-                    output = detector(processed_frame)[0]
+                    output = detector([processed_image])[0]
                 boxes = output["boxes"][:num_hands]
                 scores = output["scores"][:num_hands]
                 labels = output["labels"][:num_hands]
@@ -98,12 +110,9 @@ class Demo:
                 for i in range(min(num_hands, len(boxes))):
                     if scores[i] > threshold:
                         width, height = size
-                        padded_width, padded_height = padded_size
-                        scale = max(width, height) / 320
-
-                        padding_w = abs(padded_width - width) // (2 * scale)
-                        padding_h = abs(padded_height - height) // (2 * scale)
-
+                        scale = max(width, height) / conf.LongestMaxSize.max_size
+                        padding_w = abs(conf.PadIfNeeded.min_width - width // scale) // 2
+                        padding_h = abs(conf.PadIfNeeded.min_height - height // scale) // 2
                         x1 = int((boxes[i][0] - padding_w) * scale)
                         y1 = int((boxes[i][1] - padding_h) * scale)
                         x2 = int((boxes[i][2] - padding_w) * scale)
@@ -111,7 +120,7 @@ class Demo:
                         cv2.rectangle(frame, (x1, y1), (x2, y2), COLOR, thickness=3)
                         cv2.putText(
                             frame,
-                            targets[int(labels[i])],
+                            targets[int(labels[i]) + 1],
                             (x1, y1 - 10),
                             cv2.FONT_HERSHEY_SIMPLEX,
                             2,
@@ -146,14 +155,12 @@ def parse_arguments(params: Optional[Tuple] = None) -> argparse.Namespace:
 if __name__ == "__main__":
     args = parse_arguments()
     conf = OmegaConf.load(args.path_to_config)
-    model = build_model(
-        model_name=conf.model.name,
-        num_classes=len(conf.dataset.targets) + 1,
-        checkpoint=conf.model.get("checkpoint", None),
-        device=conf.device,
-        pretrained=conf.model.pretrained,
-    )
+    model = build_model(conf)
+    transform = Demo.get_transform_for_inf(conf.test_transforms)
+    if conf.model.checkpoint is not None:
+        snapshot = torch.load(conf.model.checkpoint, map_location=torch.device("cpu"))
+        model.load_state_dict(snapshot["MODEL_STATE"])
 
     model.eval()
     if model is not None:
-        Demo.run(model, num_hands=100, threshold=0.8, landmarks=args.landmarks)
+        Demo.run(model, transform, conf.test_transforms, num_hands=100, threshold=0.8, landmarks=args.landmarks)
