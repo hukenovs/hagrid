@@ -276,9 +276,11 @@ Please see the specific [license](https://github.com/hukenovs/hagrid/blob/master
 ### Citation
 You can cite the paper using the following BibTeX entry:
 
-    @article{hagrid,
-        title={HaGRID - HAnd Gesture Recognition Image Dataset},
-        author={Kapitanov, Alexander and Makhlyarchuk, Andrey and Kvanchiani, Karina},
-        journal={arXiv preprint arXiv:2206.08219},
-        year={2022}
+    @InProceedings{Kapitanov_2024_WACV,
+        author    = {Kapitanov, Alexander and Kvanchiani, Karina and Nagaev, Alexander and Kraynov, Roman and Makhliarchuk, Andrei},
+        title     = {HaGRID -- HAnd Gesture Recognition Image Dataset},
+        booktitle = {Proceedings of the IEEE/CVF Winter Conference on Applications of Computer Vision (WACV)},
+        month     = {January},
+        year      = {2024},
+        pages     = {4572-4581}
     }
