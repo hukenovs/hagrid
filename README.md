@@ -35,7 +35,7 @@ For more information see our arxiv paper [HaGRID - HAnd Gesture Recognition Imag
   - **34,730** unique persons from 18 to 65 years old
   - The distance is 0.5 to 4 meters from the camera
 
-Old HaGRID dataset is also available into branch `hagrid_v1`! 
+Old HaGRID dataset is also available into branch `hagrid_v1`!
 
 ## Installation
 Clone and install required python packages:
@@ -53,7 +53,7 @@ pip install -r requirements.txt
 ## Downloads
 We split the train dataset into 18 archives by gestures because of the large size of data. Download and unzip them from the following links:
 
-### Tranval
+### Dataset
 
 | Gesture                           | Size    | Gesture                                   | Size    |
 |-----------------------------------|---------|-------------------------------------------|---------|
@@ -147,6 +147,7 @@ You can use downloaded trained models, otherwise select a parameters for trainin
 To train the model, execute the following command:
 
 Single GPU:
+
 ```bash
 python run.py -c train -p configs/<config>
 ```
@@ -164,8 +165,11 @@ tensorboard --logdir=<workdir>
 ```
 </details>
 <details><summary><h3>Test</h3></summary>
+
 Test your model by running the following command:
+
 Single GPU:
+
 ```bash
 python run.py -c test -p configs/<config>
 ```
