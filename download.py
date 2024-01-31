@@ -2,7 +2,7 @@
 import argparse
 import os
 
-main_url = "https://n-ws-620xz-pd11.s3pd11.sbercloud.ru/b-ws-620xz-pd11-jux/hagrid/hagrid_dataset_new/"
+main_url = "https://n-ws-620xz-pd11.s3pd11.sbercloud.ru/b-ws-620xz-pd11-jux/hagrid/hagrid_dataset_new_554800/"
 urls = {
     "call": f"{main_url}hagrid_dataset/call.zip",
     "dislike": f"{main_url}hagrid_dataset/dislike.zip",
