@@ -4,11 +4,11 @@
 
 We introduce a large image dataset **HaGRID** (**HA**nd **G**esture **R**ecognition **I**mage **D**ataset) for hand gesture recognition (HGR) systems. You can use it for image classification or image detection tasks. Proposed dataset allows to build HGR systems, which can be used in video conferencing services (Zoom, Skype, Discord, Jazz etc.), home automation systems, the automotive sector, etc.
 
-HaGRID size is **723GB** and dataset contains **553,991** FullHD RGB images divided into **18** classes of gestures. Also, some images have `no_gesture` class if there is a second free hand in the frame. This extra class contains **108,056** samples. The data were split into training 74%, 10% validation and testing 16% sets by subject `user_id`, with 410,107 images for train, 53,982 images for validation and 89,902 for test.
+HaGRID size is **723GB** and dataset contains **554,800** FullHD RGB images divided into **18** classes of gestures. Also, some images have `no_gesture` class if there is a second free hand in the frame. This extra class contains **120,105** samples. The data were split into training 74%, 10% validation and testing 16% sets by subject `user_id`, with 410,800 images for train, 54,000 images for validation and 90,000 for test.
 
 ![gestures](images/gestures.jpg)
 
-The dataset contains **37,563** unique persons and at least this number of unique scenes. The subjects are people from 18 to 65 years old. The dataset was collected mainly indoors with considerable variation in lighting, including artificial and natural light. Besides, the dataset includes images taken in extreme conditions such as facing and backing to a window. Also, the subjects had to show gestures at a distance of 0.5 to 4 meters from the camera.
+The dataset contains **37,583** unique persons and at least this number of unique scenes. The subjects are people from 18 to 65 years old. The dataset was collected mainly indoors with considerable variation in lighting, including artificial and natural light. Besides, the dataset includes images taken in extreme conditions such as facing and backing to a window. Also, the subjects had to show gestures at a distance of 0.5 to 4 meters from the camera.
 
 Example of sample and its annotation:
 
@@ -23,10 +23,10 @@ For more information see our arxiv paper [HaGRID - HAnd Gesture Recognition Imag
   - Multi-gpu training and testing
   - Added new models for detection and full-frame classification
   - Dataset size is **723GB**
-  - **553,991** FullHD RGB images (cleaned and updated classes, added diversity by race)
-  - Extra class `no_gesture` contains **108,056** samples
-  - Train/val/test split: (410,107) **74%** / (53,982) **10%** / (89,902) **16%** by subject `user_id`
-  - **37,563** unique persons
+  - **554,800** FullHD RGB images (cleaned and updated classes, added diversity by race)
+  - Extra class `no_gesture` contains **120,105** samples
+  - Train/val/test split: (410,800) **74%** / (54,000) **10%** / (90,000) **16%** by subject `user_id`
+  - **37,583** unique persons
 - **`2022/06/16`**: HaGRID (Initial Dataset) 💪
   - Dataset size is **716GB**
   - **552,992** FullHD RGB images divided into **18** classes
@@ -57,19 +57,19 @@ We split the train dataset into 18 archives by gestures because of the large siz
 
 | Gesture                           | Size    | Gesture                                   | Size    |
 |-----------------------------------|---------|-------------------------------------------|---------|
-| [`call`](https://n-ws-620xz-pd11.s3pd11.sbercloud.ru/b-ws-620xz-pd11-jux/hagrid/hagrid_dataset_new/hagrid_dataset/call.zip)    | 37.2 GB | [`peace`](https://n-ws-620xz-pd11.s3pd11.sbercloud.ru/b-ws-620xz-pd11-jux/hagrid/hagrid_dataset_new/hagrid_dataset/peace.zip)           | 41.4 GB |
-| [`dislike`](https://n-ws-620xz-pd11.s3pd11.sbercloud.ru/b-ws-620xz-pd11-jux/hagrid/hagrid_dataset_new/hagrid_dataset/dislike.zip) | 40.9 GB | [`peace_inverted`](https://n-ws-620xz-pd11.s3pd11.sbercloud.ru/b-ws-620xz-pd11-jux/hagrid/hagrid_dataset_new/hagrid_dataset/peace_inverted.zip)  | 39.6 GB |
-| [`fist`](https://n-ws-620xz-pd11.s3pd11.sbercloud.ru/b-ws-620xz-pd11-jux/hagrid/hagrid_dataset_new/hagrid_dataset/fist.zip)    | 41.2 GB | [`rock`](https://n-ws-620xz-pd11.s3pd11.sbercloud.ru/b-ws-620xz-pd11-jux/hagrid/hagrid_dataset_new/hagrid_dataset/rock.zip)            | 40.7 GB |
-| [`four`](https://n-ws-620xz-pd11.s3pd11.sbercloud.ru/b-ws-620xz-pd11-jux/hagrid/hagrid_dataset_new/hagrid_dataset/four.zip)    | 42.1 GB | [`stop`](https://n-ws-620xz-pd11.s3pd11.sbercloud.ru/b-ws-620xz-pd11-jux/hagrid/hagrid_dataset_new/hagrid_dataset/stop.zip)            | 40.8 GB |
-| [`like`](https://n-ws-620xz-pd11.s3pd11.sbercloud.ru/b-ws-620xz-pd11-jux/hagrid/hagrid_dataset_new/hagrid_dataset/like.zip)    | 41.2 GB | [`stop_inverted`](https://n-ws-620xz-pd11.s3pd11.sbercloud.ru/b-ws-620xz-pd11-jux/hagrid/hagrid_dataset_new/hagrid_dataset/stop_inverted.zip)   | 40.4 GB |
-| [`mute`](https://n-ws-620xz-pd11.s3pd11.sbercloud.ru/b-ws-620xz-pd11-jux/hagrid/hagrid_dataset_new/hagrid_dataset/mute.zip)    | 42.1 GB | [`three`](https://n-ws-620xz-pd11.s3pd11.sbercloud.ru/b-ws-620xz-pd11-jux/hagrid/hagrid_dataset_new/hagrid_dataset/three.zip)           | 41.2 GB |
-| [`ok`](https://n-ws-620xz-pd11.s3pd11.sbercloud.ru/b-ws-620xz-pd11-jux/hagrid/hagrid_dataset_new/hagrid_dataset/ok.zip)      | 41.4 GB | [`three2`](https://n-ws-620xz-pd11.s3pd11.sbercloud.ru/b-ws-620xz-pd11-jux/hagrid/hagrid_dataset_new/hagrid_dataset/three2.zip)          | 39.2 GB |
-| [`one`](https://n-ws-620xz-pd11.s3pd11.sbercloud.ru/b-ws-620xz-pd11-jux/hagrid/hagrid_dataset_new/hagrid_dataset/one.zip)     | 41.7 GB | [`two_up`](https://n-ws-620xz-pd11.s3pd11.sbercloud.ru/b-ws-620xz-pd11-jux/hagrid/hagrid_dataset_new/hagrid_dataset/two_up.zip)          | 40.9 GB |
-| [`palm`](https://n-ws-620xz-pd11.s3pd11.sbercloud.ru/b-ws-620xz-pd11-jux/hagrid/hagrid_dataset_new/hagrid_dataset/palm.zip)    | 42.1 GB | [`two_up_inverted`](https://n-ws-620xz-pd11.s3pd11.sbercloud.ru/b-ws-620xz-pd11-jux/hagrid/hagrid_dataset_new/hagrid_dataset/two_up_inverted.zip) | 39.9 GB |
+| [`call`](https://n-ws-620xz-pd11.s3pd11.sbercloud.ru/b-ws-620xz-pd11-jux/hagrid/hagrid_dataset_new_554800/hagrid_dataset/call.zip)    | 37.2 GB | [`peace`](https://n-ws-620xz-pd11.s3pd11.sbercloud.ru/b-ws-620xz-pd11-jux/hagrid/hagrid_dataset_new_554800/hagrid_dataset/peace.zip)           | 41.4 GB |
+| [`dislike`](https://n-ws-620xz-pd11.s3pd11.sbercloud.ru/b-ws-620xz-pd11-jux/hagrid/hagrid_dataset_new_554800/hagrid_dataset/dislike.zip) | 40.9 GB | [`peace_inverted`](https://n-ws-620xz-pd11.s3pd11.sbercloud.ru/b-ws-620xz-pd11-jux/hagrid/hagrid_dataset_new_554800/hagrid_dataset/peace_inverted.zip)  | 40.5 GB |
+| [`fist`](https://n-ws-620xz-pd11.s3pd11.sbercloud.ru/b-ws-620xz-pd11-jux/hagrid/hagrid_dataset_new_554800/hagrid_dataset/fist.zip)    | 42.3 GB | [`rock`](https://n-ws-620xz-pd11.s3pd11.sbercloud.ru/b-ws-620xz-pd11-jux/hagrid/hagrid_dataset_new_554800/hagrid_dataset/rock.zip)            | 41.7 GB |
+| [`four`](https://n-ws-620xz-pd11.s3pd11.sbercloud.ru/b-ws-620xz-pd11-jux/hagrid/hagrid_dataset_new_554800/hagrid_dataset/four.zip)    | 43.1 GB | [`stop`](https://n-ws-620xz-pd11.s3pd11.sbercloud.ru/b-ws-620xz-pd11-jux/hagrid/hagrid_dataset_new_554800/hagrid_dataset/stop.zip)            | 41.8 GB |
+| [`like`](https://n-ws-620xz-pd11.s3pd11.sbercloud.ru/b-ws-620xz-pd11-jux/hagrid/hagrid_dataset_new_554800/hagrid_dataset/like.zip)    | 42.2 GB | [`stop_inverted`](https://n-ws-620xz-pd11.s3pd11.sbercloud.ru/b-ws-620xz-pd11-jux/hagrid/hagrid_dataset_new_554800/hagrid_dataset/stop_inverted.zip)   | 41.4 GB |
+| [`mute`](https://n-ws-620xz-pd11.s3pd11.sbercloud.ru/b-ws-620xz-pd11-jux/hagrid/hagrid_dataset_new_554800/hagrid_dataset/mute.zip)    | 43.2 GB | [`three`](https://n-ws-620xz-pd11.s3pd11.sbercloud.ru/b-ws-620xz-pd11-jux/hagrid/hagrid_dataset_new_554800/hagrid_dataset/three.zip)           | 42.2 GB |
+| [`ok`](https://n-ws-620xz-pd11.s3pd11.sbercloud.ru/b-ws-620xz-pd11-jux/hagrid/hagrid_dataset_new_554800/hagrid_dataset/ok.zip)      | 42.5 GB | [`three2`](https://n-ws-620xz-pd11.s3pd11.sbercloud.ru/b-ws-620xz-pd11-jux/hagrid/hagrid_dataset_new_554800/hagrid_dataset/three2.zip)          | 40.2 GB |
+| [`one`](https://n-ws-620xz-pd11.s3pd11.sbercloud.ru/b-ws-620xz-pd11-jux/hagrid/hagrid_dataset_new_554800/hagrid_dataset/one.zip)     | 42.7 GB | [`two_up`](https://n-ws-620xz-pd11.s3pd11.sbercloud.ru/b-ws-620xz-pd11-jux/hagrid/hagrid_dataset_new_554800/hagrid_dataset/two_up.zip)          | 41.8 GB |
+| [`palm`](https://n-ws-620xz-pd11.s3pd11.sbercloud.ru/b-ws-620xz-pd11-jux/hagrid/hagrid_dataset_new_554800/hagrid_dataset/palm.zip)    | 43.0 GB | [`two_up_inverted`](https://n-ws-620xz-pd11.s3pd11.sbercloud.ru/b-ws-620xz-pd11-jux/hagrid/hagrid_dataset_new_554800/hagrid_dataset/two_up_inverted.zip) | 40.9 GB |
 
-`dataset` **annotations**: [`annotations`](https://n-ws-620xz-pd11.s3pd11.sbercloud.ru/b-ws-620xz-pd11-jux/hagrid/hagrid_dataset_new/annotations.zip)
+`dataset` **annotations**: [`annotations`](https://n-ws-620xz-pd11.s3pd11.sbercloud.ru/b-ws-620xz-pd11-jux/hagrid/hagrid_dataset_new_554800/annotations.zip)
 
-[HaGRID 512px - lightweight version of the full dataset with](https://n-ws-620xz-pd11.s3pd11.sbercloud.ru/b-ws-620xz-pd11-jux/hagrid/hagrid_dataset_new/hagrid_dataset_512.zip) `min_side = 512p` `22.4 GB`
+[HaGRID 512px - lightweight version of the full dataset with](https://n-ws-620xz-pd11.s3pd11.sbercloud.ru/b-ws-620xz-pd11-jux/hagrid/hagrid_dataset_new_554800/hagrid_dataset_512.zip) `min_side = 512p` `26.4 GB`
 
 or by using python script
 ```bash
