@@ -81,7 +81,7 @@ We split the train dataset into 18 archives by gestures because of the large siz
 
 `dataset` **annotations**: [`annotations`](https://rndml-team-cv.obs.ru-moscow-1.hc.sbercloud.ru/datasets/hagrid_v2/annotations_with_landmarks/annotations.zip)
 
-[HaGRIDv2 512px - lightweight version of the full dataset with](https://rndml-team-cv.obs.ru-moscow-1.hc.sbercloud.ru/datasets/hagrid_v2/hagridv2_512.zip) `min_side = 512p` `26.4 GB`
+[HaGRIDv2 512px - lightweight version of the full dataset with](https://rndml-team-cv.obs.ru-moscow-1.hc.sbercloud.ru/datasets/hagrid_v2/hagridv2_512.zip) `min_side = 512p` `119.4 GB`
 
 or by using python script
 ```bash
