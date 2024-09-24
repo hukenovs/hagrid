@@ -2,7 +2,9 @@
 import argparse
 import os
 
+v2_url = "https://rndml-team-cv.obs.ru-moscow-1.hc.sbercloud.ru/datasets/hagrid_v2/"
 main_url = "https://n-ws-620xz-pd11.s3pd11.sbercloud.ru/b-ws-620xz-pd11-jux/hagrid/hagrid_dataset_new_554800/"
+
 urls = {
     "call": f"{main_url}hagrid_dataset/call.zip",
     "dislike": f"{main_url}hagrid_dataset/dislike.zip",
@@ -11,18 +13,37 @@ urls = {
     "like": f"{main_url}hagrid_dataset/like.zip",
     "mute": f"{main_url}hagrid_dataset/mute.zip",
     "ok": f"{main_url}hagrid_dataset/ok.zip",
-    "one": f"{main_url}hagrid_dataset/one.zip",
+    "one": f"{v2_url}hagrid_v2_zip/one.zip",
     "palm": f"{main_url}hagrid_dataset/palm.zip",
     "peace_inverted": f"{main_url}hagrid_dataset/peace_inverted.zip",
     "peace": f"{main_url}hagrid_dataset/peace.zip",
-    "rock": f"{main_url}hagrid_dataset/rock.zip",
+    "rock": f"{v2_url}hagrid_v2_zip/rock.zip",
     "stop_inverted": f"{main_url}hagrid_dataset/stop_inverted.zip",
     "stop": f"{main_url}hagrid_dataset/stop.zip",
     "three": f"{main_url}hagrid_dataset/three.zip",
     "three2": f"{main_url}hagrid_dataset/three2.zip",
     "two_up_inverted": f"{main_url}hagrid_dataset/two_up_inverted.zip",
     "two_up": f"{main_url}hagrid_dataset/two_up.zip",
-    "annotations": f"{main_url}annotations.zip",
+    
+    "grabbing": f"{v2_url}hagrid_v2_zip/grabbing.zip",
+    "grip": f"{v2_url}hagrid_v2_zip/grip.zip",
+    "holy": f"{v2_url}hagrid_v2_zip/holy.zip",
+    "point": f"{v2_url}hagrid_v2_zip/point.zip",
+    "three3": f"{v2_url}hagrid_v2_zip/three3.zip",
+    "timeout": f"{v2_url}hagrid_v2_zip/timeout.zip",
+    "xsign": f"{v2_url}hagrid_v2_zip/xsign.zip",
+    "hand_heart": f"{v2_url}hagrid_v2_zip/hand_heart.zip",
+    "hands_heart2": f"{v2_url}hagrid_v2_zip/hands_heart2.zip",
+    "little_finger": f"{v2_url}hagrid_v2_zip/little_finger.zip",
+    "middle_finger": f"{v2_url}hagrid_v2_zip/middle_finger.zip",
+    "take_picture": f"{v2_url}hagrid_v2_zip/take_picture.zip",
+    "three_gun": f"{v2_url}hagrid_v2_zip/three_gun.zip",
+    "thumb_index": f"{v2_url}hagrid_v2_zip/thumb_index.zip",
+    "thumb_index2": f"{v2_url}hagrid_v2_zip/thumb_index2.zip",
+    "no_gesture": f"{v2_url}hagrid_v2_zip/no_gesture.zip",
+    
+    "annotations": f"{v2_url}/annotations_with_landmarks/annotations.zip",
+    
 }
 
 GESTURES = (
@@ -44,6 +65,22 @@ GESTURES = (
     "three2",
     "two_up_inverted",
     "two_up",
+    "grabbing",
+    "grip",
+    "holy",
+    "point",
+    "three3",
+    "timeout",
+    "xsign",
+    "hand_heart",
+    "hands_heart2",
+    "little_finger",
+    "middle_finger",
+    "take_picture",
+    "three_gun",
+    "thumb_index",
+    "thumb_index2",
+    "no_gesture",
 )
 
 DATASET = os.path.expanduser("./hagrid/dataset/")

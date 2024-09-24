@@ -95,9 +95,8 @@ class HagridDataset(Dataset):
         annotations_all = []
 
         for target in tqdm(self.conf.dataset.targets, desc=f"Prepare {self.dataset_type} dataset"):
-            if target == "no_gesture":
-                continue
             target_tsv = os.path.join(self.path_to_json, f"{target}.json")
+            print(target_tsv)
             if os.path.exists(target_tsv):
                 with open(target_tsv, "r") as file:
                     json_annotation = json.load(file)
@@ -166,15 +165,23 @@ class DetectionDataset(HagridDataset):
         image_pth = os.path.join(self.path_to_dataset, row["target"], row["name"])
 
         image = self._load_image(image_pth)
-
-        labels = np.array([self.labels[label] for label in row["labels"]])
+        
+        if self.one_class:
+            labels = np.array([self.labels[label] for label in row["labels"]])
+        else:
+            labels = np.array([self.labels[label] for label in row["united_label"]])
 
         target = {}
         width, height = image.size
 
         bboxes = []
-
-        for bbox in row["bboxes"]:
+        
+        if self.one_class:
+            iter_boxes = row["bboxes"]
+        else:
+            iter_boxes = row["united_bbox"]
+            
+        for bbox in iter_boxes:
             x1, y1, w, h = bbox
             x_min = x1 * width
             y_min = y1 * height
@@ -221,7 +228,9 @@ class ClassificationDataset(HagridDataset):
             Transformations for dataset
         """
         super().__init__(conf, dataset_type, transform)
-        self.annotations = self.annotations[~self.annotations["labels"].apply(lambda x: x == ["no_gesture"])]
+        self.annotations = self.annotations[~self.annotations.apply(lambda x: x["labels"] == ["no_gesture"] \
+                                                                    and x["target"] !="no_gesture", axis=1)]
+
         self.dataset_type = dataset_type
 
     def __getitem__(self, index: int) -> Tuple[Image.Image, Dict]:
@@ -245,13 +254,16 @@ class ClassificationDataset(HagridDataset):
         image = self._load_image(image_pth)
 
         labels = row["labels"]
-
-        for label in labels:
-            if label == "no_gesture":
-                continue
-            else:
-                gesture = label
-                break
+        
+        if row['target'] == "no_gesture":
+            gesture = "no_gesture"
+        else:
+            for label in labels:
+                if label == "no_gesture":
+                    continue
+                else:
+                    gesture = label
+                    break
         try:
             label = {"labels": torch.tensor(self.labels[gesture])}
         except Exception:

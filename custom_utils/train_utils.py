@@ -14,6 +14,8 @@ from custom_utils.utils import Logger, build_model, get_transform
 from models import HaGRIDModel
 
 
+set_random_seed()
+
 def collate_fn(batch: List) -> Tuple:
     """
     Collate func for dataloader
@@ -82,11 +84,14 @@ def load_train_objects(config: DictConfig, command: str, n_gpu: int):
         raise Exception(f"Model type {model.type} does not exist")
 
     test_dataset = GestureDataset(config, "test", get_transform(config.test_transforms, model.type))
+    print(len(test_dataset))
 
     if command == "train":
         train_dataset = GestureDataset(config, "train", get_transform(config.train_transforms, model.type))
+        print(len(train_dataset))
         if config.dataset.dataset_val and config.dataset.annotations_val:
             val_dataset = GestureDataset(config, "val", get_transform(config.val_transforms, model.type))
+            print(len(val_dataset))
         else:
             raise Exception("Cannot train without validation data")
 

@@ -43,7 +43,7 @@ def xywh_to_xyxy(boxes):
     return np.concatenate([boxes[..., :2], boxes[..., :2] + boxes[..., 2:]], len(boxes.shape) - 1)
 
 
-def create_label(row):
+def create_label(row, mode):
     """
     Create .txt files with bboxes and labels
     Parameters
@@ -55,7 +55,8 @@ def create_label(row):
     None
     """
     with open(row["label_path"], "w") as f:
-        for i in range(len(row["labels"])):
+        amount_bboxes = len(row["labels"]) if mode == "hands" else len(row["united_label"])
+        for i in range(amount_bboxes):
             f.write(str(row["category_id"][i]) + " ")
             f.write(" ".join(map(str, row["converted_bboxes"][i])) + "\n")
 
@@ -123,22 +124,38 @@ def run_convert(args):
 
         if bbox_format == "cxcywh":
             logging.info("Create bboxes cxcywh format")
-            annotations["converted_bboxes"] = annotations.progress_apply(
-                lambda row: xywh_to_cxcywh(row["bboxes"]), axis=1
-            )
+            if args.mode == "hands":
+                annotations["converted_bboxes"] = annotations.progress_apply(
+                    lambda row: xywh_to_cxcywh(row["bboxes"]), axis=1
+                )
+            elif args.mode == "gestures":
+                annotations["converted_bboxes"] = annotations.progress_apply(
+                    lambda row: xywh_to_cxcywh(row["united_bbox"]), axis=1
+                )
 
         elif bbox_format == "xyxy":
             logging.info("Create bboxes xyxy format")
-            annotations["converted_bboxes"] = annotations.progress_apply(
-                lambda row: xywh_to_xyxy(row["bboxes"]), axis=1
-            )
+            if args.mode == "hands":
+                annotations["converted_bboxes"] = annotations.progress_apply(
+                    lambda row: xywh_to_xyxy(row["bboxes"]), axis=1
+                )
+            elif args.mode == "gestures":
+                annotations["converted_bboxes"] = annotations.progress_apply(
+                    lambda row: xywh_to_cxcywh(row["united_bbox"]), axis=1
+                )
 
         elif bbox_format == "xywh":
             logging.info("Create bboxes xywh format")
-            annotations["converted_bboxes"] = annotations["bboxes"]
+            if args.mode == "hands":
+                annotations["converted_bboxes"] = annotations["bboxes"]
+            elif args.mode == "gestures":
+                annotations["converted_bboxes"] = annotations["united_bbox"]
 
         logging.info("Create labels_id")
-        annotations["category_id"] = annotations["labels"].progress_apply(lambda x: [labels[label] for label in x])
+        if mode == "hands":
+            annotations["category_id"] = annotations["labels"].progress_apply(lambda x: [labels[label] for label in x])
+        else:
+            annotations["category_id"] = annotations["united_label"].progress_apply(lambda x: [labels[label] for label in x])
         annotations["label_path"] = annotations["image_path"].progress_apply(
             lambda x: x.replace(phase, f"{phase}_labels").replace(".jpg", ".txt")
         )
@@ -161,5 +178,6 @@ if __name__ == "__main__":
     parser.add_argument("--bbox_format", default="cxcywh", type=str, help="bbox format: xyxy, cxcywh, xywh")
     parser.add_argument("--cfg", default="converter_config.yaml", type=str, help="path to data config")
     parser.add_argument("--out", default="./hagrid_yolo_format", type=str, help="path to output dir")
+    parser.add_argument("--mode", default="gestures", type=str, help="modes: hands or gestures detection")
     args = parser.parse_args()
     run_convert(args)
