@@ -1,7 +1,7 @@
 dataset:
-  dataset_annotations: /home/jovyan/nuzhdin/Hagrid2/HaGRID_V2/HaGRIDv2_annotations_with_meta # Path to annotations
-  dataset_folder: /home/jovyan/nuzhdin/Hagrid2/HaGRID_V2/HaGRIDv2_dataset # Path to images
-  phases: [train, test, val] #names of annotation directories
+  dataset_annotations: <path_to_json_folder> # Path to annotations
+  dataset_folder: <path_to_dataset_folder> # Path to images
+  phases: [train, test, val] # names of annotation directories
   targets:
     - grabbing
     - grip

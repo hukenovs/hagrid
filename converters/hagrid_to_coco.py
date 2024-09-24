@@ -131,37 +131,48 @@ def run_convert(args: argparse.Namespace) -> None:
         logging.info("Create id")
         annotations["id"] = annotations.index
 
-        logging.info("Create abs_bboxes")
-        if args.mode == "hands":
-            annotations["abs_bboxes"] = annotations.progress_apply(
-                lambda row: get_abs_bboxes(row["bboxes"], (row["width"], row["height"])), axis=1
-            )
-        elif args.mode == "gestures":
-            annotations["abs_bboxes"] = annotations.progress_apply(
-                lambda row: get_abs_bboxes(row["united_bbox"], (row["width"], row["height"])), axis=1
-            )
+        logging.info("Create abs_bboxes and category_id")
+        def get_correct_boxes_and_labels(row):
+            if args.mode == "hands":
+                abs_bboxes = get_abs_bboxes(row["bboxes"], (row["width"], row["height"]))
+                category_id = [labels[label] for label in row["labels"]]
+            elif args.mode == "gestures":
+                boxes = []
+                labels_list = []
+                for i in range(len(row["united_bbox"])):
+                    if row["united_bbox"][i] is None:
+                        boxes.append(row["bboxes"][i])
+                        labels_list.append(row["labels"][i])
+                    else:
+                        boxes.append(row["united_bbox"][i])
+                        labels_list.append(row["united_label"][i])
+                abs_bboxes = get_abs_bboxes(boxes, (row["width"], row["height"]))
+                category_id = [labels[label] for label in labels_list]
+            return pd.Series({"abs_bboxes": abs_bboxes, "category_id": category_id})
+
+        annotations[["abs_bboxes", "category_id"]] = annotations.progress_apply(
+            get_correct_boxes_and_labels, axis=1
+        )
+
         logging.info("Create area")
         annotations["area"] = annotations["abs_bboxes"].progress_apply(lambda bboxes: get_area(bboxes))
         logging.info("Create segmentation")
         annotations["segmentation"] = annotations["abs_bboxes"].progress_apply(lambda bboxes: get_poly(bboxes))
-        logging.info("Create category_id")
-        if args.mode == "hands":
-            annotations["category_id"] = annotations["labels"].progress_apply(lambda x: [labels[label] for label in x])
-        elif args.mode == "gestures":
-            annotations["category_id"] = annotations["united_label"].progress_apply(lambda x: [labels[label] for label in x])
+
         categories = [{"supercategory": "none", "name": k, "id": v} for k, v in labels.items()]
         logging.info(f"Save to {phase}.json")
         res_file = {"categories": categories, "images": [], "annotations": []}
         annot_count = 0
         for index, row in tqdm(annotations.iterrows()):
-            img_elem = {"file_name": row["image_path"], "height": row["height"], "width": row["width"], "id": row["id"]}
-
+            img_elem = {
+                "file_name": row["image_path"],
+                "height": row["height"],
+                "width": row["width"],
+                "id": row["id"]
+            }
             res_file["images"].append(img_elem)
 
-            if args.mode == "hands":
-                num_boxes = len(row["bboxes"])
-            elif args.mode == "gestures":
-                num_boxes = len(row["united_bbox"])
+            num_boxes = len(row["abs_bboxes"])
             for i in range(num_boxes):
                 annot_elem = {
                     "id": annot_count,
@@ -180,9 +191,10 @@ def run_convert(args: argparse.Namespace) -> None:
             f.write(json_str)
 
 
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser("Convert Hagrid annotations to Coco annotations format", add_help=False)
-    parser.add_argument("--cfg", default="converter_config.yaml", type=str, help="path to data config")
+    parser.add_argument("--cfg", default="converters/converter_config.yaml", type=str, help="path to data config")
     parser.add_argument("--out", default="./hagrid_coco_format", type=str, help="path to output jsons")
     parser.add_argument("--mode", default="gestures", type=str, help="modes: hands or gestures detection")
     args = parser.parse_args()

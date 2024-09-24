@@ -96,7 +96,6 @@ class HagridDataset(Dataset):
 
         for target in tqdm(self.conf.dataset.targets, desc=f"Prepare {self.dataset_type} dataset"):
             target_tsv = os.path.join(self.path_to_json, f"{target}.json")
-            print(target_tsv)
             if os.path.exists(target_tsv):
                 with open(target_tsv, "r") as file:
                     json_annotation = json.load(file)
@@ -168,19 +167,24 @@ class DetectionDataset(HagridDataset):
         
         if self.one_class:
             labels = np.array([self.labels[label] for label in row["labels"]])
+            iter_boxes = [row["bboxes"][i] for i in range(len(row["bboxes"]))]
         else:
-            labels = np.array([self.labels[label] for label in row["united_label"]])
+            labels = []
+            iter_boxes = []
+            for i in range(len(row["united_bbox"])):
+                if row["united_bbox"][i] is None:
+                    iter_boxes.append(row["bboxes"][i])
+                    labels.append(self.labels[row["labels"][i]])
+                else:
+                    iter_boxes.append(row["united_bbox"][i])
+                    labels.append(self.labels[row["united_label"][i]])
+            labels = np.array(labels)
 
         target = {}
         width, height = image.size
 
         bboxes = []
-        
-        if self.one_class:
-            iter_boxes = row["bboxes"]
-        else:
-            iter_boxes = row["united_bbox"]
-            
+
         for bbox in iter_boxes:
             x1, y1, w, h = bbox
             x_min = x1 * width
