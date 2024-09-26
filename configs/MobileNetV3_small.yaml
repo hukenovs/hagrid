@@ -1,6 +1,5 @@
 #Exp params
 epochs: 100
-random_state: 42
 log_every: 100 # Log every n iterations
 eval_every: 1 # Eval and save every n epochs
 test_every: 0 # Test every n epochs
@@ -24,12 +23,26 @@ dataset:
     dataset_test: <path_to_dataset_folder>
 
     img_size: &img_size 224 # Image size for training, must be square
-    img_mean: &img_mean [0.54, 0.499, 0.473]
-    img_std: &img_std [0.231, 0.232, 0.229]
+    img_mean: &img_mean [0.54, 0.499, 0.474]
+    img_std: &img_std [0.234, 0.235, 0.231]
     subset: -1 # Amount of training data
+    
+    one_class: False
 
     targets:
+        - grabbing
+        - grip
+        - holy
+        - point
         - call
+        - three3
+        - timeout
+        - xsign
+        - hand_heart
+        - hand_heart2
+        - little_finger
+        - middle_finger
+        - take_picture
         - dislike
         - fist
         - four
@@ -39,15 +52,18 @@ dataset:
         - one
         - palm
         - peace
+        - peace_inverted
         - rock
         - stop
         - stop_inverted
         - three
+        - three2
         - two_up
         - two_up_inverted
-        - three2
-        - peace_inverted
-
+        - three_gun
+        - thumb_index
+        - thumb_index2
+        - no_gesture
 
 # Transform and augmentation pipeline. See https://albumentations.ai/docs/ for using
 train_transforms:

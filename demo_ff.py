@@ -74,7 +74,7 @@ class Demo:
                 label = output["labels"].argmax(dim=1)
 
                 cv2.putText(
-                    frame, targets[int(label) + 1], (10, 100), cv2.FONT_HERSHEY_SIMPLEX, 2, (0, 0, 255), thickness=3
+                    frame, targets[int(label)], (10, 100), cv2.FONT_HERSHEY_SIMPLEX, 2, (0, 0, 255), thickness=3
                 )
                 fps = 1 / delta
                 cv2.putText(frame, f"FPS: {fps :02.1f}, Frame: {cnt}", (30, 30), FONT, 1, (255, 0, 255), 2)

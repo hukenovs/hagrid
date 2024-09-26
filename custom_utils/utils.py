@@ -7,8 +7,12 @@ import torch
 from albumentations.pytorch import ToTensorV2
 from omegaconf import DictConfig
 from torchmetrics import F1Score
-
+import random
+import numpy as np
 from models import classifiers_list, detectors_list
+
+
+TORCH_VERSION = torch.__version__
 
 
 class F1ScoreWithLogging:
@@ -101,7 +105,7 @@ class Logger:
             log_str += f"{self.train_state} ---- Epoch [{epoch}/{self.max_epochs}], Iteration [{iteration}/{self.dataloader_len}]:"
             if self.train_state == "Train" and loss is not None:
                 self.loss_averager.update(loss)
-                log_str += f" Loss: {self.loss_averager.value:.4f}"
+                log_str += f" Loss: {self.loss_averager.value}"
             if self.train_state in ["Eval", "Test"] and metrics is not None:
                 try:
                     del metrics["classes"]
@@ -110,7 +114,7 @@ class Logger:
                 self.metric_averager.update(metrics)
                 if iteration == self.dataloader_len:
                     for metric_name, metric_value in self.metric_averager.value.items():
-                        log_str += f" {metric_name}: {metric_value:.3}"
+                        log_str += f" {metric_name}: {metric_value}"
             print(log_str)
 
     def __enter__(self):
@@ -170,7 +174,7 @@ def get_transform(transform_config: DictConfig, model_type: str):
 
 def build_model(config: DictConfig):
     model_name = config.model.name
-    model_config = {"num_classes": len(config.dataset.targets), "pretrained": config.model.pretrained}
+    model_config = {"num_classes": 34, "pretrained": config.model.pretrained}
     if model_name in detectors_list:
         model_config["num_classes"] += 1
         model_config.update(
@@ -191,3 +195,34 @@ def build_model(config: DictConfig):
         raise Exception(f"Unknown model {model_name}")
 
     return model
+
+
+def set_random_seed(seed: int = 42,
+                    deterministic: bool = False) -> int:
+    """Set random seed.
+
+    Args:
+        seed (int, optional): Seed to be used.
+        deterministic (bool): Whether to set the deterministic option for
+            CUDNN backend, i.e., set `torch.backends.cudnn.deterministic`
+            to True and `torch.backends.cudnn.benchmark` to False.
+            Defaults to False.
+    """
+    random.seed(seed)
+    np.random.seed(seed)
+    torch.manual_seed(seed)
+    # torch.cuda.manual_seed(seed)
+    if torch.cuda.is_available():
+        torch.cuda.manual_seed_all(seed)
+    if deterministic:
+        if torch.backends.cudnn.benchmark:
+            print(
+                'torch.backends.cudnn.benchmark is going to be set as '
+                '`False` to cause cuDNN to deterministically select an '
+                'algorithm')
+        torch.backends.cudnn.deterministic = True
+        torch.backends.cudnn.benchmark = False
+
+        if digit_version(TORCH_VERSION) >= digit_version('1.10.0'):
+            torch.use_deterministic_algorithms(True)
+    return seed

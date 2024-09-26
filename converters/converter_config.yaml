@@ -1,9 +1,21 @@
 dataset:
-  dataset_annotations: <path_to_annotations> # Path to annotations
-  dataset_folder: <path_to_dataset> # Path to images
-  phases: [train, test, val] #names of annotation directories
+  dataset_annotations: <path_to_json_folder> # Path to annotations
+  dataset_folder: <path_to_dataset_folder> # Path to images
+  phases: [train, val, test] # names of annotation directories
   targets:
+    - grabbing
+    - grip
+    - holy
+    - point
     - call
+    - three3
+    - timeout
+    - xsign
+    - hand_heart
+    - hand_heart2
+    - little_finger
+    - middle_finger
+    - take_picture
     - dislike
     - fist
     - four
@@ -13,12 +25,15 @@ dataset:
     - one
     - palm
     - peace
+    - peace_inverted
     - rock
     - stop
     - stop_inverted
     - three
+    - three2
     - two_up
     - two_up_inverted
-    - three2
-    - peace_inverted
+    - three_gun
+    - thumb_index
+    - thumb_index2
     - no_gesture

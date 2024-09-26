@@ -12,7 +12,10 @@ from torch.utils.tensorboard import SummaryWriter
 from custom_utils.ddp_utils import get_sampler
 from custom_utils.utils import Logger, build_model, get_transform
 from models import HaGRIDModel
+from .utils import set_random_seed
 
+
+set_random_seed()
 
 def collate_fn(batch: List) -> Tuple:
     """
