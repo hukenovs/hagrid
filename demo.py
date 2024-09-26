@@ -120,7 +120,7 @@ class Demo:
                         cv2.rectangle(frame, (x1, y1), (x2, y2), COLOR, thickness=3)
                         cv2.putText(
                             frame,
-                            targets[int(labels[i]) + 1],
+                            targets[int(labels[i])],
                             (x1, y1 - 10),
                             cv2.FONT_HERSHEY_SIMPLEX,
                             2,

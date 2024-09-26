@@ -5,6 +5,7 @@ import os
 from typing import Tuple
 
 import numpy as np
+import pandas as pd
 from omegaconf import OmegaConf
 from PIL import Image
 from tqdm import tqdm
@@ -139,13 +140,17 @@ def run_convert(args: argparse.Namespace) -> None:
             elif args.mode == "gestures":
                 boxes = []
                 labels_list = []
-                for i in range(len(row["united_bbox"])):
-                    if row["united_bbox"][i] is None:
-                        boxes.append(row["bboxes"][i])
-                        labels_list.append(row["labels"][i])
-                    else:
-                        boxes.append(row["united_bbox"][i])
-                        labels_list.append(row["united_label"][i])
+                if row['united_bbox'] is None:
+                    iter_bboxes = row['bboxes']
+                    iter_labels = row['labels']
+                else:
+                    iter_bboxes = row['united_bbox']
+                    iter_labels = row['united_label']
+                    
+                for i in range(len(iter_bboxes)):
+                    boxes.append(iter_bboxes[i])
+                    labels_list.append(iter_labels[i])
+                    
                 abs_bboxes = get_abs_bboxes(boxes, (row["width"], row["height"]))
                 category_id = [labels[label] for label in labels_list]
             return pd.Series({"abs_bboxes": abs_bboxes, "category_id": category_id})

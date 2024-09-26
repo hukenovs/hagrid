@@ -143,17 +143,17 @@ criterion: CrossEntropyLoss
 train_params:
     num_workers: 16
     shuffle: True
-    batch_size: 64
+    batch_size: 128
     prefetch_factor: 3
 
 test_params:
     num_workers: 16
     shuffle: False
-    batch_size: 64
+    batch_size: 128
     prefetch_factor: 3
 
 val_params:
     num_workers: 16
     shuffle: False
-    batch_size: 64
+    batch_size: 128
     prefetch_factor: 3

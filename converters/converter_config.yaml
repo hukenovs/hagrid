@@ -1,7 +1,7 @@
 dataset:
   dataset_annotations: <path_to_json_folder> # Path to annotations
   dataset_folder: <path_to_dataset_folder> # Path to images
-  phases: [train, test, val] # names of annotation directories
+  phases: [train, val, test] # names of annotation directories
   targets:
     - grabbing
     - grip

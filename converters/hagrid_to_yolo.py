@@ -1,6 +1,7 @@
 import argparse
 import logging
 import os
+import pandas as pd
 
 import numpy as np
 from omegaconf import OmegaConf
@@ -129,13 +130,17 @@ def run_convert(args):
             elif args.mode == "gestures":
                 boxes = []
                 labels_list = []
-                for i in range(len(row["united_bbox"])):
-                    if row["united_bbox"][i] is None:
-                        boxes.append(row["bboxes"][i])
-                        labels_list.append(labels_dict[row["labels"][i]])
-                    else:
-                        boxes.append(row["united_bbox"][i])
-                        labels_list.append(labels_dict[row["united_label"][i]])
+                if row['united_bbox'] is None:
+                    iter_bboxes = row['bboxes']
+                    iter_labels = row['labels']
+                else:
+                    iter_bboxes = row['united_bbox']
+                    iter_labels = row['united_label']
+                    
+                for i in range(len(iter_bboxes)):
+                    boxes.append(iter_bboxes[i])
+                    labels_list.append(labels_dict[iter_labels[i]])
+                    
             else:
                 raise ValueError("Invalid mode. Should be 'hands' or 'gestures'.")
 

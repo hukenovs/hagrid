@@ -17,7 +17,7 @@ Example of sample and its annotation:
 For more information see our arxiv paper [TBA]().
 
 ## 🔥 Changelog
-- **`2024/09/24`**: We release HaGRIDv2. 🙏
+- **`2024/09/24`**: We release [HaGRIDv2](https://github.com/hukenovs/hagrid/tree/hagridv2-1m). 🙏
   - The HaGRID dataset has been expanded with 15 new gesture classes, including two-handed gestures
   - New class "no_gesture" with domain-specific natural hand postures was addad (**2,164** samples, divided by train/val/test containing 1,464, 200, 500 images, respectively)
   - Extra class `no_gesture` contains **200,390** bounding boxes
@@ -26,7 +26,7 @@ For more information see our arxiv paper [TBA]().
   - **1,086,158** FullHD RGB images
   - Train/val/test split: (821,458) **76%** / (99,200) **9%** / (165,500) **15%** by subject `user_id`
   - **65,977** unique persons
-- **`2023/09/21`**: We release HaGRID 2.0. ✌️
+- **`2023/09/21`**: We release [HaGRID 2.0.](https://github.com/hukenovs/hagrid/tree/Hagrid_v2) ✌️
   - All files for training and testing are combined into one directory
   - The data was further cleared and new ones were added
   - Multi-gpu training and testing
@@ -36,15 +36,13 @@ For more information see our arxiv paper [TBA]().
   - Extra class `no_gesture` contains **120,105** samples
   - Train/val/test split: (410,800) **74%** / (54,000) **10%** / (90,000) **16%** by subject `user_id`
   - **37,583** unique persons
-- **`2022/06/16`**: HaGRID (Initial Dataset) 💪
+- **`2022/06/16`**: [HaGRID (Initial Dataset)](https://github.com/hukenovs/hagrid/tree/Hagrid_v1) 💪
   - Dataset size is **716GB**
   - **552,992** FullHD RGB images divided into **18** classes
   - Extra class `no_gesture` contains **123,589** samples
   - Train/test split: (509,323) **92%** / (43,669) **8%** by subject `user_id`
   - **34,730** unique persons from 18 to 65 years old
   - The distance is 0.5 to 4 meters from the camera
-
-Old HaGRID dataset is also available into branch `hagrid_v1`!
 
 ## Installation
 Clone and install required python packages:
@@ -60,7 +58,7 @@ pip install -r requirements.txt
 ```
 
 ## Downloads
-We split the train dataset into 18 archives by gestures because of the large size of data. Download and unzip them from the following links:
+We split the train dataset into 34 archives by gestures because of the large size of data. Download and unzip them from the following links:
 
 ### Dataset
 
@@ -326,11 +324,11 @@ Please see the specific [license](https://github.com/hukenovs/hagrid/blob/master
 
 ### Links
 - [Github](https://github.com/hukenovs/hagrid)
-- [Mirror](https://gitlab.aicloud.sbercloud.ru/rndcv/hagrid)
+<!-- - [Mirror](https://gitlab.aicloud.sbercloud.ru/rndcv/hagrid) -->
 - [arXiv](https://arxiv.org/abs/2206.08219)
-- [Kaggle](https://www.kaggle.com/datasets/kapitanov/hagrid)
-- [Habr](https://habr.com/ru/company/sberdevices/blog/671614/)
-- [Paperswithcode](https://paperswithcode.com/paper/hagrid-hand-gesture-recognition-image-dataset)
+<!-- - [Kaggle](https://www.kaggle.com/datasets/kapitanov/hagrid) -->
+<!-- - [Habr](https://habr.com/ru/company/sberdevices/blog/671614/) -->
+<!-- - [Paperswithcode](https://paperswithcode.com/paper/hagrid-hand-gesture-recognition-image-dataset) -->
 
 ### Citation
 You can cite the paper using the following BibTeX entry:
