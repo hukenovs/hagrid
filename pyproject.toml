@@ -4,6 +4,9 @@
 # [tool.setuptools.dynamic]
 # dependencies = requirements.txt
 
+[tool.poetry]
+enable = false
+
 # TODO 2020/06/02: Check Flake8
 # [tool.flake8]
 # ignore = ['E203', 'E266', 'E501', 'W503', 'F403', 'F401']
@@ -21,7 +24,7 @@ line_length = 120
 
 [tool.black]
 line-length = 120
-target-version = ['py39']
+target-version = ['py311']
 exclude = '''
 /(
     \.eggs

@@ -133,6 +133,7 @@ def run_convert(args: argparse.Namespace) -> None:
         annotations["id"] = annotations.index
 
         logging.info("Create abs_bboxes and category_id")
+
         def get_correct_boxes_and_labels(row):
             if args.mode == "hands":
                 abs_bboxes = get_abs_bboxes(row["bboxes"], (row["width"], row["height"]))
@@ -140,24 +141,22 @@ def run_convert(args: argparse.Namespace) -> None:
             elif args.mode == "gestures":
                 boxes = []
                 labels_list = []
-                if row['united_bbox'] is None:
-                    iter_bboxes = row['bboxes']
-                    iter_labels = row['labels']
+                if row["united_bbox"] is None:
+                    iter_bboxes = row["bboxes"]
+                    iter_labels = row["labels"]
                 else:
-                    iter_bboxes = row['united_bbox']
-                    iter_labels = row['united_label']
-                    
+                    iter_bboxes = row["united_bbox"]
+                    iter_labels = row["united_label"]
+
                 for i in range(len(iter_bboxes)):
                     boxes.append(iter_bboxes[i])
                     labels_list.append(iter_labels[i])
-                    
+
                 abs_bboxes = get_abs_bboxes(boxes, (row["width"], row["height"]))
                 category_id = [labels[label] for label in labels_list]
             return pd.Series({"abs_bboxes": abs_bboxes, "category_id": category_id})
 
-        annotations[["abs_bboxes", "category_id"]] = annotations.progress_apply(
-            get_correct_boxes_and_labels, axis=1
-        )
+        annotations[["abs_bboxes", "category_id"]] = annotations.progress_apply(get_correct_boxes_and_labels, axis=1)
 
         logging.info("Create area")
         annotations["area"] = annotations["abs_bboxes"].progress_apply(lambda bboxes: get_area(bboxes))
@@ -169,12 +168,7 @@ def run_convert(args: argparse.Namespace) -> None:
         res_file = {"categories": categories, "images": [], "annotations": []}
         annot_count = 0
         for index, row in tqdm(annotations.iterrows()):
-            img_elem = {
-                "file_name": row["image_path"],
-                "height": row["height"],
-                "width": row["width"],
-                "id": row["id"]
-            }
+            img_elem = {"file_name": row["image_path"], "height": row["height"], "width": row["width"], "id": row["id"]}
             res_file["images"].append(img_elem)
 
             num_boxes = len(row["abs_bboxes"])
@@ -194,7 +188,6 @@ def run_convert(args: argparse.Namespace) -> None:
         with open(f"{args.out}/{phase}.json", "w") as f:
             json_str = json.dumps(res_file)
             f.write(json_str)
-
 
 
 if __name__ == "__main__":

@@ -34,5 +34,5 @@ targets = {
     30: "three_gun",
     31: "thumb_index",
     32: "thumb_index2",
-    33: "no_gesture"
+    33: "no_gesture",
 }
