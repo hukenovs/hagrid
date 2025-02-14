@@ -26,9 +26,9 @@ dataset:
     img_mean: &img_mean [0.54, 0.499, 0.474]
     img_std: &img_std [0.234, 0.235, 0.231]
     subset: -1 # Amount of training data
-    
+
     one_class: False
-    
+
     targets:
         - grabbing
         - grip

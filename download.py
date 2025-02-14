@@ -1,7 +1,7 @@
 """Download models and datasets"""
+
 import argparse
 import os
-
 
 v2_url = "https://rndml-team-cv.obs.ru-moscow-1.hc.sbercloud.ru/datasets/hagrid_v2/"
 main_url = "https://rndml-team-cv.obs.ru-moscow-1.hc.sbercloud.ru/datasets/hagrid/hagrid_dataset_new_554800/"
@@ -25,7 +25,6 @@ urls = {
     "three2": f"{main_url}hagrid_dataset/three2.zip",
     "two_up_inverted": f"{main_url}hagrid_dataset/two_up_inverted.zip",
     "two_up": f"{main_url}hagrid_dataset/two_up.zip",
-    
     "grabbing": f"{v2_url}hagrid_v2_zip/grabbing.zip",
     "grip": f"{v2_url}hagrid_v2_zip/grip.zip",
     "holy": f"{v2_url}hagrid_v2_zip/holy.zip",
@@ -42,9 +41,7 @@ urls = {
     "thumb_index": f"{v2_url}hagrid_v2_zip/thumb_index.zip",
     "thumb_index2": f"{v2_url}hagrid_v2_zip/thumb_index2.zip",
     "no_gesture": f"{v2_url}hagrid_v2_zip/no_gesture.zip",
-    
     "annotations": f"{v2_url}/annotations_with_landmarks/annotations.zip",
-    
 }
 
 GESTURES = (

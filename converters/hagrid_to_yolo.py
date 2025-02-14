@@ -1,9 +1,9 @@
 import argparse
 import logging
 import os
-import pandas as pd
 
 import numpy as np
+import pandas as pd
 from omegaconf import OmegaConf
 from tqdm import tqdm
 
@@ -123,6 +123,7 @@ def run_convert(args):
         )
 
         logging.info("Processing annotations")
+
         def process_row(row):
             if args.mode == "hands":
                 boxes = row["bboxes"]
@@ -130,17 +131,17 @@ def run_convert(args):
             elif args.mode == "gestures":
                 boxes = []
                 labels_list = []
-                if row['united_bbox'] is None:
-                    iter_bboxes = row['bboxes']
-                    iter_labels = row['labels']
+                if row["united_bbox"] is None:
+                    iter_bboxes = row["bboxes"]
+                    iter_labels = row["labels"]
                 else:
-                    iter_bboxes = row['united_bbox']
-                    iter_labels = row['united_label']
-                    
+                    iter_bboxes = row["united_bbox"]
+                    iter_labels = row["united_label"]
+
                 for i in range(len(iter_bboxes)):
                     boxes.append(iter_bboxes[i])
                     labels_list.append(labels_dict[iter_labels[i]])
-                    
+
             else:
                 raise ValueError("Invalid mode. Should be 'hands' or 'gestures'.")
 
@@ -154,14 +155,9 @@ def run_convert(args):
             else:
                 raise ValueError("Invalid bbox_format. Should be 'cxcywh', 'xyxy', or 'xywh'.")
 
-            return pd.Series({
-                "converted_bboxes": converted_bboxes,
-                "category_id": labels_list
-            })
+            return pd.Series({"converted_bboxes": converted_bboxes, "category_id": labels_list})
 
-        annotations[["converted_bboxes", "category_id"]] = annotations.progress_apply(
-            process_row, axis=1
-        )
+        annotations[["converted_bboxes", "category_id"]] = annotations.progress_apply(process_row, axis=1)
 
         annotations["label_path"] = annotations["image_path"].progress_apply(
             lambda x: x.replace(phase, f"{phase}_labels").replace(".jpg", ".txt")

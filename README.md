@@ -17,7 +17,7 @@ Example of sample and its annotation:
 For more information see our arxiv paper [TBA]().
 
 ## 🔥 Changelog
-- **`2024/09/24`**: We release [HaGRIDv2](https://github.com/hukenovs/hagrid/tree/hagridv2-1m). 🙏
+- **`2024/09/24`**: We release [HaGRIDv2](https://github.com/hukenovs/hagrid/tree/Hagrid_v2-1M). 🙏
   - The HaGRID dataset has been expanded with 15 new gesture classes, including two-handed gestures
   - New class "no_gesture" with domain-specific natural hand postures was addad (**2,164** samples, divided by train/val/test containing 1,464, 200, 500 images, respectively)
   - Extra class `no_gesture` contains **200,390** bounding boxes
@@ -253,7 +253,7 @@ The annotations consist of bounding boxes of hands and gestures in COCO format `
 - United_label - a class label for united_bbox in case of two-handed gestures and 'null' in the case of one-handed gestures
 - User ID - subject id (useful for split data to train / val subsets).
 - Hand_landmarks - auto-annotated with MediaPipe landmarks for each hand.
-- Meta - automatically annotated with FairFace and MiVOLO neural networks meta-information contains age, gender and race 
+- Meta - automatically annotated with FairFace and MiVOLO neural networks meta-information contains age, gender and race
 
 
 ### Bounding boxes

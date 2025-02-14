@@ -1,16 +1,16 @@
+import random
 from collections import defaultdict
 from time import gmtime, strftime
 from typing import Dict
 
 import albumentations as A
+import numpy as np
 import torch
 from albumentations.pytorch import ToTensorV2
 from omegaconf import DictConfig
 from torchmetrics import F1Score
-import random
-import numpy as np
-from models import classifiers_list, detectors_list
 
+from models import classifiers_list, detectors_list
 
 TORCH_VERSION = torch.__version__
 
@@ -197,8 +197,7 @@ def build_model(config: DictConfig):
     return model
 
 
-def set_random_seed(seed: int = 42,
-                    deterministic: bool = False) -> int:
+def set_random_seed(seed: int = 42, deterministic: bool = False) -> int:
     """Set random seed.
 
     Args:
@@ -217,12 +216,13 @@ def set_random_seed(seed: int = 42,
     if deterministic:
         if torch.backends.cudnn.benchmark:
             print(
-                'torch.backends.cudnn.benchmark is going to be set as '
-                '`False` to cause cuDNN to deterministically select an '
-                'algorithm')
+                "torch.backends.cudnn.benchmark is going to be set as "
+                "`False` to cause cuDNN to deterministically select an "
+                "algorithm"
+            )
         torch.backends.cudnn.deterministic = True
         torch.backends.cudnn.benchmark = False
 
-        if digit_version(TORCH_VERSION) >= digit_version('1.10.0'):
+        if TORCH_VERSION >= "1.10.0":
             torch.use_deterministic_algorithms(True)
     return seed

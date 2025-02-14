@@ -164,7 +164,7 @@ class DetectionDataset(HagridDataset):
         image_pth = os.path.join(self.path_to_dataset, row["target"], row["name"])
 
         image = self._load_image(image_pth)
-        
+
         if self.one_class:
             labels = np.array([self.labels[label] for label in row["labels"]])
             iter_boxes = [row["bboxes"][i] for i in range(len(row["bboxes"]))]
@@ -232,8 +232,9 @@ class ClassificationDataset(HagridDataset):
             Transformations for dataset
         """
         super().__init__(conf, dataset_type, transform)
-        self.annotations = self.annotations[~self.annotations.apply(lambda x: x["labels"] == ["no_gesture"] \
-                                                                    and x["target"] !="no_gesture", axis=1)]
+        self.annotations = self.annotations[
+            ~self.annotations.apply(lambda x: x["labels"] == ["no_gesture"] and x["target"] != "no_gesture", axis=1)
+        ]
 
         self.dataset_type = dataset_type
 
@@ -258,8 +259,8 @@ class ClassificationDataset(HagridDataset):
         image = self._load_image(image_pth)
 
         labels = row["labels"]
-        
-        if row['target'] == "no_gesture":
+
+        if row["target"] == "no_gesture":
             gesture = "no_gesture"
         else:
             for label in labels:
