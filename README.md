@@ -2,7 +2,7 @@
 
 ![hagrid](images/hagrid.jpg)
 
-We introduce a large image dataset **HaGRIDv2** (**HA**nd **G**esture **R**ecognition **I**mage **D**ataset) for hand gesture recognition (HGR) systems. You can use it for image classification or image detection tasks. Proposed dataset allows to build HGR systems, which can be used in video conferencing services (Zoom, Skype, Discord, Jazz etc.), home automation systems, the automotive sector, etc.
+We introduce a large image dataset **HaGRIDv2** (**HA**nd **G**esture **R**ecognition **I**mage **D**ataset) for hand gesture recognition (HGR) systems. You can use it for image classification or image detection tasks. Proposed dataset allows to build HGR systems, which can be used in video conferencing services (Zoom, Skype, Discord, Jazz etc.), home automation systems, the automotive sector, etc. We have also released an algorithm for dynamic gesture recognition, which we described in our paper. This model is trained entirely on HaGRIDv2 and enables the recognition of dynamic gestures while being trained exclusively on static ones. You can find it in our [repository](https://github.com/ai-forever/dynamic_gestures).
 
 HaGRIDv2 size is **1.5T** and dataset contains **1,086,158** FullHD RGB images divided into **33** classes of gestures and a new separate "no_gesture" class, containing domain-specific natural hand postures. Also, some images have `no_gesture` class if there is a second gesture-free hand in the frame. This extra class contains **2,164** samples. The data were split into training 76%, 9% validation and testing 15% sets by subject `user_id`, with 821,458 images for train, 99,200 images for validation and 165,500 for test.
 
@@ -14,9 +14,14 @@ Example of sample and its annotation:
 
 ![example](images/hagrid_samples.jpg)
 
-For more information see our arxiv paper [TBA]().
+For more information see our arxiv [paper](https://arxiv.org/abs/2412.01508).
 
 ## 🔥 Changelog
+- **`2025/02/27`**: We release [Dynamic Gesture Recognition algorithm](https://github.com/ai-forever/dynamic_gestures). 🙋
+  - Introduced a novel algorithm that enables dynamic gesture recognition while being trained exclusively on static gestures
+  - Fully trained on the HaGRIDv2-1M dataset
+  - Designed for real-time applications in video conferencing, smart home control, automotive systems, and more
+  - Open-source implementation with pretrained models available in the repository
 - **`2024/09/24`**: We release [HaGRIDv2](https://github.com/hukenovs/hagrid/tree/Hagrid_v2-1M). 🙏
   - The HaGRID dataset has been expanded with 15 new gesture classes, including two-handed gestures
   - New class "no_gesture" with domain-specific natural hand postures was addad (**2,164** samples, divided by train/val/test containing 1,464, 200, 500 images, respectively)
@@ -323,15 +328,26 @@ Please see the specific [license](https://github.com/hukenovs/hagrid/blob/master
 - [Anton Nuzhdin](https://www.linkedin.com/in/anton-nuzhdin-46b799234 )
 
 ### Links
-- [Github](https://github.com/hukenovs/hagrid)
+- [Github (HaGRIDv2-1M)](https://github.com/hukenovs/hagrid)
 <!-- - [Mirror](https://gitlab.aicloud.sbercloud.ru/rndcv/hagrid) -->
 - [arXiv](https://arxiv.org/abs/2206.08219)
+- [Github (Dynamic Gesture Recognition)](https://github.com/ai-forever/dynamic_gestures)
 <!-- - [Kaggle](https://www.kaggle.com/datasets/kapitanov/hagrid) -->
 <!-- - [Habr](https://habr.com/ru/company/sberdevices/blog/671614/) -->
 <!-- - [Paperswithcode](https://paperswithcode.com/paper/hagrid-hand-gesture-recognition-image-dataset) -->
 
 ### Citation
 You can cite the paper using the following BibTeX entry:
+
+    @misc{nuzhdin2024hagridv21mimagesstatic,
+        title={HaGRIDv2: 1M Images for Static and Dynamic Hand Gesture Recognition}, 
+        author={Anton Nuzhdin and Alexander Nagaev and Alexander Sautin and Alexander Kapitanov and Karina Kvanchiani},
+        year={2024},
+        eprint={2412.01508},
+        archivePrefix={arXiv},
+        primaryClass={cs.CV},
+        url={https://arxiv.org/abs/2412.01508}, 
+    }
 
     @InProceedings{Kapitanov_2024_WACV,
         author    = {Kapitanov, Alexander and Kvanchiani, Karina and Nagaev, Alexander and Kraynov, Roman and Makhliarchuk, Andrei},
