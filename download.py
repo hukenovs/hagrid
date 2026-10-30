@@ -41,7 +41,7 @@ urls = {
     "thumb_index": f"{v2_url}hagrid_v2_zip/thumb_index.zip",
     "thumb_index2": f"{v2_url}hagrid_v2_zip/thumb_index2.zip",
     "no_gesture": f"{v2_url}hagrid_v2_zip/no_gesture.zip",
-    "annotations": f"{v2_url}/annotations_with_landmarks/annotations.zip",
+    "annotations": f"{v2_url}annotations_with_landmarks/annotations.zip",
 }
 
 GESTURES = (
